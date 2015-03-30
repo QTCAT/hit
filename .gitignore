@@ -1,1 +1,9 @@
-
+.Rproj.user
+.Rhistory
+.RData
+.Rprofile
+hit.Rproj
+packrat/lib*/
+src/*.o
+src/*.so
+src/*.dll
