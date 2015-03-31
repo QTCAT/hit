@@ -26,6 +26,7 @@
 #'   high-dimensional setting with correlated variables.} To appear in the 
 #'   Journal of the American Statistical Association. Preprint arXiv:1312.5556
 #' @examples
+#' set.seed(123)
 #' n <- 100
 #' p <- 150
 #' # x with correlated columns

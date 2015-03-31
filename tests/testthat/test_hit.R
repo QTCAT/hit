@@ -1,6 +1,7 @@
 context("HIT testing")
 
 test_that("hit testing", {
+  set.seed(123)
   n <- 100
   p <- 150
   # x with correlated columns

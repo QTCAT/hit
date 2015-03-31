@@ -1,6 +1,7 @@
 context("hirarchy testing")
 
 test_that("hirarchy testing", {
+  set.seed(123)
   n <- 100
   p <- 150
   # x with correlated columns

@@ -26,6 +26,7 @@ see \code{\link{mclapply}}.}
 Hierachy indeces from desndrogram
 }
 \examples{
+set.seed(123)
 n <- 100
 p <- 150
 # x with correlated columns

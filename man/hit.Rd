@@ -43,6 +43,7 @@ experimental-design variables. These variables are not penalised in the
 LASSO model selection and are always include in the reduced ANOVA model.
 }
 \examples{
+set.seed(123)
 n <- 100
 p <- 150
 # x with correlated columns
