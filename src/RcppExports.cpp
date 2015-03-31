@@ -21,7 +21,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // sigCluster
-NumericMatrix sigCluster(NumericVector pVal, List clustLevel, List clustMemb, const size_t p, const double alpha, int minDistInx, int maxDistInx);
+NumericMatrix sigCluster(NumericVector pVal, List clustLevel, List clustMemb, const int p, const double alpha, int minDistInx, int maxDistInx);
 RcppExport SEXP hit_sigCluster(SEXP pValSEXP, SEXP clustLevelSEXP, SEXP clustMembSEXP, SEXP pSEXP, SEXP alphaSEXP, SEXP minDistInxSEXP, SEXP maxDistInxSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
@@ -30,7 +30,7 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< NumericVector >::type pVal(pValSEXP );
         Rcpp::traits::input_parameter< List >::type clustLevel(clustLevelSEXP );
         Rcpp::traits::input_parameter< List >::type clustMemb(clustMembSEXP );
-        Rcpp::traits::input_parameter< const size_t >::type p(pSEXP );
+        Rcpp::traits::input_parameter< const int >::type p(pSEXP );
         Rcpp::traits::input_parameter< const double >::type alpha(alphaSEXP );
         Rcpp::traits::input_parameter< int >::type minDistInx(minDistInxSEXP );
         Rcpp::traits::input_parameter< int >::type maxDistInx(maxDistInxSEXP );
