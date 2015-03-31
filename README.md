@@ -4,7 +4,7 @@
 
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/QTCAT/hit?branch=master)](https://ci.appveyor.com/project/QTCAT/hit)
 
-Installation 'hit' from source:
+Install 'hit' from source:
 
      # install.packages("devtools")
     devtools::install_github("QTCAT/hit")
