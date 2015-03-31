@@ -6,10 +6,12 @@ Satus of CI for Unix:
 
 The package can be installed from an R console via `devtools`. If `devtools` is not yet installed you have to do so.
 
-     # install.packages("devtools")
+    # install.packages("devtools")
     devtools::install_github("QTCAT/hit")
     
 The functionality of the package is represented by the example of the `hit`-function (please be aware, that this can take a few seconds).
 
+    library(hit)
     example(hit)
+
 
