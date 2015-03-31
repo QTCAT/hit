@@ -1,8 +1,8 @@
 # Hierarchical Interference Testing (HIT)
 
 Satus of CI for Unix:
-[![Travis-CI Build Status](https://travis-ci.org/QTCAT/hit.png?branch=master)](https://travis-ci.org/QTCAT/hit), and for Windows:
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/QTCAT/hit?branch=master)](https://ci.appveyor.com/project/QTCAT/hit) 
+[![Travis-CI Build Status](https://travis-ci.org/jrklasen/hit.png?branch=master)](https://travis-ci.org/jrklasen/hit), and for Windows:
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jrklasen/hit?branch=master)](https://ci.appveyor.com/project/jrklasen/hit) 
 
 The package can be installed from an R console via `devtools`. If `devtools` is not yet installed you have to do so.
 
