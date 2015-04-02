@@ -1,6 +1,7 @@
 
-#' @title Hierarchical interference test
-#' @description Hierarchical inference testing by repeated sample splitting.
+#' @title Hierarchical inference testing
+#' @description Hierarchical inference testing for linear models with 
+#' high-dimensional and/or correlated covariates by repeated sample splitting.
 #' @param x design matrix of dimension \code{n * p}, without intercept.
 #' Variables not part of the dendrogram are added to the HO-model, see Details 
 #' below.
