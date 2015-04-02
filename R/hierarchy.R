@@ -7,7 +7,7 @@
 #' @param h.cut vector of cutting points. If it is specified min.dist, 
 #' max.dist, and h.levels are ignored.
 #' @param mc.cores number of cores for parallelising, 
-#' see \code{\link{mclapply}}.
+#' see \code{\link[parallel]{mclapply}}.
 #' @author Jonas Klasen
 #' @examples
 #' set.seed(123)

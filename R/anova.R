@@ -1,13 +1,14 @@
 
-#' @title Fast ANOVA.
+#' @title Fast ANOVA
 #' @description A fast  analysis of variance (ANOVA) for pedifind design matrix.
 #' @param x design matrix of dimension \code{n * p}.
 #' @param y respons vector of observations of length \code{n}.
 #' @param assign integer vector assigning columns to terms can be also given as 
 #' \code{x} attribute in which case the argument is ignored. For details about 
-#' assign see \code{\link{model.matrix}}.
+#' assign see \code{\link[stats]{model.matrix}}.
 #' @author Jonas Klasen
-#' @seealso \code{\link{lm}}, \code{\link{anova}}, and \code{\link{aov}}.
+#' @seealso \code{\link[stats]{lm}}, \code{\link[stats]{anova}}, and 
+#' \code{\link[stats]{aov}}.
 #' @examples
 #' y <- rnorm(n=100)
 #' x <- matrix(data=rnorm(1000), nrow=100)

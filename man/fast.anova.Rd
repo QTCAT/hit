@@ -2,7 +2,7 @@
 % Please edit documentation in R/anova.R
 \name{fast.anova}
 \alias{fast.anova}
-\title{Fast ANOVA.}
+\title{Fast ANOVA}
 \usage{
 fast.anova(x, y, assign = NULL)
 }
@@ -13,7 +13,7 @@ fast.anova(x, y, assign = NULL)
 
 \item{assign}{integer vector assigning columns to terms can be also given as
 \code{x} attribute in which case the argument is ignored. For details about
-assign see \code{\link{model.matrix}}.}
+assign see \code{\link[stats]{model.matrix}}.}
 }
 \description{
 A fast  analysis of variance (ANOVA) for pedifind design matrix.
@@ -28,6 +28,7 @@ fast.anova(x=x, y=y, assign=a)
 Jonas Klasen
 }
 \seealso{
-\code{\link{lm}}, \code{\link{anova}}, and \code{\link{aov}}.
+\code{\link[stats]{lm}}, \code{\link[stats]{anova}}, and
+\code{\link[stats]{aov}}.
 }
 

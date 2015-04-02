@@ -14,9 +14,9 @@
 #' @param max.p.esti maximum alpha level. All p-values above this value are set 
 #' to one. Small \code{max.p.esti} values reduce computing time.
 #' @param mc.cores number of cores for parallelising. Theoretical maximum is 
-#' 'B'. For details see \code{\link{mclapply}}.
+#' 'B'. For details see \code{\link[parallel]{mclapply}}.
 #' @param trace if TRUE it prints current status of the program.
-#' @param ... additional arguments for \code{\link{cv.glmnet}}.
+#' @param ... additional arguments for \code{\link[glmnet]{cv.glmnet}}.
 #' @details The H0-model contains variables, with are not tested, like 
 #' experimental-design variables. These variables are not penalised in the 
 #' LASSO model selection and are always include in the reduced ANOVA model.
