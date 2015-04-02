@@ -28,11 +28,11 @@ variables of \code{x} which should be trested.}
 to one. Small \code{max.p.esti} values reduce computing time.}
 
 \item{mc.cores}{number of cores for parallelising. Theoretical maximum is
-'B'. For details see \code{\link{mclapply}}.}
+'B'. For details see \code{\link[parallel]{mclapply}}.}
 
 \item{trace}{if TRUE it prints current status of the program.}
 
-\item{...}{additional arguments for \code{\link{cv.glmnet}}.}
+\item{...}{additional arguments for \code{\link[glmnet]{cv.glmnet}}.}
 }
 \description{
 Hierarchical inference testing by repeated sample splitting.

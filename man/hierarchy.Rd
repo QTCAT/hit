@@ -20,7 +20,7 @@ hierarchy(dendrogram, min.dist = 0, max.dist = max(dist), h.levels = 100L,
 max.dist, and h.levels are ignored.}
 
 \item{mc.cores}{number of cores for parallelising,
-see \code{\link{mclapply}}.}
+see \code{\link[parallel]{mclapply}}.}
 }
 \description{
 Hierachy indeces from desndrogram
