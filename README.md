@@ -1,6 +1,6 @@
 # Hierarchical Interference Testing (HIT)
 
-Build and test passing status for master branch at Linux:
+Master branch build and test passing status at Linux:
 [![Travis-CI Build Status](https://travis-ci.org/jrklasen/hit.png?branch=master)](https://travis-ci.org/jrklasen/hit?branch=master), and at Windows:
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jrklasen/hit?branch=master&svg=true)](https://ci.appveyor.com/project/jrklasen/hit) 
 
