@@ -1,7 +1,7 @@
 # Hierarchical Interference Testing (HIT)
 
-CI status for master branch at Linux:
-[![Travis-CI Build Status](https://travis-ci.org/jrklasen/hit.png?branch=master)](https://travis-ci.org/jrklasen/hit), and at Windows:
+Build and test passing status for master branch at Linux:
+[![Travis-CI Build Status](https://travis-ci.org/jrklasen/hit.png?branch=master)](https://travis-ci.org/jrklasen/hit?branch=master), and at Windows:
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jrklasen/hit?branch=master&svg=true)](https://ci.appveyor.com/project/jrklasen/hit) 
 
 The package can be installed from an R console via `devtools`. If you haven't yet `devtools` installed, you have to do so first.
