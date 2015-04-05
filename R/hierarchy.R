@@ -20,50 +20,39 @@
 #' @export
 hierarchy <- function (x, height = NULL) {
   make.hierarchy <- function(subtree, level, superset) {
-    h <- attr(subtree, "height")
-    newLevel <- length(height) - findInterval(h, vec = hInterval)
+    newLevel <- sum(attr(subtree, "height") <= height)
     if (is.leaf(subtree) && newLevel > level) {
-      CLUSTERS[[COUNTER]] <<- match(labels(subtree), varLabel)
+      CLUSTERS[[COUNTER]] <<- labels(subtree)
       attr(CLUSTERS[[COUNTER]], "superset") <<- superset
+      attr(CLUSTERS[[COUNTER]], "height") <<- height[newLevel]
       subset <- c(attr(CLUSTERS[[superset]], "subset"), COUNTER)
-      attr(CLUSTERS[[superset]], "subset") <<- subset
-      LEVELS[[newLevel]] <<- c(LEVELS[[newLevel]], COUNTER)
+      attr(CLUSTERS[[superset]], "subset") <<- subset      
       COUNTER <<- COUNTER + 1L
     } else {
       if (newLevel > level) {
-        CLUSTERS[[COUNTER]] <<- match(labels(subtree), varLabel)
+        CLUSTERS[[COUNTER]] <<- labels(subtree)
         attr(CLUSTERS[[COUNTER]], "superset") <<- superset
+        attr(CLUSTERS[[COUNTER]], "height") <<- height[newLevel]
         subset <- c(attr(CLUSTERS[[superset]], "subset"), COUNTER)
         attr(CLUSTERS[[superset]], "subset") <<- subset
-        LEVELS[[newLevel]] <<- c(LEVELS[[newLevel]], COUNTER)
         superset <- COUNTER
         COUNTER <<- COUNTER + 1L
       }
-      lapply(subtree, make.hierarchy, level = newLevel, 
-             superset = superset)
+      lapply(subtree, make.hierarchy, level = newLevel, superset = superset)
     }
     return(NULL)
   }
   if (!inherits(x, "dendrogram")) 
     stop("'x' is not a dendrogram")
-  varLabel <- labels(x)
   if (is.null(height)) 
     height <- heightLevels(x)
-  height <- sort(height)
-  hInterval <- height[-1] - diff(height)/2
-  CLUSTERS <- list(seq_along(varLabel))
-  attr(CLUSTERS[[1]], "superset") <- 0L
-  LEVELS <- rep(list(c()), length(height))
-  LEVELS[[1L]] <- 1L
+  height <- sort(height, decreasing = TRUE)
+  CLUSTERS <- list(labels(x))
+  attr(CLUSTERS[[1L]], "height") <- height[1L]
   COUNTER <- 2L
   lapply(x, make.hierarchy, level = 1L, superset = 1L)
-  usedLevels <- !sapply(LEVELS, is.null)
-  out <- list(hierarchyCluster = LEVELS[usedLevels], 
-              clusterMembers = CLUSTERS, 
-              labels = varLabel, 
-              hierarchyLevel = sort(height,  decreasing = TRUE)[usedLevels])
-  class(out) <- "hierarchy"
-  out
+  class(CLUSTERS) <- "hierarchy"
+  CLUSTERS
 }
 
 #' @title all heights from a dendrogram 
@@ -80,4 +69,22 @@ heightLevels <- function (x) {
   if (!inherits(x, "dendrogram")) 
     stop("'x' is not a dendrogram")
   sort(unique(node.height(x)), decreasing = TRUE)
+}
+
+#' @title root of thr hierarchy 
+#' @param x a hierarchy
+#' @keywords internal
+topSet <- function(x) {
+  if (!inherits(x, "hierarchy")) 
+    stop("'x' is not a hierarchy")
+  which(sapply(x, function(x) is.null(attr(x, which = "superset"))))
+}
+
+#' @title leaf of thr hierarchy 
+#' @param x a hierarchy
+#' @keywords internal
+bottomSet <- function(x) {
+  if (!inherits(x, "hierarchy")) 
+    stop("'x' is not a hierarchy")
+  which(sapply(x, function(x) is.null(attr(x, which = "subset"))))
 }
