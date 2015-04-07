@@ -4,23 +4,12 @@
 \alias{hierarchy}
 \title{Hierachy indeces from desndrogram}
 \usage{
-hierarchy(dendrogram, min.dist = 0, max.dist = max(dist), h.levels = 100L,
-  h.cut = NULL, mc.cores = 1L)
+hierarchy(x, height = NULL)
 }
 \arguments{
-\item{dendrogram}{object of class 'dendrogram'.}
+\item{x}{object of class 'dendrogram'.}
 
-\item{min.dist}{min. distence to be tested.}
-
-\item{max.dist}{max. distence to be tested.}
-
-\item{h.levels}{number of hierarchy levels to be tested.}
-
-\item{h.cut}{vector of cutting points. If it is specified min.dist,
-max.dist, and h.levels are ignored.}
-
-\item{mc.cores}{number of cores for parallelising,
-see \code{\link[parallel]{mclapply}}.}
+\item{height}{vector of cutting points.}
 }
 \description{
 Hierachy indeces from desndrogram

@@ -22,7 +22,7 @@ hierarchy <- function (x, height = NULL) {
   make.hierarchy <- function(subtree, level, superset) {
     newLevel <- sum(attr(subtree, "height") <= height)
     if (is.leaf(subtree) && newLevel > level) {
-      CLUSTERS[[COUNTER]] <<- labels(subtree)
+      CLUSTERS[[COUNTER]] <<- match(labels(subtree), varNames)
       attr(CLUSTERS[[COUNTER]], "superset") <<- superset
       attr(CLUSTERS[[COUNTER]], "height") <<- height[newLevel]
       subset <- c(attr(CLUSTERS[[superset]], "subset"), COUNTER)
@@ -30,7 +30,7 @@ hierarchy <- function (x, height = NULL) {
       COUNTER <<- COUNTER + 1L
     } else {
       if (newLevel > level) {
-        CLUSTERS[[COUNTER]] <<- labels(subtree)
+        CLUSTERS[[COUNTER]] <<- match(labels(subtree), varNames)
         attr(CLUSTERS[[COUNTER]], "superset") <<- superset
         attr(CLUSTERS[[COUNTER]], "height") <<- height[newLevel]
         subset <- c(attr(CLUSTERS[[superset]], "subset"), COUNTER)
@@ -47,7 +47,9 @@ hierarchy <- function (x, height = NULL) {
   if (is.null(height)) 
     height <- heightLevels(x)
   height <- sort(height, decreasing = TRUE)
-  CLUSTERS <- list(labels(x))
+  varNames <- labels(x)
+  CLUSTERS <- list(seq_along(varNames))
+  attr(CLUSTERS[[1L]], "names") <- varNames
   attr(CLUSTERS[[1L]], "height") <- height[1L]
   COUNTER <- 2L
   lapply(x, make.hierarchy, level = 1L, superset = 1L)
@@ -71,20 +73,38 @@ heightLevels <- function (x) {
   sort(unique(node.height(x)), decreasing = TRUE)
 }
 
-#' @title root of thr hierarchy 
+#' @title leaf of the hierarchy 
 #' @param x a hierarchy
 #' @keywords internal
-topSet <- function(x) {
-  if (!inherits(x, "hierarchy")) 
-    stop("'x' is not a hierarchy")
-  which(sapply(x, function(x) is.null(attr(x, which = "superset"))))
-}
-
-#' @title leaf of thr hierarchy 
-#' @param x a hierarchy
-#' @keywords internal
-bottomSet <- function(x) {
+bottomSets <- function(x) {
   if (!inherits(x, "hierarchy")) 
     stop("'x' is not a hierarchy")
   which(sapply(x, function(x) is.null(attr(x, which = "subset"))))
+}
+
+#' @title heights of the hierarchy 
+#' @param x a hierarchy
+#' @keywords internal
+heightSets <- function(x) {
+  if (!inherits(x, "hierarchy")) 
+    stop("'x' is not a hierarchy")
+  sort(unique(sapply(x, attr, which = "height")))
+}
+
+#' @title reorder hierarchy according to names vector
+#' @param x a hierarchy.
+#' @param names names in new order.
+#' @param ... further arguments passed to or from other methods (not used).
+#' @importFrom stats reorder
+#' @method reorder hierarchy 
+#' @export
+reorder.hierarchy <- function(x, names, ...) {
+  if (!inherits(x, "hierarchy")) 
+    stop("'x' is not a hierarchy")
+  if (length(setdiff(names(x[[1]]), names)))
+    stop("'x' includs variabels not in 'names'")
+  newOrder <- match(names(x[[1]]), names)
+  x[] <- lapply(x, function(x, newOrder){x[] <- sort(newOrder[x]); x}, newOrder)
+  names(x[[1]]) <- names[x[[1]]]
+  x
 }
