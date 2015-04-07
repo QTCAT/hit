@@ -104,7 +104,8 @@ reorder.hierarchy <- function(x, names, ...) {
   if (length(setdiff(names(x[[1]]), names)))
     stop("'x' includs variabels not in 'names'")
   newOrder <- match(names(x[[1]]), names)
-  x[] <- lapply(x, function(x, newOrder){x[] <- sort(newOrder[x]); x}, newOrder)
-  names(x[[1]]) <- names[x[[1]]]
-  x
+  out <- lapply(x, function(x, newOrder){x[] <- sort(newOrder[x]); x}, newOrder)
+  names(out[[1]]) <- names[out[[1]]]
+  class(out) <- "hierarchy"
+  out
 }

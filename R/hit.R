@@ -172,12 +172,13 @@ samp2.testing <- function(cIndex, level, upper.p, x, y, allSamp1.ids,
   p.value <- max(p.aggre, upper.p)
   if (p.value < max.p.esti && !is.null(cIndeces <- attr(cluster, "subset"))) {
     if (level <= max.allow.recursive) {
-      pValues <- mclapply(cIndeces, samp2.testing, level + 1, p.value, x, y, 
+      mc.cores <- ifelse(max.allow.recursive == 1L, 1L, 2L)
+      pValues <- mclapply(cIndeces, samp2.testing, level + 1L, p.value, x, y, 
                            allSamp1.ids, allActSet.ids, x.nonTested, hierarchy, 
                            max.p.esti, B, gamma, max.allow.recursive,
-                           mc.cores = 2L, mc.allow.recursive = TRUE)
+                           mc.cores = mc.cores, mc.allow.recursive = TRUE)
     } else {
-      pValues <- lapply(cIndeces, samp2.testing,  level + 1, p.value, x, y, 
+      pValues <- lapply(cIndeces, samp2.testing,  level + 1L, p.value, x, y, 
                          allSamp1.ids, allActSet.ids, x.nonTested, hierarchy, 
                          max.p.esti, B, gamma, max.allow.recursive)
     }
