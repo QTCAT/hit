@@ -170,28 +170,34 @@ samp2.testing <- function(cIndex, level, upper.p, x, y, allSamp1.ids,
   p.aggre <- min(1, (1-log(min(gamma)))*min(q.aggre))
   ## 2.4-2 Hierarchical adjustment
   p.value <- max(p.aggre, upper.p)
-  if (p.value < max.p.esti && !is.null(cIndeces <- attr(cluster, "subset"))) {
-    if (level <= max.allow.recursive) {
-      mc.cores <- ifelse(max.allow.recursive == 1L, 1L, 2L)
-      pValues <- mclapply(cIndeces, samp2.testing, level + 1L, p.value, x, y, 
-                           allSamp1.ids, allActSet.ids, x.nonTested, hierarchy, 
-                           max.p.esti, B, gamma, max.allow.recursive,
-                           mc.cores = mc.cores, mc.allow.recursive = TRUE)
+  ## estimation at next lower level
+  if (!is.null(cIndeces <- attr(cluster, "subset"))) {
+    if (p.value < max.p.esti) {
+      if (level <= max.allow.recursive) {
+        mc.cores <- ifelse(max.allow.recursive == 1L, 1L, 2L)
+        pValues <- mclapply(cIndeces, samp2.testing, level + 1L, p.value, x, y, 
+                            allSamp1.ids, allActSet.ids, x.nonTested, 
+                            hierarchy, max.p.esti, B, gamma, 
+                            max.allow.recursive, mc.cores = mc.cores, 
+                            mc.allow.recursive = TRUE)
+      } else {
+        pValues <- lapply(cIndeces, samp2.testing,  level + 1L, p.value, x, y, 
+                          allSamp1.ids, allActSet.ids, x.nonTested, hierarchy, 
+                          max.p.esti, B, gamma, max.allow.recursive)
+      }
     } else {
-      pValues <- lapply(cIndeces, samp2.testing,  level + 1L, p.value, x, y, 
-                         allSamp1.ids, allActSet.ids, x.nonTested, hierarchy, 
-                         max.p.esti, B, gamma, max.allow.recursive)
+      pOne <- function(cIndex) {
+        if (!is.null(cIndeces <- attr(hierarchy[[cIndex]], "subset")))
+          return(c(1, sapply(cIndeces, pOne)))
+        return(1)
+      }
+      pValues <-  sapply(cIndeces, pOne)
     }
   } else {
-    bCountr <- 1L
-    while (cIndex + bCountr <= length(hierarchy) && 
-             attr(hierarchy[[cIndex + bCountr]], "height") < 
-             attr(cluster, "height")) {
-      bCountr <- bCountr + 1L
-    }
-    pValues <-  rep(1, bCountr)
-  } 
-  c(p.value, unlist(pValues))
+    pValues <- c()
+  }
+  out <- c(p.value, unlist(pValues))
+  out
 }
 
 #' @title ANOVA testing and multiplicity adjustment
@@ -280,21 +286,23 @@ summary.hit <- function(object, alpha=.05, ...) {
 #' @title Significant hierarchy
 #' @description Significant hierarchy
 #' @param x a hit object
-#' @details makes a matrix of p-values for image(hit:::p.hierarchy(x))
-#' @keywords internal
-p.hierarchy <- function (x) {
-  heig <- hit:::heightSets(x$hierarchy)
+#' @details makes a matrix of p-values for image(p.matrix(x))
+#' @export
+p.matrix <- function (x) {
+  heig <- heightSets(x$hierarchy)
   allheig <- sapply(x$hierarchy, attr, "height")
-  out <- rep(list(c()), length(heig))
   inx <- which(heig[1] == allheig)
-  p.val <- rep(x$pValues[inx], sapply(allheig[inx] , length))
-  out[[1]] <- p.val[unlist(x$hierarchy[inx])]
-  for (h in 2:length(heig)) {
+  p.val <- rep(x$pValues[inx], sapply(allheig[inx], length))
+  out <- list(rep(NA_real_, length(p.val)))
+  out[[1]][unlist(x$hierarchy[inx])] <- p.val
+  for (h in 2L:length(heig)) {
     out[[h]] <- out[[h-1]]
     inx <- which(heig[h] == allheig)
     p.val <- rep(x$pValues[inx], sapply(allheig[inx] , length))
     out[[h]][unlist(x$hierarchy[inx])] <- p.val
   }
   out <- do.call("rbind", out)
+  colnames(out) <- names(x$hierarchy[[1]])
+  rownames(out) <- heig
   out
-} # p.hierarchy
+} # p.matrix
