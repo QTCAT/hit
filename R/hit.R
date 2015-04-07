@@ -277,21 +277,24 @@ summary.hit <- function(object, alpha=.05, ...) {
   out
 } # summary.hit
 
-# #' @title Significant hierarchy
-# #' @description Significant hierarchy
-# #' @param x a hit object
-# #' @details makes a matrix of p-values for image(hit:::p.hierarchy(x))
-# #' @keywords internal
-# p.hierarchy <- function (x) {
-#   out <- matrix(NA_real_, 
-#                 length(x$hierarchy$hierarchyCluster), 
-#                 length(x$hierarchy$labels))
-#   for (j in seq_along(x$hierarchy$hierarchyCluster)) {
-#     for (i in x$hierarchy$hierarchyCluster[[j]]) {
-#       out[j, x$hierarchy$clusterMember[[i]]] <- x$pValues[i]
-#     }
-#   }
-#   colnames(out) <- x$hierarchy$labels
-#   rownames(out) <- x$hierarchy$hierarchyLevel
-#   out
-# } # p.hierarchy
+#' @title Significant hierarchy
+#' @description Significant hierarchy
+#' @param x a hit object
+#' @details makes a matrix of p-values for image(hit:::p.hierarchy(x))
+#' @keywords internal
+p.hierarchy <- function (x) {
+  heig <- hit:::heightSets(x$hierarchy)
+  allheig <- sapply(x$hierarchy, attr, "height")
+  out <- rep(list(c()), length(heig))
+  inx <- which(heig[1] == allheig)
+  p.val <- rep(x$pValues[inx], sapply(allheig[inx] , length))
+  out[[1]] <- p.val[unlist(x$hierarchy[inx])]
+  for (h in 2:length(heig)) {
+    out[[h]] <- out[[h-1]]
+    inx <- which(heig[h] == allheig)
+    p.val <- rep(x$pValues[inx], sapply(allheig[inx] , length))
+    out[[h]][unlist(x$hierarchy[inx])] <- p.val
+  }
+  out <- do.call("rbind", out)
+  out
+} # p.hierarchy
