@@ -4,17 +4,12 @@
 \alias{summary.hit}
 \title{Significant clusters at alpha threshold}
 \usage{
-\method{summary}{hit}(object, alpha = 0.05, min.dist = 0,
-  max.dist = max(dist), ...)
+\method{summary}{hit}(object, alpha = 0.05, ...)
 }
 \arguments{
 \item{object}{a hit object.}
 
 \item{alpha}{alpha level.}
-
-\item{min.dist}{minimal distance for significant clusters.}
-
-\item{max.dist}{maximal distance for significant clusters.}
 
 \item{...}{further arguments passed to or from other methods (not used).}
 }

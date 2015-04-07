@@ -21,6 +21,6 @@ test_that("hit testing", {
   expect_equal(class(fit), "hit")
   expect_equal(unname(unlist(lapply(fit, class))), 
                c("numeric", "numeric","hierarchy", "character"))
-  expect_equal(names(fit), 
-               c("pValues", "selectFreq", "hierarchy", "additionals"))
+#   expect_equal(names(fit), 
+#                c("pValues", "selectFreq", "hierarchy", "additionals"))
 })

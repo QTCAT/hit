@@ -60,7 +60,7 @@ dend <- as.dendrogram(hclust(dist(t(x))))
 hier <- hierarchy(dend)
 # HIT
 out <- hit(x, y, hier)
-summary(out)
+# summary(out)
 }
 \author{
 Jonas Klasen
