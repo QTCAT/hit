@@ -1,13 +1,7 @@
 
 #' @title Hierachy indeces from desndrogram
-#' @param dendrogram object of class 'dendrogram'.
-#' @param min.dist min. distence to be tested.
-#' @param max.dist max. distence to be tested.
-#' @param h.levels number of hierarchy levels to be tested.
-#' @param h.cut vector of cutting points. If it is specified min.dist, 
-#' max.dist, and h.levels are ignored.
-#' @param mc.cores number of cores for parallelising, 
-#' see \code{\link[parallel]{mclapply}}.
+#' @param x object of class 'dendrogram'.
+#' @param height vector of cutting points.
 #' @author Jonas Klasen
 #' @examples
 #' set.seed(123)
@@ -24,79 +18,94 @@
 #' hier <- hierarchy(dend)
 #' @importFrom parallel mclapply
 #' @export
-hierarchy <- function (dendrogram, min.dist=0, max.dist=max(dist), 
-                       h.levels=100L, h.cut=NULL, mc.cores=1L) {
-  stopifnot(class(dendrogram) == "dendrogram")
-  dend.names <- labels(dendrogram)
-  p <- length(dend.names)
-  if (is.null(h.cut)) {
-    dist <- dend.heights(dendrogram)
-    cut.min <- which.min(abs(dist-min.dist))
-    cut.max <- which.min(abs(dist-max.dist))
-    if ((cut.min-cut.max) > h.levels) {
-      h.cut <- dist[seq(cut.max, cut.min, length.out=h.levels)]
+hierarchy <- function (x, height = NULL) {
+  make.hierarchy <- function(subtree, level, superset) {
+    newLevel <- sum(attr(subtree, "height") <= height)
+    if (is.leaf(subtree) && newLevel > level) {
+      CLUSTERS[[COUNTER]] <<- match(labels(subtree), varNames)
+      attr(CLUSTERS[[COUNTER]], "superset") <<- superset
+      attr(CLUSTERS[[COUNTER]], "height") <<- height[newLevel]
+      subset <- c(attr(CLUSTERS[[superset]], "subset"), COUNTER)
+      attr(CLUSTERS[[superset]], "subset") <<- subset      
+      COUNTER <<- COUNTER + 1L
     } else {
-      h.cut <- dist[cut.max:cut.min]
+      if (newLevel > level) {
+        CLUSTERS[[COUNTER]] <<- match(labels(subtree), varNames)
+        attr(CLUSTERS[[COUNTER]], "superset") <<- superset
+        attr(CLUSTERS[[COUNTER]], "height") <<- height[newLevel]
+        subset <- c(attr(CLUSTERS[[superset]], "subset"), COUNTER)
+        attr(CLUSTERS[[superset]], "subset") <<- subset
+        superset <- COUNTER
+        COUNTER <<- COUNTER + 1L
+      }
+      lapply(subtree, make.hierarchy, level = newLevel, superset = superset)
     }
-  } else {
-    h.cut <- sort(h.cut, decreasing=TRUE)
-  } # if (is.null(h.cut))
-  clust <- function(h.cut, dendrogram) {    
-    cluster <- clust.h(dendrogram, h.cut)
-    cluster
-  } # clust()
-  cluster <- mclapply(h.cut, clust, dendrogram,
-                      mc.cores=mc.cores, mc.cleanup=TRUE)
-  if (length(unique(na.exclude(cluster[[1]]))) > 1) {
-    h.cut <- c(Inf, h.cut)
-    rone <- rep(1L, p)
-    cluster <- c(list(rone), cluster)
-  } 
-  cluster <- do.call("rbind", cluster)
-  hierarchy <- clusterInx(cluster)
-  out <- list("hierarchyCluster"=hierarchy$hierarchyCluster,
-              "clusterMembers"=hierarchy$clusterMembers,
-              "labels"=dend.names,
-              "hierarchyLevel"=h.cut)
-  class(out) <- "hierarchy"
-  out
-} # hierarchy
+    return(NULL)
+  }
+  if (!inherits(x, "dendrogram")) 
+    stop("'x' is not a dendrogram")
+  if (is.null(height)) 
+    height <- heightLevels(x)
+  height <- sort(height, decreasing = TRUE)
+  varNames <- labels(x)
+  CLUSTERS <- list(seq_along(varNames))
+  attr(CLUSTERS[[1L]], "names") <- varNames
+  attr(CLUSTERS[[1L]], "height") <- height[1L]
+  COUNTER <- 2L
+  lapply(x, make.hierarchy, level = 1L, superset = 1L)
+  class(CLUSTERS) <- "hierarchy"
+  CLUSTERS
+}
 
 #' @title all heights from a dendrogram 
 #' @param x a dendrogram
 #' @keywords internal
-dend.heights <- function(x) {
-  if (!inherits(x, "dendrogram")) 
-    stop("'x' is not a dendrogram")
+heightLevels <- function (x) {
   node.height <- function(d) {
     if (is.list(d)) {
       r <- attributes(d)$height
       return(c(r, node.height(d[[1L]]), node.height(d[[2L]])))
     }
     attributes(d)$height
-  } # node.height()
-  sort(unique(round(node.height(x), 8L)), decreasing=TRUE)
-} # dend.heights
+  }
+  if (!inherits(x, "dendrogram")) 
+    stop("'x' is not a dendrogram")
+  sort(unique(node.height(x)), decreasing = TRUE)
+}
 
-#' @title cluster dendrogram
-#' @param x dendrogram
-#' @param h cutting hight 
+#' @title leaf of the hierarchy 
+#' @param x a hierarchy
 #' @keywords internal
-clust.h <- function(x, h) {
-  stopifnot(!missing(h))
-  if (h >= attr(x, "height")) {
-    names.clust <- labels(x)
-    cluster <- rep(1, length(names.clust))
-    names(cluster) <- names.clust
-  } else {
-    cut.x <- cut(x, h=h)$lower
-    clust.member <- function(i, x) {
-      names.clust <- labels(x[[i]])
-      clust <- rep(i, length(names.clust))
-      names(clust) <- names.clust
-      return(clust)
-    }
-    cluster <- lapply(1:length(cut.x), clust.member, cut.x)
-  }  
-  unlist(cluster)
-} # clust.h
+bottomSets <- function(x) {
+  if (!inherits(x, "hierarchy")) 
+    stop("'x' is not a hierarchy")
+  which(sapply(x, function(x) is.null(attr(x, which = "subset"))))
+}
+
+#' @title heights of the hierarchy 
+#' @param x a hierarchy
+#' @keywords internal
+heightSets <- function(x) {
+  if (!inherits(x, "hierarchy")) 
+    stop("'x' is not a hierarchy")
+  sort(unique(sapply(x, attr, which = "height")))
+}
+
+#' @title reorder hierarchy according to names vector
+#' @param x a hierarchy.
+#' @param names names in new order.
+#' @param ... further arguments passed to or from other methods (not used).
+#' @importFrom stats reorder
+#' @method reorder hierarchy 
+#' @export
+reorder.hierarchy <- function(x, names, ...) {
+  if (!inherits(x, "hierarchy")) 
+    stop("'x' is not a hierarchy")
+  if (length(setdiff(names(x[[1]]), names)))
+    stop("'x' includs variabels not in 'names'")
+  newOrder <- match(names(x[[1]]), names)
+  out <- lapply(x, function(x, newOrder){x[] <- sort(newOrder[x]); x}, newOrder)
+  names(out[[1]]) <- names[out[[1]]]
+  class(out) <- "hierarchy"
+  out
+}

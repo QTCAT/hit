@@ -8,7 +8,6 @@ Maintainer: Jonas Klasen <maintainer@gmx.de>
 Description: Hierarchical Inference Test (HIT) by repeated sample splitting.
 License: GPL (>= 2)
 Depends: R (>= 3.0.0)
-Imports: stats, parallel, Rcpp (>= 0.11.0), glmnet
+Imports: stats, parallel, glmnet
 Suggests: testthat
-LinkingTo: Rcpp
 License: GPL (>= 2)

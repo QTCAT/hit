@@ -6,7 +6,4 @@
 #' @title Hierarchical Inference Test
 #' @author Jonas Klasen
 #' 
-#' @useDynLib hit
-#' @importFrom Rcpp evalCpp
-#' 
 NULL

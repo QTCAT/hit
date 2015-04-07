@@ -5,27 +5,27 @@
 \title{ANOVA testing, multiplicity adjustment, aggregating and hierarchical
 adjustment}
 \usage{
-samp2.testing(clust.id, x, y, p.values, hierarchy, level, x.nonTested,
-  allSamp1.ids, allActSet.ids, max.p.esti, B, gamma)
+samp2.testing(cIndex, level, upper.p, x, y, allSamp1.ids, allActSet.ids,
+  x.nonTested, hierarchy, max.p.esti, B, gamma, max.allow.recursive)
 }
 \arguments{
-\item{clust.id}{index for cluster-ID (mclapply index).}
+\item{cIndex}{index for cluster (mclapply index).}
+
+\item{level}{hierarchy level counter for parallelism}
+
+\item{upper.p}{p value upper huerarchy level of the clusters variables.}
 
 \item{x}{design matrix, of dimension n x p.}
 
 \item{y}{vector of quantitative response variable.}
 
-\item{p.values}{vector of p value per clusters.}
-
-\item{hierarchy}{a hierarchy object}
-
-\item{level}{hierarchy level}
-
-\item{x.nonTested}{vector of indeces of non tested variabels.}
-
 \item{allSamp1.ids}{list of subsampels.}
 
 \item{allActSet.ids}{list of active sets.}
+
+\item{x.nonTested}{vector of indeces of non tested variabels.}
+
+\item{hierarchy}{a hierarchy object}
 
 \item{max.p.esti}{maximum alpha level. All p-values above this value are set
 to one. Small max.p.esti values reduce computing time.}
@@ -33,6 +33,8 @@ to one. Small max.p.esti values reduce computing time.}
 \item{B}{number of sample-splits.}
 
 \item{gamma}{vector of gamma-values.}
+
+\item{max.allow.recursive}{max. level of recursive parallelism}
 }
 \description{
 ANOVA testing, multiplicity adjustment, aggregating and hierarchical
