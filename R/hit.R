@@ -43,7 +43,7 @@
 #' hier <- hierarchy(dend)
 #' # HIT
 #' out <- hit(x, y, hier)
-#' # summary(out)
+#' summary(out)
 #' @importFrom parallel mclapply
 #' @export 
 hit <- function(x, y, hierarchy, B=50, p.samp1=0.5, 
@@ -254,14 +254,18 @@ samp2.sigNode <- function (k, x, y, cluster, x.nonTested,
 #' @title Significant clusters at alpha threshold
 #' @param object a hit object.
 #' @param alpha alpha level.
+#' @param max.height max. height to consider.
 #' @param ... further arguments passed to or from other methods (not used).
 #' @method summary hit
 #' @export 
-summary.hit <- function(object, alpha=.05, ...) {
+summary.hit <- function(object, alpha = 0.05, max.height, ...) {
   make.pVal <- function(i) {
     p.value <- object$pValues[i]
     inx <- object$hierarchy[[i]]
-    if (p.value <= alpha && all(is.na(P.CLUSTER[inx]))) {
+    if (p.value <= alpha && 
+          (all(is.na(P.CLUSTER[inx])) || 
+             (all(!is.na(P.CLUSTER[inx]) && 
+                    P.CLUSTER[inx] <= alpha)))) {
       P.CLUSTER[inx] <<-  p.value
       ID.CLUSTER[inx] <<- COUNTER
       H.CLUSTER[inx] <<- attr(object$hierarchy[[i]], "height")
@@ -280,6 +284,8 @@ summary.hit <- function(object, alpha=.05, ...) {
                     "pValues"=P.CLUSTER[non.na],
                     "height"=H.CLUSTER[non.na])
   rownames(out) <- names(object$hierarchy[[1L]])[non.na]
+  if(!missing(max.height)) 
+    out <- out[out[, 3] <= max.height, ]
   out
 } # summary.hit
 

@@ -4,12 +4,14 @@
 \alias{summary.hit}
 \title{Significant clusters at alpha threshold}
 \usage{
-\method{summary}{hit}(object, alpha = 0.05, ...)
+\method{summary}{hit}(object, alpha = 0.05, max.height, ...)
 }
 \arguments{
 \item{object}{a hit object.}
 
 \item{alpha}{alpha level.}
+
+\item{max.height}{max. height to consider.}
 
 \item{...}{further arguments passed to or from other methods (not used).}
 }
