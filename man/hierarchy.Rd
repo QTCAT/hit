@@ -4,12 +4,14 @@
 \alias{hierarchy}
 \title{Hierachy indeces from desndrogram}
 \usage{
-hierarchy(x, height = NULL)
+hierarchy(x, height = NULL, names)
 }
 \arguments{
 \item{x}{object of class 'dendrogram'.}
 
 \item{height}{vector of cutting points.}
+
+\item{names}{names in order.}
 }
 \description{
 Hierachy indeces from desndrogram

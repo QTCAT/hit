@@ -6,18 +6,28 @@ Master branch build and test passing status at Linux:
 
 ## Install
 
-The package can be installed from an R console via `devtools`. If you haven't yet `devtools` installed, you have to do so first.
+The package can be installed from an R console via `devtools`. If you haven't 
+yet `devtools` installed, you have to do so first.
 
     # install.packages("devtools")
     devtools::install_github("jrklasen/hit")
 
-If you want to install a specific release e.g. `v0.0-1`, use: `devtools::install_github("jrklasen/hit", ref="v0.0-1")`
+If you want to install a specific release e.g. `v0.0-2`, use: 
+`devtools::install_github("jrklasen/hit", ref="v0.0-2")`
 
 ## Example
 
-The `hit`-function example gives an overview of the functionality of the package and can be accessed once the package is loaded (please be aware, that running the example can take a few seconds).
+The `hit`-function example gives an overview of the functionality of the 
+package and can be accessed once the package is loaded (please be aware, 
+that running the example can take a few seconds).
 
     library(hit)
     example(hit)
 
+## Algorithm
+The algorithm is described in:
+
+Mandozzi, J. and Buehlmann, P. (2013). Hierarchical testing in the 
+high-dimensional setting with correlated variables. To appear in the Journal 
+of the American Statistical Association. Preprint arXiv:1312.5556
 
