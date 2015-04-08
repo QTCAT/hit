@@ -45,7 +45,7 @@ hierarchy <- function (x, height = NULL) {
   if (!inherits(x, "dendrogram")) 
     stop("'x' is not a dendrogram")
   if (is.null(height)) 
-    height <- heightLevels(x)
+    height <- height.dend(x)
   height <- sort(height, decreasing = TRUE)
   varNames <- labels(x)
   CLUSTERS <- list(seq_along(varNames))
@@ -60,7 +60,7 @@ hierarchy <- function (x, height = NULL) {
 #' @title all heights from a dendrogram 
 #' @param x a dendrogram
 #' @keywords internal
-heightLevels <- function (x) {
+height.dend <- function (x) {
   node.height <- function(d) {
     if (is.list(d)) {
       r <- attributes(d)$height

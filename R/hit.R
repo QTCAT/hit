@@ -94,9 +94,9 @@ hit <- function(x, y, hierarchy, B=50, p.samp1=0.5,
     cat("Significance testing has started at:\n\t", 
         as.character(Sys.time()), "\n\t Loop:\n")
   max.allow.recursive <- as.integer(sqrt(mc.cores))
-  pValues <- samp2.testing(1, 0, 0, x, y, allSamp1.ids, allActSet.ids, 
-                            x.nonTested, hierarchy, max.p.esti, B, gamma, 
-                            max.allow.recursive)
+  pValues <- samp2.sigHierarchy(1, 0, 0, x, y, allSamp1.ids, allActSet.ids, 
+                                x.nonTested, hierarchy, max.p.esti, B, gamma, 
+                                max.allow.recursive)
   # make output
   if (isTRUE(trace))
     cat("\nHIT has finished at:\n\t", as.character(Sys.time()), "\n")
@@ -153,14 +153,14 @@ samp1.lasso <- function (samp1, x, y, n.samp2, penalty.factor, ...) {
 #' @param gamma vector of gamma-values.
 #' @param max.allow.recursive max. level of recursive parallelism
 #' @keywords internal
-samp2.testing <- function(cIndex, level, upper.p, x, y, allSamp1.ids, 
-                          allActSet.ids, x.nonTested, hierarchy, max.p.esti, 
-                          B, gamma, max.allow.recursive) {
+samp2.sigHierarchy <- function(cIndex, level, upper.p, x, y, allSamp1.ids, 
+                               allActSet.ids, x.nonTested, hierarchy, 
+                               max.p.esti, B, gamma, max.allow.recursive) {
   ## 2.3 Testing and multiplicity adjustment
-  cluster <- hierarchy[[cIndex]]
   ## 2.3-1 Testing
   ## 2.3 Testing and multiplicity adjustment
-  p.cluster <- sapply(1L:B, samp2.anova, 
+  cluster <- hierarchy[[cIndex]]
+  p.cluster <- sapply(1L:B, samp2.sigNode, 
                       x, y, cluster, x.nonTested, 
                       allSamp1.ids, allActSet.ids)
   ## 2.4-1 Aggregating 
@@ -175,15 +175,15 @@ samp2.testing <- function(cIndex, level, upper.p, x, y, allSamp1.ids,
     if (p.value < max.p.esti) {
       if (level <= max.allow.recursive) {
         mc.cores <- ifelse(max.allow.recursive == 1L, 1L, 2L)
-        pValues <- mclapply(cIndeces, samp2.testing, level + 1L, p.value, x, y, 
-                            allSamp1.ids, allActSet.ids, x.nonTested, 
+        pValues <- mclapply(cIndeces, samp2.sigHierarchy, level + 1L, p.value, 
+                            x, y, allSamp1.ids, allActSet.ids, x.nonTested, 
                             hierarchy, max.p.esti, B, gamma, 
-                            max.allow.recursive, mc.cores = mc.cores, 
-                            mc.allow.recursive = TRUE)
+                            max.allow.recursive, 
+                            mc.cores = mc.cores, mc.allow.recursive = TRUE)
       } else {
-        pValues <- lapply(cIndeces, samp2.testing,  level + 1L, p.value, x, y, 
-                          allSamp1.ids, allActSet.ids, x.nonTested, hierarchy, 
-                          max.p.esti, B, gamma, max.allow.recursive)
+        pValues <- lapply(cIndeces, samp2.sigHierarchy,  level + 1L, p.value, 
+                          x, y, allSamp1.ids, allActSet.ids, x.nonTested, 
+                          hierarchy, max.p.esti, B, gamma, max.allow.recursive)
       }
     } else {
       pOne <- function(cIndex) {
@@ -209,8 +209,8 @@ samp2.testing <- function(cIndex, level, upper.p, x, y, allSamp1.ids,
 #' @param allSamp1.ids  list of subsampels.
 #' @param allActSet.ids list of active sets.
 #' @keywords internal
-samp2.anova <- function (k, x, y, cluster, x.nonTested, 
-                         allSamp1.ids, allActSet.ids) {
+samp2.sigNode <- function (k, x, y, cluster, x.nonTested, 
+                           allSamp1.ids, allActSet.ids) {
   n <- nrow(x)
   ## Mandozzi and Buehlmann, 2013
   # see chapter 2 Description of method
@@ -248,7 +248,7 @@ samp2.anova <- function (k, x, y, cluster, x.nonTested,
     p.cluster <- min(1, p.test*(l.actClust+l.nonActClust)/l.actClust)
   } # if (l.actClust <- length(actClust))
   return(p.cluster) 
-} # samp2.anova
+} # samp2.sigNode
 
 
 #' @title Significant clusters at alpha threshold
@@ -261,24 +261,24 @@ summary.hit <- function(object, alpha=.05, ...) {
   make.pVal <- function(i) {
     p.value <- object$pValues[i]
     inx <- object$hierarchy[[i]]
-    if (p.value <= alpha && all(is.na(p.cluster[inx]))) {
-      p.cluster[inx] <<-  p.value
-      id.cluster[inx] <<- counter
-      h.cluster[inx] <<- attr(object$hierarchy[[i]], "height")
-      counter <<- counter + 1L
+    if (p.value <= alpha && all(is.na(P.CLUSTER[inx]))) {
+      P.CLUSTER[inx] <<-  p.value
+      ID.CLUSTER[inx] <<- COUNTER
+      H.CLUSTER[inx] <<- attr(object$hierarchy[[i]], "height")
+      COUNTER <<- COUNTER + 1L
     }
     return(NULL)
   } 
   stopifnot(is(object, "hit"))
-  p.cluster <- rep(NA_real_, length(object$hierarchy[[1L]]))
-  id.cluster <- rep(NA_integer_, length(object$hierarchy[[1L]]))
-  h.cluster <- rep(NA_real_, length(object$hierarchy[[1L]]))
-  counter <- 1L
+  P.CLUSTER <- rep(NA_real_, length(object$hierarchy[[1L]]))
+  ID.CLUSTER <- rep(NA_integer_, length(object$hierarchy[[1L]]))
+  H.CLUSTER <- rep(NA_real_, length(object$hierarchy[[1L]]))
+  COUNTER <- 1L
   lapply(length(object$hierarchy):1L, make.pVal)
-  non.na <- which(!is.na(id.cluster))
-  out <- data.frame("clusters"=id.cluster[non.na], 
-                    "pValues"=p.cluster[non.na],
-                    "height"=h.cluster[non.na])
+  non.na <- which(!is.na(ID.CLUSTER))
+  out <- data.frame("clusters"=ID.CLUSTER[non.na], 
+                    "pValues"=P.CLUSTER[non.na],
+                    "height"=H.CLUSTER[non.na])
   rownames(out) <- names(object$hierarchy[[1L]])[non.na]
   out
 } # summary.hit
