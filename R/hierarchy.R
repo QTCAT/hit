@@ -2,6 +2,7 @@
 #' @title Hierachy indeces from desndrogram
 #' @param x object of class 'dendrogram'.
 #' @param height vector of cutting points.
+#' @param names names in order.
 #' @author Jonas Klasen
 #' @examples
 #' set.seed(123)
@@ -18,11 +19,11 @@
 #' hier <- hierarchy(dend)
 #' @importFrom parallel mclapply
 #' @export
-hierarchy <- function (x, height = NULL) {
+hierarchy <- function (x, height = NULL, names) {
   make.hierarchy <- function(subtree, level, superset) {
     newLevel <- sum(attr(subtree, "height") <= height)
     if (is.leaf(subtree) && newLevel > level) {
-      CLUSTERS[[COUNTER]] <<- match(labels(subtree), varNames)
+      CLUSTERS[[COUNTER]] <<- match(labels(subtree), names)
       attr(CLUSTERS[[COUNTER]], "superset") <<- superset
       attr(CLUSTERS[[COUNTER]], "height") <<- height[newLevel]
       subset <- c(attr(CLUSTERS[[superset]], "subset"), COUNTER)
@@ -30,7 +31,7 @@ hierarchy <- function (x, height = NULL) {
       COUNTER <<- COUNTER + 1L
     } else {
       if (newLevel > level) {
-        CLUSTERS[[COUNTER]] <<- match(labels(subtree), varNames)
+        CLUSTERS[[COUNTER]] <<- match(labels(subtree), names)
         attr(CLUSTERS[[COUNTER]], "superset") <<- superset
         attr(CLUSTERS[[COUNTER]], "height") <<- height[newLevel]
         subset <- c(attr(CLUSTERS[[superset]], "subset"), COUNTER)
@@ -47,9 +48,13 @@ hierarchy <- function (x, height = NULL) {
   if (is.null(height)) 
     height <- height.dend(x)
   height <- sort(height, decreasing = TRUE)
-  varNames <- labels(x)
-  CLUSTERS <- list(seq_along(varNames))
-  attr(CLUSTERS[[1L]], "names") <- varNames
+  if (missing(names)) {
+    names <- labels(x)
+  } else if (length(setdiff(labels(x), names))) {
+    stop("'x' includs variabels not in 'names'")
+  }
+  CLUSTERS <- list(seq_along(names))
+  attr(CLUSTERS[[1L]], "names") <- names
   attr(CLUSTERS[[1L]], "height") <- height[1L]
   COUNTER <- 2L
   lapply(x, make.hierarchy, level = 1L, superset = 1L)

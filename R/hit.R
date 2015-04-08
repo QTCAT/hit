@@ -92,7 +92,7 @@ hit <- function(x, y, hierarchy, B=50, p.samp1=0.5,
   ## 2.4 Aggregating and Hierarchical adjustment
   if (isTRUE(trace))
     cat("Significance testing has started at:\n\t", 
-        as.character(Sys.time()), "\n\t Loop:\n")
+        as.character(Sys.time()), "\n")
   max.allow.recursive <- as.integer(sqrt(mc.cores))
   pValues <- samp2.sigHierarchy(1, 0, 0, x, y, allSamp1.ids, allActSet.ids, 
                                 x.nonTested, hierarchy, max.p.esti, B, gamma, 
