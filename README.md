@@ -12,8 +12,8 @@ yet `devtools` installed, you have to do so first.
     # install.packages("devtools")
     devtools::install_github("jrklasen/hit")
 
-If you want to install a specific release e.g. `v0.0-1`, use: 
-`devtools::install_github("jrklasen/hit", ref="v0.0-1")`
+If you want to install a specific release e.g. `v0.0-2`, use: 
+`devtools::install_github("jrklasen/hit", ref="v0.0-2")`
 
 ## Example
 
