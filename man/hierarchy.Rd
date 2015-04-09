@@ -4,12 +4,14 @@
 \alias{hierarchy}
 \title{Hierachy indeces from desndrogram}
 \usage{
-hierarchy(x, height = NULL, names)
+hierarchy(x, height, max.height, names)
 }
 \arguments{
 \item{x}{object of class 'dendrogram'.}
 
-\item{height}{vector of cutting points.}
+\item{height}{vector of heghts at which nodes are grouped.}
+
+\item{max.height}{is the maximal heigt at which the testing starts.}
 
 \item{names}{names in order.}
 }
@@ -21,14 +23,13 @@ set.seed(123)
 n <- 100
 p <- 150
 # x with correlated columns
-sigmaChol <- chol(toeplitz((p:1/p)^3), pivot = TRUE)
-sigmaChol <- sigmaChol[, order(attr(sigmaChol, "pivot"))]
-x <- matrix(rnorm(n * p), nrow = n) \%*\% sigmaChol
-x <- sweep(x, 2, rnorm(p, 10), "+")
+corMat <- toeplitz(p:1/p)
+corMatQ <- chol(corMat)
+x <- matrix(rnorm(n * p), nrow = n) \%*\% corMatQ
 colnames(x) <- paste0("x", 1:p)
 # hierarchy
 dend <- as.dendrogram(hclust(dist(t(x))))
-hier <- hierarchy(dend)
+hier <- hierarchy(dend, max.height = 20)
 }
 \author{
 Jonas Klasen
