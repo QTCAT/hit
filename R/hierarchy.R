@@ -1,7 +1,8 @@
 
 #' @title Hierachy indeces from desndrogram
 #' @param x object of class 'dendrogram'.
-#' @param height vector of cutting points.
+#' @param height vector of heghts at which nodes are grouped.
+#' @param max.height is the maximal heigt at which the testing starts.
 #' @param names names in order.
 #' @author Jonas Klasen
 #' @examples
@@ -19,7 +20,7 @@
 #' hier <- hierarchy(dend)
 #' @importFrom parallel mclapply
 #' @export
-hierarchy <- function (x, height = NULL, names) {
+hierarchy <- function (x, height, max.height, names) {
   make.hierarchy <- function(subtree, level, superset) {
     newLevel <- sum(attr(subtree, "height") <= height)
     if (is.leaf(subtree) && newLevel > level) {
@@ -45,9 +46,12 @@ hierarchy <- function (x, height = NULL, names) {
   }
   if (!inherits(x, "dendrogram")) 
     stop("'x' is not a dendrogram")
-  if (is.null(height)) 
+  if (missing(height)) 
     height <- height.dend(x)
   height <- sort(height, decreasing = TRUE)
+  if (missing(max.height))
+    max.height <- attr(x, "height")
+  height <- height[height < max.height]
   if (missing(names)) {
     names <- labels(x)
   } else if (length(setdiff(labels(x), names))) {
