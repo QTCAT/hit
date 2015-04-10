@@ -46,11 +46,11 @@ hierarchy <- function (x, height, max.height, names) {
   if (!inherits(x, "dendrogram")) 
     stop("'x' is not a dendrogram")
   if (missing(height)) 
-    height <- height.dend(x)
+    height <- heightDendrogram(x)
   height <- sort(height, decreasing = TRUE)
   if (missing(max.height))
     max.height <- attr(x, "height")
-  height <- height[height < max.height]
+  height <- height[height <= max.height]
   if (missing(names)) {
     names <- labels(x)
   } else if (length(setdiff(labels(x), names))) {
@@ -65,10 +65,10 @@ hierarchy <- function (x, height, max.height, names) {
   CLUSTERS
 }
 
-#' @title all heights from a dendrogram 
+#' @title All heights from a dendrogram 
 #' @param x a dendrogram
 #' @keywords internal
-height.dend <- function (x) {
+heightDendrogram <- function (x) {
   node.height <- function(d) {
     if (is.list(d)) {
       r <- attributes(d)$height
@@ -81,22 +81,30 @@ height.dend <- function (x) {
   sort(unique(node.height(x)), decreasing = TRUE)
 }
 
-#' @title leaf of the hierarchy 
+#' @title All heights from a hierarchy 
 #' @param x a hierarchy
 #' @keywords internal
-bottomSets <- function(x) {
-  if (!inherits(x, "hierarchy")) 
-    stop("'x' is not a hierarchy")
-  which(sapply(x, function(x) is.null(attr(x, which = "subset"))))
-}
-
-#' @title heights of the hierarchy 
-#' @param x a hierarchy
-#' @keywords internal
-heightSets <- function(x) {
+heightHierarchy <- function(x) {
   if (!inherits(x, "hierarchy")) 
     stop("'x' is not a hierarchy")
   sort(unique(sapply(x, attr, which = "height")))
+}
+
+# #' @title Leaf of the hierarchy 
+# #' @param x a hierarchy
+# #' @keywords internal
+# bottomNodeIndex <- function(x) {
+#   if (!inherits(x, "hierarchy")) 
+#     stop("'x' is not a hierarchy")
+#   which(sapply(x, function(x) is.null(attr(x, which = "subset"))))
+# }
+
+#' @title names of variables in hierarchy
+#' @param x a hierarchy.
+#' @method names hierarchy 
+#' @export
+names.hierarchy <- function(x) {
+  names(x[[1]])
 }
 
 #' @title reorder hierarchy according to names vector
