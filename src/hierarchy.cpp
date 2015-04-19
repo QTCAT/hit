@@ -30,7 +30,7 @@ List dend2hier(List x, NumericVector height, CharacterVector newNames)
     vector<int> nullSubset;
     cluster.attr("subset") = nullSubset;
     // output 
-    map< int, IntegerVector> out;
+    map<int, IntegerVector> out;
     out[0] = cluster;
     int counter = 1;
     // run through the dendrogram
@@ -122,7 +122,6 @@ IntegerVector clusterIndex(List x, map<string, int>& dandNameIndex)
 }
 
 // names of cluster
-// [[Rcpp::export]]
 CharacterVector names(List x)
 {
     vector<string> out;

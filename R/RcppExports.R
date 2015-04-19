@@ -5,7 +5,3 @@ dend2hier <- function(x, height, newNames) {
     .Call('hit_dend2hier', PACKAGE = 'hit', x, height, newNames)
 }
 
-names <- function(x) {
-    .Call('hit_names', PACKAGE = 'hit', x)
-}
-

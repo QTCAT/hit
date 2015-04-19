@@ -18,14 +18,3 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// names
-CharacterVector names(List x);
-RcppExport SEXP hit_names(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    __result = Rcpp::wrap(names(x));
-    return __result;
-END_RCPP
-}

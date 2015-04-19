@@ -10,7 +10,7 @@
 #' n <- 100
 #' p <- 150
 #' # x with correlated columns
-#' corMat <- toeplitz(p:1/p)
+#' corMat <- toeplitz((p:1/p)^3)
 #' corMatQ <- chol(corMat)
 #' x <- matrix(rnorm(n * p), nrow = n) %*% corMatQ
 #' colnames(x) <- paste0("x", 1:p)
@@ -20,29 +20,6 @@
 #' @importFrom parallel mclapply
 #' @export
 hierarchy <- function (x, height, max.height, names) {
-  make.hierarchy <- function(subtree, level, superset) {
-    newLevel <- sum(attr(subtree, "height") <= height)
-    if (is.leaf(subtree) && newLevel > level) {
-      CLUSTERS[[COUNTER]] <<- match(labels(subtree), names)
-      attr(CLUSTERS[[COUNTER]], "height") <<- height[newLevel]
-      attr(CLUSTERS[[COUNTER]], "superset") <<- superset
-      subset <- c(attr(CLUSTERS[[superset]], "subset"), COUNTER)
-      attr(CLUSTERS[[superset]], "subset") <<- subset      
-      COUNTER <<- COUNTER + 1L
-    } else {
-      if (newLevel > level) {
-        CLUSTERS[[COUNTER]] <<- match(labels(subtree), names)
-        attr(CLUSTERS[[COUNTER]], "height") <<- height[newLevel]
-        attr(CLUSTERS[[COUNTER]], "superset") <<- superset
-        subset <- c(attr(CLUSTERS[[superset]], "subset"), COUNTER)
-        attr(CLUSTERS[[superset]], "subset") <<- subset
-        superset <- COUNTER
-        COUNTER <<- COUNTER + 1L
-      }
-      lapply(subtree, make.hierarchy, level = newLevel, superset = superset)
-    }
-    return(NULL)
-  }
   if (!inherits(x, "dendrogram")) 
     stop("'x' is not a dendrogram")
   if (missing(height)) 
@@ -56,13 +33,12 @@ hierarchy <- function (x, height, max.height, names) {
   } else if (length(setdiff(labels(x), names))) {
     stop("'x' includs variabels not in 'names'")
   }
-  CLUSTERS <- list(seq_along(names))
-  attr(CLUSTERS[[1L]], "names") <- names
-  attr(CLUSTERS[[1L]], "height") <- height[1L]
-  COUNTER <- 2L
-  lapply(x, make.hierarchy, level = 1L, superset = 1L)
-  class(CLUSTERS) <- "hierarchy"
-  CLUSTERS
+  out <- unname(dend2hier(x, height, names))
+  ordAll <- order(out[[1]])
+  out[[1]][] <- out[[1]][ordAll]
+  names(out[[1]]) <- names(out[[1]])[ordAll]
+  class(out) <- "hierarchy"
+  out
 }
 
 #' @title All heights from a dendrogram 
