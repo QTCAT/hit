@@ -24,16 +24,16 @@ hierarchy <- function (x, height, max.height, names) {
     newLevel <- sum(attr(subtree, "height") <= height)
     if (is.leaf(subtree) && newLevel > level) {
       CLUSTERS[[COUNTER]] <<- match(labels(subtree), names)
-      attr(CLUSTERS[[COUNTER]], "superset") <<- superset
       attr(CLUSTERS[[COUNTER]], "height") <<- height[newLevel]
+      attr(CLUSTERS[[COUNTER]], "superset") <<- superset
       subset <- c(attr(CLUSTERS[[superset]], "subset"), COUNTER)
       attr(CLUSTERS[[superset]], "subset") <<- subset      
       COUNTER <<- COUNTER + 1L
     } else {
       if (newLevel > level) {
         CLUSTERS[[COUNTER]] <<- match(labels(subtree), names)
-        attr(CLUSTERS[[COUNTER]], "superset") <<- superset
         attr(CLUSTERS[[COUNTER]], "height") <<- height[newLevel]
+        attr(CLUSTERS[[COUNTER]], "superset") <<- superset
         subset <- c(attr(CLUSTERS[[superset]], "subset"), COUNTER)
         attr(CLUSTERS[[superset]], "subset") <<- subset
         superset <- COUNTER
