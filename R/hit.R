@@ -31,16 +31,15 @@
 #' n <- 100
 #' p <- 150
 #' # x with correlated columns
-#' sigmaChol <- chol(toeplitz((p:1/p)^3), pivot = TRUE)
-#' sigmaChol <- sigmaChol[, order(attr(sigmaChol, "pivot"))]
-#' x <- matrix(rnorm(n * p), nrow = n) %*% sigmaChol
-#' x <- sweep(x, 2, rnorm(p, 10), "+")
+#' corMat <- toeplitz((p:1/p)^3)
+#' corMatQ <- chol(corMat)
+#' x <- matrix(rnorm(n * p), nrow = n) %*% corMatQ
 #' colnames(x) <- paste0("x", 1:p)
 #' # y
 #' y <- x[, c(3, 5, 73)] %*% c(2, 5, 3) + rnorm(n)
 #' # hierarchy
 #' dend <- as.dendrogram(hclust(dist(t(x))))
-#' hier <- hierarchy(dend)
+#' hier <- hierarchy(dend, max.height = 20)
 #' # HIT
 #' out <- hit(x, y, hier)
 #' summary(out)
@@ -93,10 +92,9 @@ hit <- function(x, y, hierarchy, B=50, p.samp1=0.5,
   if (isTRUE(trace))
     cat("Significance testing has started at:\n\t", 
         as.character(Sys.time()), "\n")
-  max.allow.recursive <- as.integer(sqrt(mc.cores))
   pValues <- samp2.sigHierarchy(1, 0, 0, x, y, allSamp1.ids, allActSet.ids, 
                                 x.nonTested, hierarchy, max.p.esti, B, gamma, 
-                                max.allow.recursive)
+                                mc.cores)
   # make output
   if (isTRUE(trace))
     cat("\nHIT has finished at:\n\t", as.character(Sys.time()), "\n")
@@ -151,11 +149,11 @@ samp1.lasso <- function (samp1, x, y, n.samp2, penalty.factor, ...) {
 #' to one. Small max.p.esti values reduce computing time.
 #' @param B number of sample-splits.
 #' @param gamma vector of gamma-values.
-#' @param max.allow.recursive max. level of recursive parallelism
+#' @param cores number of cores for parallelising.
 #' @keywords internal
 samp2.sigHierarchy <- function(cIndex, level, upper.p, x, y, allSamp1.ids, 
                                allActSet.ids, x.nonTested, hierarchy, 
-                               max.p.esti, B, gamma, max.allow.recursive) {
+                               max.p.esti, B, gamma, cores) {
   ## 2.3 Testing and multiplicity adjustment
   ## 2.3-1 Testing
   ## 2.3 Testing and multiplicity adjustment
@@ -173,17 +171,22 @@ samp2.sigHierarchy <- function(cIndex, level, upper.p, x, y, allSamp1.ids,
   ## estimation at next lower level
   if (!is.null(cIndeces <- attr(cluster, "subset"))) {
     if (p.value < max.p.esti) {
-      if (level <= max.allow.recursive) {
-        mc.cores <- ifelse(max.allow.recursive == 1L, 1L, 2L)
+      if (level == 0L && length(cIndeces) >= cores) {
+        level <- as.integer(sqrt(cores))
         pValues <- mclapply(cIndeces, samp2.sigHierarchy, level + 1L, p.value, 
                             x, y, allSamp1.ids, allActSet.ids, x.nonTested, 
-                            hierarchy, max.p.esti, B, gamma, 
-                            max.allow.recursive, 
+                            hierarchy, max.p.esti, B, gamma, cores, 
+                            mc.cores = cores)
+      } else if (level <= as.integer(sqrt(cores))) {
+        mc.cores <- ifelse(as.integer(sqrt(cores)) == 1L, 1L, 2L)
+        pValues <- mclapply(cIndeces, samp2.sigHierarchy, level + 1L, p.value, 
+                            x, y, allSamp1.ids, allActSet.ids, x.nonTested, 
+                            hierarchy, max.p.esti, B, gamma, cores, 
                             mc.cores = mc.cores, mc.allow.recursive = TRUE)
       } else {
         pValues <- lapply(cIndeces, samp2.sigHierarchy,  level + 1L, p.value, 
                           x, y, allSamp1.ids, allActSet.ids, x.nonTested, 
-                          hierarchy, max.p.esti, B, gamma, max.allow.recursive)
+                          hierarchy, max.p.esti, B, gamma, cores)
       }
     } else {
       pOne <- function(cIndex) {
@@ -286,6 +289,7 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
   rownames(out) <- names(object$hierarchy[[1L]])[non.na]
   if(!missing(max.height)) 
     out <- out[out[, 3] <= max.height, ]
+  out[, 1] <- as.integer(factor(out[, 1], labels = 1:length(unique(out[, 1]))))
   out
 } # summary.hit
 
@@ -295,7 +299,7 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
 #' @details makes a matrix of p-values for image(p.matrix(x))
 #' @export
 p.matrix <- function (x) {
-  heig <- heightSets(x$hierarchy)
+  heig <- heightHierarchy(x$hierarchy)
   allheig <- sapply(x$hierarchy, attr, "height")
   inx <- which(heig[1] == allheig)
   p.val <- rep(x$pValues[inx], sapply(allheig[inx], length))
