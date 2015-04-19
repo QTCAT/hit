@@ -6,7 +6,7 @@
 adjustment}
 \usage{
 samp2.sigHierarchy(cIndex, level, upper.p, x, y, allSamp1.ids, allActSet.ids,
-  x.nonTested, hierarchy, max.p.esti, B, gamma, max.allow.recursive)
+  x.nonTested, hierarchy, max.p.esti, B, gamma, cores)
 }
 \arguments{
 \item{cIndex}{index for cluster (mclapply index).}
@@ -34,7 +34,7 @@ to one. Small max.p.esti values reduce computing time.}
 
 \item{gamma}{vector of gamma-values.}
 
-\item{max.allow.recursive}{max. level of recursive parallelism}
+\item{cores}{number of cores for parallelising.}
 }
 \description{
 ANOVA testing, multiplicity adjustment, aggregating and hierarchical
