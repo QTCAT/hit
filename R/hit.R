@@ -289,7 +289,8 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
   rownames(out) <- names(object$hierarchy[[1L]])[non.na]
   if(!missing(max.height)) 
     out <- out[out[, 3] <= max.height, ]
-  out[, 1] <- as.integer(factor(out[, 1], labels = 1:length(unique(out[, 1]))))
+  if (ll <- length(unique(out[, 1])))
+    out[, 1] <- as.integer(factor(out[, 1], labels = 1:ll))
   out
 } # summary.hit
 
