@@ -1,13 +1,14 @@
 Package: hit
 Type: Package
-Title: Hierarchical Inference Test
+Title: Hierarchical Inference Testing
+Description: Hierarchical inference testing (HIT) for linear models with 
+correlated covariates. The algorithm is applicable to high-dimensional settings.
 Version: 0.0-3
-Date: 2015-04-19
-Author: Jonas Klasen [aut, cph, cre]
+Date: 2015-04-20
+Author: Jonas Klasen
 Maintainer: Jonas Klasen <maintainer@gmx.de>
-Description: Hierarchical Inference Test (HIT) by repeated sample splitting.
-License: GPL (>= 2)
 Depends: R (>= 3.0.0)
 Imports: stats, parallel, Rcpp (>= 0.11.0), glmnet
 Suggests: testthat
 LinkingTo: Rcpp
+License: GPL (>= 2)
