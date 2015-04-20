@@ -5,7 +5,7 @@ test_that("hit testing", {
   n <- 100
   p <- 150
   # x with correlated columns
-  corMat <- toeplitz(p:1/p)
+  corMat <- toeplitz((p:1/p)^3)
   corMatQ <- chol(corMat)
   x <- matrix(rnorm(n * p), nrow = n) %*% corMatQ
   colnames(x) <- paste0("x", 1:p)

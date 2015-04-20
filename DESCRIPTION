@@ -2,11 +2,12 @@ Package: hit
 Type: Package
 Title: Hierarchical Inference Test
 Version: 0.0-3
-Date: 2015-04-00
-Author: Jonas Klasen [aut, cph, cre], Korbinian Schneeberger [ths]
+Date: 2015-04-19
+Author: Jonas Klasen [aut, cph, cre]
 Maintainer: Jonas Klasen <maintainer@gmx.de>
 Description: Hierarchical Inference Test (HIT) by repeated sample splitting.
 License: GPL (>= 2)
 Depends: R (>= 3.0.0)
-Imports: stats, parallel, glmnet
+Imports: stats, parallel, Rcpp (>= 0.11.0), glmnet
 Suggests: testthat
+LinkingTo: Rcpp
