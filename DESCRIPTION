@@ -2,7 +2,8 @@ Package: hit
 Type: Package
 Title: Hierarchical Inference Testing
 Description: Hierarchical inference testing (HIT) for linear models with 
-  correlated covariates. HIT is applicable to high-dimensional settings.
+  correlated covariates. HIT is furthermore applicable to high-dimensional 
+  settings.
 Version: 0.0-3
 Date: 2015-04-20
 Author: Jonas Klasen
