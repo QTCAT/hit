@@ -28,6 +28,6 @@ that running the example can take a few seconds).
 The algorithm is described in:
 
 **Mandozzi, J. and Buehlmann, P. (2013)**. *Hierarchical testing in the 
-high-dimensional setting with correlated variables.* To appear in the Journal 
+high-dimensional setting with correlated variables*. To appear in the Journal 
 of the American Statistical Association. Preprint [arXiv:1312.5556](http://arxiv.org/abs/1312.5556).
 
