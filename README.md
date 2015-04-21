@@ -17,20 +17,23 @@ Association. Preprint [arXiv:1312.5556](http://arxiv.org/abs/1312.5556).
 
 ## Install:
 
-The package can be installed from an R console via ``devtools``. If you haven't yet 
-``devtools`` installed, you have to do so first.
+The package can be installed from an R console via `devtools`. If you haven't yet 
+`devtools` installed, you have to do so first.
 
 ```R
 # install.packages("devtools")
 devtools::install_github("jrklasen/hit")
 ```
 
-If you want to install a specific release e.g. ``v0.0-3``, use: 
-``devtools::install_github("jrklasen/hit", ref="v0.0-3")``
+If you want to install a specific release e.g. `v0.0-3`, use: 
+
+```R
+devtools::install_github("jrklasen/hit", ref="v0.0-3")
+```
 
 ## Example:
 
-The ``hit``-function example gives an overview of the functionality of the package 
+The `hit`-function example gives an overview of the functionality of the package 
 and can be accessed once the package is loaded (please be aware, that running the 
 example can take a few seconds).
 
