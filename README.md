@@ -1,8 +1,8 @@
 # Hierarchical Inference Testing
 
-Master branch build and test passing status at Linux:
+The current built and test status under Linux 
 [![Travis-CI Build Status](https://travis-ci.org/jrklasen/hit.png?branch=master)]
-(https://travis-ci.org/jrklasen/hit), and at Windows:
+(https://travis-ci.org/jrklasen/hit) and Windows 
 [![AppVeyor Build Status]
   (https://ci.appveyor.com/api/projects/status/github/jrklasen/hit?branch=master&svg=true)]
 (https://ci.appveyor.com/project/jrklasen/hit).
@@ -41,3 +41,8 @@ example can take a few seconds).
 library(hit)
 example(hit)
 ```
+
+[![License]
+  (http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)]
+(http://www.gnu.org/licenses/gpl-2.0.html)
+&copy; 2015 JR Klasen
