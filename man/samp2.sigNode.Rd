@@ -22,7 +22,10 @@ samp2.sigNode(k, x, y, cluster, x.nonTested, allSamp1.ids, allActSet.ids)
 \item{allActSet.ids}{list of active sets.}
 }
 \description{
-ANOVA testing and multiplicity adjustment
+ANOVA test (at single node) of the HIT algorithem.
+}
+\author{
+Jonas Klasen
 }
 \keyword{internal}
 

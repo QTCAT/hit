@@ -2,19 +2,26 @@
 % Please edit documentation in R/hierarchy.R
 \name{names.hierarchy}
 \alias{names.hierarchy}
-\title{Leaf of the hierarchy
+\title{Leaf of hierarchy
 #}
 \usage{
 \method{names}{hierarchy}(x)
 }
 \arguments{
-\item{x}{a hierarchy
+\item{x}{a \code{\link{hierarchy}}.
 #}
 
-\item{x}{a hierarchy.}
+\item{x}{a \code{\link{hierarchy}}.}
 }
 \description{
+All the leafs of the hierarchy.
 #
+}
+\details{
+#
+}
+\author{
+Jonas Klasen
 }
 \keyword{internal}
 

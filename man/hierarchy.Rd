@@ -2,21 +2,24 @@
 % Please edit documentation in R/hierarchy.R
 \name{hierarchy}
 \alias{hierarchy}
-\title{Hierachy indeces from desndrogram}
+\title{Clustering hierachy}
 \usage{
 hierarchy(x, height, max.height, names)
 }
 \arguments{
-\item{x}{object of class 'dendrogram'.}
+\item{x}{a \code{\link[stats]{dendrogram}}.}
 
-\item{height}{vector of heghts at which nodes are grouped.}
+\item{height}{vector of heights at which nodes are grouped.}
 
-\item{max.height}{is the maximal heigt at which the testing starts.}
+\item{max.height}{is the maximal height below the global node height which
+is considered.}
 
-\item{names}{names in order.}
+\item{names}{variable names in the order in which the indexes shut be given
+to the variables.}
 }
 \description{
-Hierachy indeces from desndrogram
+Stores variable indexes of clustering hierarchies in a fast
+accessible manner.
 }
 \examples{
 set.seed(123)

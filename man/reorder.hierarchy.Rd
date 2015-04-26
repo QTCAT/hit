@@ -2,18 +2,22 @@
 % Please edit documentation in R/hierarchy.R
 \name{reorder.hierarchy}
 \alias{reorder.hierarchy}
-\title{reorder hierarchy according to names vector}
+\title{Reorder hierarchy}
 \usage{
 \method{reorder}{hierarchy}(x, names, ...)
 }
 \arguments{
-\item{x}{a hierarchy.}
+\item{x}{a \code{\link{hierarchy}}.}
 
-\item{names}{names in new order.}
+\item{names}{variable names in the order in which the indexes shut be given
+to the variables.}
 
 \item{...}{further arguments passed to or from other methods (not used).}
 }
 \description{
-reorder hierarchy according to names vector
+Reorder indexes according to a vector of names.
+}
+\author{
+Jonas Klasen
 }
 

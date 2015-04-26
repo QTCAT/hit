@@ -16,7 +16,8 @@ fast.anova(x, y, assign = NULL)
 assign see \code{\link[stats]{model.matrix}}.}
 }
 \description{
-A fast  analysis of variance (ANOVA) for pedifind design matrix.
+A fast sequential analysis of variance (ANOVA). Mainly
+developed for internal use.
 }
 \examples{
 y <- rnorm(n=100)

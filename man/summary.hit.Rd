@@ -2,20 +2,23 @@
 % Please edit documentation in R/hit.R
 \name{summary.hit}
 \alias{summary.hit}
-\title{Significant clusters at alpha threshold}
+\title{Summary of HIT}
 \usage{
 \method{summary}{hit}(object, alpha = 0.05, max.height, ...)
 }
 \arguments{
-\item{object}{a hit object.}
+\item{object}{a \code{\link{hit}} object.}
 
-\item{alpha}{alpha level.}
+\item{alpha}{a alpha significans threshold.}
 
 \item{max.height}{max. height to consider.}
 
 \item{...}{further arguments passed to or from other methods (not used).}
 }
 \description{
-Significant clusters at alpha threshold
+Significant clusters at alpha threshold.
+}
+\author{
+Jonas Klasen
 }
 

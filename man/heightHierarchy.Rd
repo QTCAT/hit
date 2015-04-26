@@ -2,15 +2,18 @@
 % Please edit documentation in R/hierarchy.R
 \name{heightHierarchy}
 \alias{heightHierarchy}
-\title{All heights from a hierarchy}
+\title{Heights of Hierarchy}
 \usage{
 heightHierarchy(x)
 }
 \arguments{
-\item{x}{a hierarchy}
+\item{x}{a \code{\link{hierarchy}}.}
 }
 \description{
-All heights from a hierarchy
+All heights from a hierarchy.
+}
+\author{
+Jonas Klasen
 }
 \keyword{internal}
 

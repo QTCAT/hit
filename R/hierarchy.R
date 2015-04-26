@@ -1,8 +1,12 @@
-#' @title Hierachy indeces from desndrogram
-#' @param x object of class 'dendrogram'.
-#' @param height vector of heghts at which nodes are grouped.
-#' @param max.height is the maximal heigt at which the testing starts.
-#' @param names names in order.
+#' @title Clustering hierachy
+#' @description Stores variable indexes of clustering hierarchies in a fast 
+#' accessible manner.
+#' @param x a \code{\link[stats]{dendrogram}}.
+#' @param height vector of heights at which nodes are grouped.
+#' @param max.height is the maximal height below the global node height which 
+#' is considered.
+#' @param names variable names in the order in which the indexes shut be given 
+#' to the variables.
 #' @author Jonas Klasen
 #' @examples
 #' set.seed(123)
@@ -42,8 +46,10 @@ hierarchy <- function (x, height, max.height, names) {
   out
 }
 
-#' @title All heights from a dendrogram 
-#' @param x a dendrogram
+#' @title Heights of dendrogram
+#' @description All heights from a dendrogram. 
+#' @param x a \code{\link[stats]{dendrogram}}.
+#' @author Jonas Klasen
 #' @keywords internal
 heightDendrogram <- function (x) {
   node.height <- function(d) {
@@ -58,8 +64,10 @@ heightDendrogram <- function (x) {
   sort(unique(node.height(x)), decreasing = TRUE)
 }
 
-#' @title All heights from a hierarchy 
-#' @param x a hierarchy
+#' @title Heights of Hierarchy
+#' @description All heights from a hierarchy.
+#' @param x a \code{\link{hierarchy}}.
+#' @author Jonas Klasen
 #' @keywords internal
 heightHierarchy <- function(x) {
   if (!inherits(x, "hierarchy")) 
@@ -67,8 +75,9 @@ heightHierarchy <- function(x) {
   sort(unique(sapply(x, attr, which = "height")))
 }
 
-# #' @title Leaf of the hierarchy 
-# #' @param x a hierarchy
+# #' @title Leaf of hierarchy 
+# #' @description All the leafs of the hierarchy.
+# #' @param x a \code{\link{hierarchy}}.
 # #' @keywords internal
 # bottomNodeIndex <- function(x) {
 #   if (!inherits(x, "hierarchy")) 
@@ -76,18 +85,23 @@ heightHierarchy <- function(x) {
 #   which(sapply(x, function(x) is.null(attr(x, which = "subset"))))
 # }
 
-#' @title names of variables in hierarchy
-#' @param x a hierarchy.
+#' @title Names  of hierarchy
+#' @description Names of variables of an hierarchy.
+#' @param x a \code{\link{hierarchy}}.
+#' @author Jonas Klasen
 #' @method names hierarchy 
 #' @export
 names.hierarchy <- function(x) {
   names(x[[1]])
 }
 
-#' @title reorder hierarchy according to names vector
-#' @param x a hierarchy.
-#' @param names names in new order.
+#' @title Reorder hierarchy
+#' @description Reorder indexes according to a vector of names.
+#' @param x a \code{\link{hierarchy}}.
+#' @param names variable names in the order in which the indexes shut be given 
+#' to the variables.
 #' @param ... further arguments passed to or from other methods (not used).
+#' @author Jonas Klasen
 #' @importFrom stats reorder
 #' @method reorder hierarchy 
 #' @export

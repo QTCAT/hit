@@ -2,17 +2,36 @@
 % Please edit documentation in R/hit.R
 \name{p.matrix}
 \alias{p.matrix}
-\title{Significant hierarchy}
+\title{p-value matrix}
 \usage{
 p.matrix(x)
 }
 \arguments{
-\item{x}{a hit object}
+\item{x}{a \code{\link{hit}} object}
 }
 \description{
-Significant hierarchy
+Matric of hierarchical p-values .
 }
-\details{
-makes a matrix of p-values for image(p.matrix(x))
+\examples{
+set.seed(123)
+n <- 100
+p <- 150
+# x with correlated columns
+corMat <- toeplitz((p:1/p)^3)
+corMatQ <- chol(corMat)
+x <- matrix(rnorm(n * p), nrow = n) \%*\% corMatQ
+colnames(x) <- paste0("x", 1:p)
+# y
+y <- x[, c(3, 5, 73)] \%*\% c(2, 5, 3) + rnorm(n)
+# hierarchy
+dend <- as.dendrogram(hclust(dist(t(x))))
+hier <- hierarchy(dend, max.height = 20)
+# HIT
+out <- hit(x, y, hier)
+# plot p-value matrix
+image(p.matrix(out))
+}
+\author{
+Jonas Klasen
 }
 

@@ -21,7 +21,10 @@ for non zero coefficients.}
 \item{...}{aditional agruments}
 }
 \description{
-LASSO screening
+LASSO function of the HIT algorithem.
+}
+\author{
+Jonas Klasen
 }
 \keyword{internal}
 

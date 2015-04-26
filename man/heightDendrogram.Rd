@@ -2,15 +2,18 @@
 % Please edit documentation in R/hierarchy.R
 \name{heightDendrogram}
 \alias{heightDendrogram}
-\title{All heights from a dendrogram}
+\title{Heights of dendrogram}
 \usage{
 heightDendrogram(x)
 }
 \arguments{
-\item{x}{a dendrogram}
+\item{x}{a \code{\link[stats]{dendrogram}}.}
 }
 \description{
-All heights from a dendrogram
+All heights from a dendrogram.
+}
+\author{
+Jonas Klasen
 }
 \keyword{internal}
 

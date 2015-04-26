@@ -4,9 +4,11 @@
 \name{hit-package}
 \alias{HIT}
 \alias{hit-package}
-\title{Hierarchical Inference Test}
+\title{Hierarchical Inference Testing}
 \description{
-Hierarchical Inference Test
+Hierarchical inference testing (HIT) for linear models with
+correlated covariates. HIT is furthermore applicable to high-dimensional
+settings.
 }
 \author{
 Jonas Klasen

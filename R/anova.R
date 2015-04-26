@@ -1,5 +1,6 @@
 #' @title Fast ANOVA
-#' @description A fast  analysis of variance (ANOVA) for pedifind design matrix.
+#' @description A fast sequential analysis of variance (ANOVA). Mainly 
+#' developed for internal use.
 #' @param x design matrix of dimension \code{n * p}.
 #' @param y respons vector of observations of length \code{n}.
 #' @param assign integer vector assigning columns to terms can be also given as 

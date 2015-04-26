@@ -110,6 +110,7 @@ hit <- function(x, y, hierarchy, B=50, p.samp1=0.5,
 } # hit
 
 #' @title LASSO screening
+#' @description LASSO function of the HIT algorithem.
 #' @param samp1 list of index for subsample (mclapply index).
 #' @param x design matrix, of dimension n x p.
 #' @param y vector of quantitative response variable.
@@ -117,6 +118,7 @@ hit <- function(x, y, hierarchy, B=50, p.samp1=0.5,
 #' for non zero coefficients.
 #' @param penalty.factor see glmnet.
 #' @param ... aditional agruments
+#' @author Jonas Klasen
 #' @importFrom glmnet cv.glmnet
 #' @importFrom stats coef
 #' @keywords internal
@@ -135,6 +137,7 @@ samp1.lasso <- function (samp1, x, y, n.samp2, penalty.factor, ...) {
 
 #' @title ANOVA testing, multiplicity adjustment, aggregating and hierarchical 
 #' adjustment
+#' @description ANOVA test (long al nodes) of the HIT algorithem.
 #' @param cIndex index for cluster (mclapply index).
 #' @param level hierarchy level counter for parallelism
 #' @param upper.p p value upper huerarchy level of the clusters variables.
@@ -149,6 +152,7 @@ samp1.lasso <- function (samp1, x, y, n.samp2, penalty.factor, ...) {
 #' @param B number of sample-splits.
 #' @param gamma vector of gamma-values.
 #' @param cores number of cores for parallelising.
+#' @author Jonas Klasen
 #' @keywords internal
 samp2.sigHierarchy <- function(cIndex, level, upper.p, x, y, allSamp1.ids, 
                                allActSet.ids, x.nonTested, hierarchy, 
@@ -203,6 +207,7 @@ samp2.sigHierarchy <- function(cIndex, level, upper.p, x, y, allSamp1.ids,
 }
 
 #' @title ANOVA testing and multiplicity adjustment
+#' @description ANOVA test (at single node) of the HIT algorithem.
 #' @param k index for subsample (mclapply index).
 #' @param x design matrix, of dimension n x p.
 #' @param y vector of quantitative response variable.
@@ -210,6 +215,7 @@ samp2.sigHierarchy <- function(cIndex, level, upper.p, x, y, allSamp1.ids,
 #' @param x.nonTested vector of indeces of non tested variabels.
 #' @param allSamp1.ids  list of subsampels.
 #' @param allActSet.ids list of active sets.
+#' @author Jonas Klasen
 #' @keywords internal
 samp2.sigNode <- function (k, x, y, cluster, x.nonTested, 
                            allSamp1.ids, allActSet.ids) {
@@ -253,11 +259,13 @@ samp2.sigNode <- function (k, x, y, cluster, x.nonTested,
 } # samp2.sigNode
 
 
-#' @title Significant clusters at alpha threshold
-#' @param object a hit object.
-#' @param alpha alpha level.
+#' @title Summary of HIT
+#' @description Significant clusters at alpha threshold.
+#' @param object a \code{\link{hit}} object.
+#' @param alpha a alpha significans threshold.
 #' @param max.height max. height to consider.
 #' @param ... further arguments passed to or from other methods (not used).
+#' @author Jonas Klasen
 #' @method summary hit
 #' @export 
 summary.hit <- function(object, alpha = 0.05, max.height, ...) {
@@ -293,10 +301,28 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
   out
 } # summary.hit
 
-#' @title Significant hierarchy
-#' @description Significant hierarchy
-#' @param x a hit object
-#' @details makes a matrix of p-values for image(p.matrix(x))
+#' @title p-value matrix
+#' @description Matric of hierarchical p-values .
+#' @param x a \code{\link{hit}} object
+#' @author Jonas Klasen
+#' @examples
+#' set.seed(123)
+#' n <- 100
+#' p <- 150
+#' # x with correlated columns
+#' corMat <- toeplitz((p:1/p)^3)
+#' corMatQ <- chol(corMat)
+#' x <- matrix(rnorm(n * p), nrow = n) %*% corMatQ
+#' colnames(x) <- paste0("x", 1:p)
+#' # y
+#' y <- x[, c(3, 5, 73)] %*% c(2, 5, 3) + rnorm(n)
+#' # hierarchy
+#' dend <- as.dendrogram(hclust(dist(t(x))))
+#' hier <- hierarchy(dend, max.height = 20)
+#' # HIT
+#' out <- hit(x, y, hier)
+#' # plot p-value matrix
+#' image(p.matrix(out))
 #' @export
 p.matrix <- function (x) {
   heig <- heightHierarchy(x$hierarchy)

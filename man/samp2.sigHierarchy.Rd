@@ -37,8 +37,10 @@ to one. Small max.p.esti values reduce computing time.}
 \item{cores}{number of cores for parallelising.}
 }
 \description{
-ANOVA testing, multiplicity adjustment, aggregating and hierarchical
-adjustment
+ANOVA test (long al nodes) of the HIT algorithem.
+}
+\author{
+Jonas Klasen
 }
 \keyword{internal}
 
