@@ -56,7 +56,8 @@ void runDend(List x, map< int, IntegerVector>& hierarchy, int& counter,
         }
         if (newLevel > level) {
             IntegerVector cluster;
-            vector<int>  subset;
+            RObject superNode = as<RObject>(hierarchy[superset]);
+            vector<int>  superSubset;
             if (node.hasAttribute("leaf") && node.attr("leaf")) {
                 // make cluster
                 string name = as<string>(node.attr("label"));
@@ -65,9 +66,13 @@ void runDend(List x, map< int, IntegerVector>& hierarchy, int& counter,
                 cluster.attr("superset") = superset +1;
                 hierarchy[counter] = cluster;
                 // modify super cluster
-                subset = hierarchy[superset].attr("subset");
-                subset.push_back(counter +1);
-                hierarchy[superset].attr("subset") = subset;
+                if (superNode.hasAttribute("subset")) {
+                    superSubset = hierarchy[superset].attr("subset");
+                    superSubset.push_back(counter +1);
+                    hierarchy[superset].attr("subset") = superSubset;
+                }
+                else
+                    hierarchy[superset].attr("subset") = counter +1;
                 ++ counter;
             }
             else {
@@ -75,23 +80,24 @@ void runDend(List x, map< int, IntegerVector>& hierarchy, int& counter,
                 cluster = clusterIndex(x[i], dandNameIndex);
                 cluster.attr("height") = height[newLevel];
                 cluster.attr("superset") = superset +1;
-                vector<int> nullSubset;
-                cluster.attr("subset") = nullSubset;
                 hierarchy[counter] = cluster;
                 // modify super cluster
-                subset = hierarchy[superset].attr("subset");
-                subset.push_back(counter +1);
-                hierarchy[superset].attr("subset") = subset;
+                if (superNode.hasAttribute("subset")) {
+                    superSubset = hierarchy[superset].attr("subset");
+                    superSubset.push_back(counter +1);
+                    hierarchy[superset].attr("subset") = superSubset;
+                }
+                else
+                    hierarchy[superset].attr("subset") = counter +1;
                 int newSuperset = counter;
                 ++ counter;
                 runDend(x[i], hierarchy, counter, newSuperset, 
                         newLevel, height, dandNameIndex);
             }
         }
-        else if (!node.hasAttribute("leaf")) {
+        else if (!node.hasAttribute("leaf"))
             runDend(x[i], hierarchy, counter, superset, 
                     level, height, dandNameIndex);
-        }
     }
 }
 
@@ -115,9 +121,8 @@ IntegerVector clusterIndex(List x, map<string, int>& dandNameIndex)
     CharacterVector name = names(x);
     int n = name.size();
     IntegerVector out(n);
-    for (int i = 0; i < n; ++i) {
-       out[i] = dandNameIndex[as<string>(name[i])];
-    }
+    for (int i = 0; i < n; ++i)
+        out[i] = dandNameIndex[as<string>(name[i])];
     return out.sort();
 }
 

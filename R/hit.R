@@ -1,4 +1,3 @@
-
 #' @title Hierarchical inference testing
 #' @description Hierarchical inference testing for linear models with 
 #' high-dimensional and/or correlated covariates by repeated sample splitting.

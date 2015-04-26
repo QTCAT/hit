@@ -1,4 +1,3 @@
-
 #' @title Hierachy indeces from desndrogram
 #' @param x object of class 'dendrogram'.
 #' @param height vector of heghts at which nodes are grouped.
@@ -28,6 +27,8 @@ hierarchy <- function (x, height, max.height, names) {
   if (missing(max.height))
     max.height <- attr(x, "height")
   height <- height[height <= max.height]
+  if (attr(x, "height") > max.height)
+    height <- c(attr(x, "height"), height)
   if (missing(names)) {
     names <- labels(x)
   } else if (length(setdiff(labels(x), names))) {
@@ -101,3 +102,53 @@ reorder.hierarchy <- function(x, names, ...) {
   class(out) <- "hierarchy"
   out
 }
+
+# #' A pure R version of hierarchy
+# #' @export
+# hierarchy2 <- function (x, height, max.height, names) {
+#   make.hierarchy <- function(subtree, level, superset) {
+#     newLevel <- sum(attr(subtree, "height") <= height)
+#     if (is.leaf(subtree) && newLevel > level) {
+#       CLUSTERS[[COUNTER]] <<- sort(match(labels(subtree), names))
+#       attr(CLUSTERS[[COUNTER]], "height") <<- height[newLevel]
+#       attr(CLUSTERS[[COUNTER]], "superset") <<- superset
+#       subset <- c(attr(CLUSTERS[[superset]], "subset"), COUNTER)
+#       attr(CLUSTERS[[superset]], "subset") <<- subset      
+#       COUNTER <<- COUNTER + 1L
+#     } else {
+#       if (newLevel > level) {
+#         CLUSTERS[[COUNTER]] <<- sort(match(labels(subtree), names)) 
+#         attr(CLUSTERS[[COUNTER]], "height") <<- height[newLevel]
+#         attr(CLUSTERS[[COUNTER]], "superset") <<- superset
+#         subset <- c(attr(CLUSTERS[[superset]], "subset"), COUNTER)
+#         attr(CLUSTERS[[superset]], "subset") <<- subset
+#         superset <- COUNTER
+#         COUNTER <<- COUNTER + 1L
+#       }
+#       lapply(subtree, make.hierarchy, level = newLevel, superset = superset)
+#     }
+#     return(NULL)
+#   }
+#   if (!inherits(x, "dendrogram")) 
+#     stop("'x' is not a dendrogram")
+#   if (missing(height)) 
+#     height <- heightDendrogram(x)
+#   height <- sort(height, decreasing = TRUE)
+#   if (missing(max.height))
+#     max.height <- attr(x, "height")
+#   height <- height[height <= max.height]
+#   if (attr(x, "height") > max.height)
+#     height <- c(attr(x, "height"), height)
+#   if (missing(names)) {
+#     names <- labels(x)
+#   } else if (length(setdiff(labels(x), names))) {
+#     stop("'x' includs variabels not in 'names'")
+#   }
+#   CLUSTERS <- list(seq_along(names))
+#   attr(CLUSTERS[[1L]], "names") <- names
+#   attr(CLUSTERS[[1L]], "height") <- height[1L]
+#   COUNTER <- 2L
+#   lapply(x, make.hierarchy, level = 1L, superset = 1L)
+#   class(CLUSTERS) <- "hierarchy"
+#   CLUSTERS
+# }

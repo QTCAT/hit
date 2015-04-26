@@ -1,4 +1,3 @@
-
 #' @title Fast ANOVA
 #' @description A fast  analysis of variance (ANOVA) for pedifind design matrix.
 #' @param x design matrix of dimension \code{n * p}.
