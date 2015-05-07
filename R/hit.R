@@ -291,11 +291,11 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
   lapply(length(object$hierarchy):1L, make.pVal)
   non.na <- which(!is.na(ID.CLUSTER))
   out <- data.frame("clusters"=ID.CLUSTER[non.na], 
-                    "pValues"=P.CLUSTER[non.na],
-                    "height"=H.CLUSTER[non.na])
+                    "heights"=H.CLUSTER[non.na],
+                    "pValues"=P.CLUSTER[non.na])
   rownames(out) <- names(object$hierarchy[[1L]])[non.na]
   if(!missing(max.height)) 
-    out <- out[out[, 3] <= max.height, ]
+    out <- out[out[, 2] <= max.height, ]
   if (ll <- length(unique(out[, 1])))
     out[, 1] <- as.integer(factor(out[, 1], labels = 1:ll))
   out
