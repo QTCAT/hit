@@ -130,7 +130,7 @@ samp1.lasso <- function (samp1, x, y, n.samp2, penalty.factor, ...) {
   y <- y[samp1]
   lasso.fit <- cv.glmnet(x, y, penalty.factor=penalty.factor, 
                          dfmax = n.samp2-2L, ...)
-  beta <- coef(lasso.fit)[-1L]
+  beta <- coef(lasso.fit, s = lasso.fit$lambda.min)[-1L]
   actSet <- which(beta != 0 & penalty.factor == 1L)
   return(actSet)
 } # samp1.lasso
