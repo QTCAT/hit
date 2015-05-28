@@ -39,9 +39,9 @@ hierarchy <- function (x, height, max.height, names) {
     stop("'x' includs variabels not in 'names'")
   }
   out <- unname(dend2hier(x, height, names))
-  ordAll <- order(out[[1]])
-  out[[1]][] <- out[[1]][ordAll]
-  names(out[[1]]) <- names(out[[1]])[ordAll]
+  ordAll <- order(out[[1L]])
+  out[[1L]][] <- out[[1L]][ordAll]
+  names(out[[1L]]) <- names(out[[1L]])[ordAll]
   class(out) <- "hierarchy"
   out
 }
@@ -92,7 +92,7 @@ heightHierarchy <- function(x) {
 #' @method names hierarchy 
 #' @export
 names.hierarchy <- function(x) {
-  names(x[[1]])
+  names(x[[1L]])
 }
 
 #' @title Reorder hierarchy
@@ -108,11 +108,14 @@ names.hierarchy <- function(x) {
 reorder.hierarchy <- function(x, names, ...) {
   if (!inherits(x, "hierarchy")) 
     stop("'x' is not a hierarchy")
-  if (length(setdiff(names(x[[1]]), names)))
+  if (length(setdiff(names(x[[1L]]), names)))
     stop("'x' includs variabels not in 'names'")
-  newOrder <- match(names(x[[1]]), names)
-  out <- lapply(x, function(x, newOrder){x[] <- sort(newOrder[x]); x}, newOrder)
-  names(out[[1]]) <- names[out[[1]]]
+  newOrder <- match(names(x[[1L]]), names)
+  out <- lapply(x, function(x, newOrder) {
+    x[] <- sort(newOrder[x]) 
+    x
+  }, newOrder)
+  names(out[[1L]]) <- names[out[[1L]]]
   class(out) <- "hierarchy"
   out
 }

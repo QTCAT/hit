@@ -4,8 +4,8 @@
 \alias{hit}
 \title{Hierarchical inference testing}
 \usage{
-hit(x, y, hierarchy, B = 50, p.samp1 = 0.5, gamma = seq(0.05, 0.99, by =
-  0.01), max.p.esti = 1, mc.cores = 1L, trace = FALSE, ...)
+hit(x, y, hierarchy, B = 50, p.samp1 = 0.5, gamma = seq(0.05, 0.99,
+  length.out = 100), max.p.esti = 1, mc.cores = 1L, trace = FALSE, ...)
 }
 \arguments{
 \item{x}{design matrix of dimension \code{n * p}, without intercept.

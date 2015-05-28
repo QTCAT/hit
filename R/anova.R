@@ -16,8 +16,8 @@
 #' fast.anova(x=x, y=y, assign=a)
 #' @importFrom stats lm.fit pf
 #' @export
-fast.anova <- function(x, y, assign=NULL) {
-  if (!is.null(attr(x, "assign"))) {
+fast.anova <- function(x, y, assign = NULL) {
+  if (is.null(assign) && !is.null(attr(x, "assign"))) {
     assign <- attr(x, "assign")
   }
   if (is.null(assign)) {
@@ -27,11 +27,13 @@ fast.anova <- function(x, y, assign=NULL) {
   stopifnot(nrow(x) == length(y))
   # LM fit by pivoted QR decomposition
   fit <- lm.fit(x, y)
-  if (assign[1L] == 0L) { # with intercept
-    full.rank <- 1L:(fit$rank-1L)
-    assign.pivot <- assign[fit$qr$pivot[full.rank+1L]]
+  if (assign[1L] == 0L) { 
+    # with intercept
+    full.rank <- 1L:(fit$rank - 1L)
+    assign.pivot <- assign[fit$qr$pivot[full.rank + 1L]]
     var <- fit$effects[-1L]^2L
-  } else { # without intercept
+  } else { 
+    # without intercept
     full.rank <- 1L:fit$rank
     assign.pivot <- assign[fit$qr$pivot[full.rank]]
     var <- fit$effects^2L
@@ -39,15 +41,15 @@ fast.anova <- function(x, y, assign=NULL) {
   # Treatment: Sum Sq | Df | Mean Sq
   ss.treat <- tapply(var[full.rank], assign.pivot, "sum")
   df.treat <- table(assign.pivot)
-  ms.treat <- ss.treat/df.treat
+  ms.treat <- ss.treat / df.treat
   # Residuals: Sum Sq | Df | Mean Sq
   ss.res <- sum(var[-full.rank])
   df.res <- fit$df.residual
-  ms.res <- ss.res/df.res
+  ms.res <- ss.res / df.res
   # F value
-  f <- ms.treat/ms.res 
+  f <- ms.treat / ms.res 
   # p value
   p <- rep(1, max(assign))
-  p[unique(assign.pivot)] <- pf(f, df.treat, df.res, lower.tail=FALSE)
+  p[unique(assign.pivot)] <- pf(f, df.treat, df.res, lower.tail = FALSE)
   p
 } # fast.anova

@@ -44,9 +44,9 @@
 #' summary(out)
 #' @importFrom parallel mclapply
 #' @export 
-hit <- function(x, y, hierarchy, B=50, p.samp1=0.5, 
-                gamma=seq(0.05, 0.99, by=0.01), max.p.esti=1, 
-                mc.cores=1L, trace=FALSE, ...) {
+hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5, 
+                gamma = seq(0.05, 0.99, length.out = 100), max.p.esti = 1, 
+                mc.cores = 1L, trace = FALSE, ...) {
   ## Mandozzi and Buehlmann, 2013
   # see chapter 2 Description of method
   if (is.null(colnames(x)))
@@ -74,7 +74,7 @@ hit <- function(x, y, hierarchy, B=50, p.samp1=0.5,
   gamma <- sort(gamma)
   if (p.samp1 < .1 | p.samp1 > .5)
     stop("'p.samp1' must be between .1 and 0.5")
-  n.samp1 <- as.integer(n*p.samp1)
+  n.samp1 <- as.integer(n * p.samp1)
   n.samp2 <- n-n.samp1
   penalty.factor <- rep(1L, p)
   penalty.factor[x.nonTested] <- 0L
@@ -99,7 +99,7 @@ hit <- function(x, y, hierarchy, B=50, p.samp1=0.5,
     cat("\nHIT has finished at:\n\t", as.character(Sys.time()), "\n")
   asi <- sort(unlist(allActSet.ids))
   sel.tab <- rep(0, p)
-  sel.tab[unique(asi)] <- table(asi)/B
+  sel.tab[unique(asi)] <- table(asi) / B
   # Output
   out <- list("pValues"=pValues,
               "selectFreq"=sel.tab,
@@ -129,7 +129,7 @@ samp1.lasso <- function (samp1, x, y, n.samp2, penalty.factor, ...) {
   x <- x[samp1, ]
   y <- y[samp1]
   lasso.fit <- cv.glmnet(x, y, penalty.factor=penalty.factor, 
-                         dfmax = n.samp2-2L, ...)
+                         dfmax = n.samp2 - 2L, ...)
   beta <- coef(lasso.fit, s = lasso.fit$lambda.min)[-1L]
   actSet <- which(beta != 0 & penalty.factor == 1L)
   return(actSet)
@@ -166,9 +166,9 @@ samp2.sigHierarchy <- function(cIndex, level, upper.p, x, y, allSamp1.ids,
                       allSamp1.ids, allActSet.ids)
   ## 2.4-1 Aggregating 
   q.aggre <- sapply(gamma, 
-                    function(i, x) { min(1, quantile(x/i, i)) }, 
+                    function(i, x) { min(1, quantile(x / i, i)) }, 
                     x = p.cluster)
-  p.aggre <- min(1, (1-log(min(gamma)))*min(q.aggre))
+  p.aggre <- min(1, (1 - log(min(gamma))) * min(q.aggre))
   ## 2.4-2 Hierarchical adjustment
   p.value <- max(p.aggre, upper.p)
   ## estimation at next lower level
@@ -253,7 +253,7 @@ samp2.sigNode <- function (k, x, y, cluster, x.nonTested,
     } # if (l.nonActClust <- length(nonActClust))
     p.test <- fast.anova(x, y, assign)[get.p]
     ## 2.3-2 Multiplicity adjustment
-    p.cluster <- min(1, p.test*(l.actClust+l.nonActClust)/l.actClust)
+    p.cluster <- min(1, p.test * (l.actClust + l.nonActClust) / l.actClust)
   } # if (l.actClust <- length(actClust))
   return(p.cluster) 
 } # samp2.sigNode
@@ -290,14 +290,14 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
   COUNTER <- 1L
   lapply(length(object$hierarchy):1L, make.pVal)
   non.na <- which(!is.na(ID.CLUSTER))
-  out <- data.frame("clusters"=ID.CLUSTER[non.na], 
-                    "heights"=H.CLUSTER[non.na],
-                    "pValues"=P.CLUSTER[non.na])
+  out <- data.frame("clusters" = ID.CLUSTER[non.na], 
+                    "heights" = H.CLUSTER[non.na],
+                    "pValues" = P.CLUSTER[non.na])
   rownames(out) <- names(object$hierarchy[[1L]])[non.na]
   if(!missing(max.height)) 
-    out <- out[out[, 2] <= max.height, ]
-  if (ll <- length(unique(out[, 1])))
-    out[, 1] <- as.integer(factor(out[, 1], labels = 1:ll))
+    out <- out[out[, 2L] <= max.height, ]
+  if (ll <- length(unique(out[, 1L])))
+    out[, 1L] <- as.integer(factor(out[, 1L], labels = 1L:ll))
   out
 } # summary.hit
 
@@ -327,18 +327,18 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
 p.matrix <- function (x) {
   heig <- heightHierarchy(x$hierarchy)
   allheig <- sapply(x$hierarchy, attr, "height")
-  inx <- which(heig[1] == allheig)
+  inx <- which(heig[1L] == allheig)
   p.val <- rep(x$pValues[inx], sapply(allheig[inx], length))
   out <- list(rep(NA_real_, length(p.val)))
-  out[[1]][unlist(x$hierarchy[inx])] <- p.val
+  out[[1L]][unlist(x$hierarchy[inx])] <- p.val
   for (h in 2L:length(heig)) {
-    out[[h]] <- out[[h-1]]
+    out[[h]] <- out[[h - 1L]]
     inx <- which(heig[h] == allheig)
     p.val <- rep(x$pValues[inx], sapply(allheig[inx] , length))
     out[[h]][unlist(x$hierarchy[inx])] <- p.val
   }
   out <- do.call("rbind", out)
-  colnames(out) <- names(x$hierarchy[[1]])
+  colnames(out) <- names(x$hierarchy[[1L]])
   rownames(out) <- heig
   out
 } # p.matrix
