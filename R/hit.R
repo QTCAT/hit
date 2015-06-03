@@ -61,31 +61,31 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
     stop("'hierarchy' includs variabels not in 'x'")
   if (identical(hier.names, x.names)) {
     additionalCovariates <- character(0L)
-    x.nonTested <- NULL
+    x.nonTested <- integer(0L)
   } else if (setequal(hier.names, x.names)) {
     hierarchy <- reorder(hierarchy, x.names)
     additionalCovariates <- character(0L)
-    x.nonTested <- NULL
+    x.nonTested <- integer(0L)
   } else {
     hierarchy <- reorder(hierarchy, x.names)
     additionalCovariates <- setdiff(x.names, names(hierarchy))
     x.nonTested <- match(additionalCovariates, x.names)
   }
   gamma <- sort(gamma)
-  if (p.samp1 < .1 | p.samp1 > .7)
-    stop("'p.samp1' must be between .1 and 0.5")
+  if (p.samp1 < .1 | p.samp1 > .9)
+    stop("'p.samp1' must be between .1 and 0.9")
   n.samp1 <- as.integer(n * p.samp1)
   n.samp2 <- n-n.samp1
   penalty.factor <- rep(1L, p)
   penalty.factor[x.nonTested] <- 0L
   ## subsamples
-  allSamp1.ids <- replicate(B, sample.int(n, n.samp1), simplify=FALSE)
+  allSamp1.ids <- replicate(B, sample.int(n, n.samp1), simplify = FALSE)
   ## 2.2 Screening
   if (isTRUE(trace))
     cat("LASSO has started at:\n\t", as.character(Sys.time()), "\n")
   allActSet.ids <- mclapply(allSamp1.ids, samp1.lasso,
                             x, y, n.samp2, penalty.factor, ...,
-                            mc.cores=mc.cores, mc.cleanup=TRUE)
+                            mc.cores=mc.cores, mc.cleanup = TRUE)
   ## 2.3 Testing and multiplicity adjustmen; and 
   ## 2.4 Aggregating and Hierarchical adjustment
   if (isTRUE(trace))
@@ -96,15 +96,15 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
                                 mc.cores)
   # make output
   if (isTRUE(trace))
-    cat("\nHIT has finished at:\n\t", as.character(Sys.time()), "\n")
+    cat("HIT has finished at:\n\t", as.character(Sys.time()), "\n")
   asi <- sort(unlist(allActSet.ids))
   sel.tab <- rep(0, p)
   sel.tab[unique(asi)] <- table(asi) / B
   # Output
-  out <- list("pValues"=pValues,
-              "selectFreq"=sel.tab,
-              "hierarchy"=hierarchy,
-              "additionalCovariates"=additionalCovariates)
+  out <- list(pValues = pValues,
+              selectFreq = sel.tab,
+              hierarchy = hierarchy,
+              additionalCovariates = additionalCovariates)
   class(out) <- "hit"
   out
 } # hit
@@ -290,9 +290,9 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
   COUNTER <- 1L
   lapply(length(object$hierarchy):1L, make.pVal)
   non.na <- which(!is.na(ID.CLUSTER))
-  out <- data.frame("clusters" = ID.CLUSTER[non.na], 
-                    "heights" = H.CLUSTER[non.na],
-                    "pValues" = P.CLUSTER[non.na])
+  out <- data.frame(clusters = ID.CLUSTER[non.na], 
+                    heights = H.CLUSTER[non.na],
+                    pValues = P.CLUSTER[non.na])
   rownames(out) <- names(object$hierarchy[[1L]])[non.na]
   if(!missing(max.height)) 
     out <- out[out[, 2L] <= max.height, ]
@@ -337,7 +337,7 @@ p.matrix <- function (x) {
     p.val <- rep(x$pValues[inx], sapply(allheig[inx] , length))
     out[[h]][unlist(x$hierarchy[inx])] <- p.val
   }
-  out <- do.call("rbind", out)
+  out <- do.call(rbind, out)
   colnames(out) <- names(x$hierarchy[[1L]])
   rownames(out) <- heig
   out
