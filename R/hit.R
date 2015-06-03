@@ -27,8 +27,8 @@
 #'   Journal of the American Statistical Association. Preprint arXiv:1312.5556
 #' @examples
 #' set.seed(123)
-#' n <- 100
-#' p <- 150
+#' n <- 500
+#' p <- 800
 #' # x with correlated columns
 #' corMat <- toeplitz((p:1/p)^3)
 #' corMatQ <- chol(corMat)
@@ -72,7 +72,7 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
     x.nonTested <- match(additionalCovariates, x.names)
   }
   gamma <- sort(gamma)
-  if (p.samp1 < .1 | p.samp1 > .5)
+  if (p.samp1 < .1 | p.samp1 > .7)
     stop("'p.samp1' must be between .1 and 0.5")
   n.samp1 <- as.integer(n * p.samp1)
   n.samp2 <- n-n.samp1
@@ -130,9 +130,7 @@ samp1.lasso <- function (samp1, x, y, n.samp2, penalty.factor, ...) {
   y <- y[samp1]
   lasso.fit <- cv.glmnet(x, y, penalty.factor=penalty.factor, 
                          dfmax = n.samp2 - 2L, ...)
-  lam.inx <- which(lasso.fit$cvlo <= min(lasso.fit$cvm))
-  lambda.n1se <- lasso.fit$lambda[max(lam.inx, na.rm = TRUE)]
-  beta <- coef(lasso.fit, s = lambda.n1se)[-1L]
+  beta <- coef(lasso.fit, s = lasso.fit$lambda.min)[-1L]
   actSet <- which(beta != 0 & penalty.factor == 1L)
   return(actSet)
 } # samp1.lasso

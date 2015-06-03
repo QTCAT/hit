@@ -45,8 +45,8 @@ LASSO model selection and are always include in the reduced ANOVA model.
 }
 \examples{
 set.seed(123)
-n <- 100
-p <- 150
+n <- 500
+p <- 800
 # x with correlated columns
 corMat <- toeplitz((p:1/p)^3)
 corMatQ <- chol(corMat)
