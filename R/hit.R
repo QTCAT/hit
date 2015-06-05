@@ -43,20 +43,20 @@
 #' out <- hit(x, y, hier)
 #' summary(out)
 #' @importFrom parallel mclapply
+#' @importFrom stats reorder
 #' @export 
 hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5, 
                 gamma = seq(0.05, 0.99, length.out = 100), max.p.esti = 1, 
                 mc.cores = 1L, trace = FALSE, ...) {
-  ## Mandozzi and Buehlmann, 2013
-  # see chapter 2 Description of method
+  #   Mandozzi and Buehlmann (2013), 2 Description of method
   if (is.null(colnames(x)))
     stop ("column names of 'x' are missing")
   n <- nrow(x)
   p <- ncol(x)
   stopifnot(class(hierarchy) == "hierarchy")
-  # checks order of variables
+  ##### Checks order of variables
   x.names <- colnames(x)
-  hier.names <- names(hierarchy[[1]])
+  hier.names <- names(hierarchy)
   if (length(setdiff(hier.names, x.names)))
     stop("'hierarchy' includs variabels not in 'x'")
   if (identical(hier.names, x.names)) {
@@ -71,43 +71,42 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
     additionalCovariates <- setdiff(x.names, names(hierarchy))
     x.nonTested <- match(additionalCovariates, x.names)
   }
-  gamma <- sort(gamma)
+  penalty.factor <- rep(1L, p)
+  penalty.factor[x.nonTested] <- 0L
+  ##### Subsample splits
   if (p.samp1 < .1 | p.samp1 > .9)
     stop("'p.samp1' must be between .1 and 0.9")
   n.samp1 <- as.integer(n * p.samp1)
-  n.samp2 <- n-n.samp1
-  penalty.factor <- rep(1L, p)
-  penalty.factor[x.nonTested] <- 0L
-  ## subsamples
+  n.samp2 <- n - n.samp1
   allSamp1.ids <- replicate(B, sample.int(n, n.samp1), simplify = FALSE)
-  ## 2.2 Screening
+  ##  2.2 Screening
   if (isTRUE(trace))
     cat("LASSO has started at:\n\t", as.character(Sys.time()), "\n")
   allActSet.ids <- mclapply(allSamp1.ids, samp1.lasso,
                             x, y, n.samp2, penalty.factor, ...,
                             mc.cores=mc.cores, mc.cleanup = TRUE)
-  ## 2.3 Testing and multiplicity adjustmen; and 
-  ## 2.4 Aggregating and Hierarchical adjustment
+  ##  2.3 Testing and multiplicity adjustmen; and 
+  ##  2.4 Aggregating and Hierarchical adjustment
   if (isTRUE(trace))
     cat("Significance testing has started at:\n\t", 
         as.character(Sys.time()), "\n")
-  pValues <- samp2.sigHierarchy(1, 0, 0, x, y, allSamp1.ids, allActSet.ids, 
-                                x.nonTested, hierarchy, max.p.esti, B, gamma, 
+  pValues <- samp2.sigHierarchy(1L, 0L, 0, x, y, allSamp1.ids, allActSet.ids, 
+                                x.nonTested, hierarchy, 
+                                max.p.esti, B, sort(gamma), 
                                 mc.cores)
-  # make output
+  ##### Results
   if (isTRUE(trace))
     cat("HIT has finished at:\n\t", as.character(Sys.time()), "\n")
   asi <- sort(unlist(allActSet.ids))
   sel.tab <- rep(0, p)
   sel.tab[unique(asi)] <- table(asi) / B
-  # Output
   out <- list(pValues = pValues,
               selectFreq = sel.tab,
               hierarchy = hierarchy,
               additionalCovariates = additionalCovariates)
   class(out) <- "hit"
   out
-} # hit
+}
 
 #' @title LASSO screening
 #' @description LASSO function of the HIT algorithem.
@@ -123,17 +122,13 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
 #' @importFrom stats coef
 #' @keywords internal
 samp1.lasso <- function (samp1, x, y, n.samp2, penalty.factor, ...) {
-  ## Mandozzi and Buehlmann, 2013
-  # see chapter 2 Description of method
-  ## 2.2 Screening
-  x <- x[samp1, ]
-  y <- y[samp1]
-  lasso.fit <- cv.glmnet(x, y, penalty.factor=penalty.factor, 
+  ##  2.2 Screening
+  lasso.fit <- cv.glmnet(x[samp1, ], y[samp1], penalty.factor = penalty.factor, 
                          dfmax = n.samp2 - 2L, ...)
   beta <- coef(lasso.fit, s = lasso.fit$lambda.min)[-1L]
   actSet <- which(beta != 0 & penalty.factor == 1L)
-  return(actSet)
-} # samp1.lasso
+  actSet
+}
 
 #' @title ANOVA testing, multiplicity adjustment, aggregating and hierarchical 
 #' adjustment
@@ -158,20 +153,19 @@ samp2.sigHierarchy <- function(cIndex, level, upper.p, x, y, allSamp1.ids,
                                allActSet.ids, x.nonTested, hierarchy, 
                                max.p.esti, B, gamma, cores) {
   ## 2.3 Testing and multiplicity adjustment
-  ## 2.3-1 Testing
-  ## 2.3 Testing and multiplicity adjustment
   cluster <- hierarchy[[cIndex]]
   p.cluster <- sapply(1L:B, samp2.sigNode, 
                       x, y, cluster, x.nonTested, 
                       allSamp1.ids, allActSet.ids)
-  ## 2.4-1 Aggregating 
+  ##  2.4 Aggregating and Hierarchical adjustment
+  ### 2.4-1 Aggregating 
   q.aggre <- sapply(gamma, 
                     function(i, x) { min(1, quantile(x / i, i)) }, 
                     x = p.cluster)
   p.aggre <- min(1, (1 - log(min(gamma))) * min(q.aggre))
-  ## 2.4-2 Hierarchical adjustment
+  ### 2.4-2 Hierarchical adjustment
   p.value <- max(p.aggre, upper.p)
-  ## estimation at next lower level
+  ##### Estimation at next lower level and find a way to parallelize
   if (!is.null(cIndeces <- attr(cluster, "subset"))) {
     if (p.value < max.p.esti) {
       if (level == 0L && length(cIndeces) >= cores) {
@@ -219,45 +213,43 @@ samp2.sigHierarchy <- function(cIndex, level, upper.p, x, y, allSamp1.ids,
 #' @keywords internal
 samp2.sigNode <- function (k, x, y, cluster, x.nonTested, 
                            allSamp1.ids, allActSet.ids) {
+  ## 2.3 Testing and multiplicity adjustment
   n <- nrow(x)
-  ## Mandozzi and Buehlmann, 2013
-  # see chapter 2 Description of method
   actClust <- intersect(allActSet.ids[[k]], cluster)
   nonActClust <- setdiff(allActSet.ids[[k]], cluster)
-  ## 2.3-1 Testing
+  ### 2.3-1 Testing
   p.cluster <- 1
   if (l.actClust <- length(actClust)) {
-    # ANOVA between active set and active set minus cluster
+    ##### ANOVA between active set and active set minus cluster
     samp2 <- (1L:n)[-allSamp1.ids[[k]]]
     y <- y[samp2]
     if (l.nonActClust <- length(nonActClust)) {
       if (l.nonTested <- length(x.nonTested)) {
-        x  <- cbind(1, x[samp2, c(x.nonTested, nonActClust, actClust)])
+        x  <- cbind(1L, x[samp2, c(x.nonTested, nonActClust, actClust)])
         assign <- rep(0L:3L, c(1L, l.nonTested, l.nonActClust, l.actClust))
         get.p <- 3L
       } else {
-        x  <- cbind(1, x[samp2, c(nonActClust, actClust)])
+        x  <- cbind(1L, x[samp2, c(nonActClust, actClust)])
         assign <- rep(0L:2L, c(1L, l.nonActClust, l.actClust))
         get.p <- 2L
       }
     } else {
       if (l.nonTested <- length(x.nonTested)) {
-        x  <- cbind(1, x[samp2, c(x.nonTested, actClust)])
+        x  <- cbind(1L, x[samp2, c(x.nonTested, actClust)])
         assign <- rep(0L:2L, c(1L, l.nonTested, l.actClust))
         get.p <- 2L
       } else {
-        x  <- cbind(1, x[samp2, actClust])
+        x  <- cbind(1L, x[samp2, actClust])
         assign <- rep(0L:1L, c(1L, l.actClust))
         get.p <- 1L
       }
-    } # if (l.nonActClust <- length(nonActClust))
+    }
     p.test <- fast.anova(x, y, assign)[get.p]
-    ## 2.3-2 Multiplicity adjustment
+    ### 2.3-2 Multiplicity adjustment
     p.cluster <- min(1, p.test * (l.actClust + l.nonActClust) / l.actClust)
-  } # if (l.actClust <- length(actClust))
-  return(p.cluster) 
-} # samp2.sigNode
-
+  }
+  p.cluster
+}
 
 #' @title Summary of HIT
 #' @description Significant clusters at alpha threshold.
@@ -299,7 +291,7 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
   if (ll <- length(unique(out[, 1L])))
     out[, 1L] <- as.integer(factor(out[, 1L], labels = 1L:ll))
   out
-} # summary.hit
+}
 
 #' @title p-value matrix
 #' @description Matric of hierarchical p-values .
@@ -338,7 +330,7 @@ p.matrix <- function (x) {
     out[[h]][unlist(x$hierarchy[inx])] <- p.val
   }
   out <- do.call(rbind, out)
-  colnames(out) <- names(x$hierarchy[[1L]])
+  colnames(out) <- names(x$hierarchy)
   rownames(out) <- heig
   out
-} # p.matrix
+}
