@@ -4,7 +4,7 @@
 \alias{samp1.lasso}
 \title{LASSO screening}
 \usage{
-samp1.lasso(samp1, x, y, n.samp2, penalty.factor, ...)
+samp1.lasso(samp1, x, y, n.samp2, lambda.opt, penalty.factor, ...)
 }
 \arguments{
 \item{samp1}{list of index for subsample (mclapply index).}
@@ -15,6 +15,10 @@ samp1.lasso(samp1, x, y, n.samp2, penalty.factor, ...)
 
 \item{n.samp2}{number of individuals in samp2 which is the max.
 for non zero coefficients.}
+
+\item{lambda.opt}{criterion for optimum selection of cross validated lasso.
+Either 'lambda.min' (default) or 'lambda.1se'. See
+\code{\link[glmnet]{cv.glmnet}} for more details.}
 
 \item{penalty.factor}{see glmnet.}
 

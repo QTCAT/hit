@@ -10,6 +10,9 @@
 #' @param B number of sample-splits.
 #' @param p.samp1 fraction of data used for the LASSO. The ANOVA uses 
 #' \code{1 - p.samp1}.
+#' @param lambda.opt criterion for optimum selection of cross validated lasso. 
+#' Either 'lambda.min' (default) or 'lambda.1se'. See 
+#' \code{\link[glmnet]{cv.glmnet}} for more details. 
 #' @param gamma vector of gamma-values.
 #' @param max.p.esti maximum alpha level. All p-values above this value are set 
 #' to one. Small \code{max.p.esti} values reduce computing time.
@@ -46,6 +49,7 @@
 #' @importFrom stats reorder
 #' @export 
 hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5, 
+                lambda.opt = c("lambda.min", "lambda.1se"), 
                 gamma = seq(0.05, 0.99, length.out = 100), max.p.esti = 1, 
                 mc.cores = 1L, trace = FALSE, ...) {
   #   Mandozzi and Buehlmann (2013), 2 Description of method
@@ -83,7 +87,7 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
   if (isTRUE(trace))
     cat("LASSO has started at:\n\t", as.character(Sys.time()), "\n")
   allActSet.ids <- mclapply(allSamp1.ids, samp1.lasso,
-                            x, y, n.samp2, penalty.factor, ...,
+                            x, y, n.samp2, lambda.opt, penalty.factor, ...,
                             mc.cores=mc.cores, mc.cleanup = TRUE)
   ##  2.3 Testing and multiplicity adjustmen; and 
   ##  2.4 Aggregating and Hierarchical adjustment
@@ -115,17 +119,25 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
 #' @param y vector of quantitative response variable.
 #' @param n.samp2 number of individuals in samp2 which is the max. 
 #' for non zero coefficients.
+#' @param lambda.opt criterion for optimum selection of cross validated lasso. 
+#' Either 'lambda.min' (default) or 'lambda.1se'. See 
+#' \code{\link[glmnet]{cv.glmnet}} for more details. 
 #' @param penalty.factor see glmnet.
 #' @param ... aditional agruments
 #' @author Jonas Klasen
 #' @importFrom glmnet cv.glmnet
 #' @importFrom stats coef
 #' @keywords internal
-samp1.lasso <- function (samp1, x, y, n.samp2, penalty.factor, ...) {
+samp1.lasso <- function (samp1, x, y, n.samp2, 
+                         lambda.opt, penalty.factor, ...) {
+  lambda.opt <- match.arg(lambda.opt, c("lambda.min", "lambda.1se"))
   ##  2.2 Screening
   lasso.fit <- cv.glmnet(x[samp1, ], y[samp1], penalty.factor = penalty.factor, 
                          dfmax = n.samp2 - 2L, ...)
-  beta <- coef(lasso.fit, s = lasso.fit$lambda.min)[-1L]
+  if (lambda.opt == "lambda.min")
+    beta <- coef(lasso.fit, s = lasso.fit$lambda.min)[-1L]
+  else 
+    beta <- coef(lasso.fit, s = lasso.fit$lambda.1se)[-1L]
   actSet <- which(beta != 0 & penalty.factor == 1L)
   actSet
 }
