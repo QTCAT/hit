@@ -31,12 +31,12 @@ fast.anova <- function(x, y, assign = NULL) {
     # with intercept
     full.rank <- 1L:(fit$rank - 1L)
     assign.pivot <- assign[fit$qr$pivot[full.rank + 1L]]
-    var <- fit$effects[-1L]^2L
+    var <- fit$effects[-1L]^2
   } else { 
     # without intercept
     full.rank <- 1L:fit$rank
     assign.pivot <- assign[fit$qr$pivot[full.rank]]
-    var <- fit$effects^2L
+    var <- fit$effects^2
   }
   # Treatment: Sum Sq | Df | Mean Sq
   ss.treat <- tapply(var[full.rank], assign.pivot, "sum")

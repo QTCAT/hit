@@ -1,6 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^packrat/
-^.Rprofile
+^packrat$
+^\.Rprofile$
 ^\.travis\.yml$
 ^appveyor\.yml$
