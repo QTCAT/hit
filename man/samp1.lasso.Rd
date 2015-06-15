@@ -4,7 +4,7 @@
 \alias{samp1.lasso}
 \title{LASSO screening}
 \usage{
-samp1.lasso(samp1, x, y, n.samp2, lambda.opt, penalty.factor, ...)
+samp1.lasso(samp1, x, y, n.samp2, lambda.opt, penalty.factor, nfolds, ...)
 }
 \arguments{
 \item{samp1}{list of index for subsample (mclapply index).}
@@ -21,6 +21,9 @@ Either 'lambda.min' (default) or 'lambda.1se'. See
 \code{\link[glmnet]{cv.glmnet}} for more details.}
 
 \item{penalty.factor}{see glmnet.}
+
+\item{nfolds}{number of folds (default is 10), see
+\code{\link[glmnet]{cv.glmnet}} for more details.}
 
 \item{...}{aditional agruments}
 }
