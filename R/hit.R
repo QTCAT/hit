@@ -11,7 +11,7 @@
 #' @param p.samp1 fraction of data used for the LASSO. The ANOVA uses 
 #' \code{1 - p.samp1}.
 #' @param lambda.opt criterion for optimum selection of cross validated lasso. 
-#' Either 'lambda.min' (default) or 'lambda.1se'. See 
+#' Either 'lambda.1se' (default) or 'lambda.min'. See 
 #' \code{\link[glmnet]{cv.glmnet}} for more details. 
 #' @param gamma vector of gamma-values.
 #' @param max.p.esti maximum alpha level. All p-values above this value are set 
@@ -49,7 +49,7 @@
 #' @importFrom stats reorder
 #' @export 
 hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5, 
-                lambda.opt = c("lambda.min", "lambda.1se"), 
+                lambda.opt = c("lambda.1se", "lambda.min"), 
                 gamma = seq(0.05, 0.99, length.out = 100), max.p.esti = 1, 
                 mc.cores = 1L, trace = FALSE, ...) {
   #   Mandozzi and Buehlmann (2013), 2 Description of method
@@ -130,7 +130,7 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
 #' @keywords internal
 samp1.lasso <- function (samp1, x, y, n.samp2, 
                          lambda.opt, penalty.factor, ...) {
-  lambda.opt <- match.arg(lambda.opt, c("lambda.min", "lambda.1se"))
+  lambda.opt <- match.arg(lambda.opt, c("lambda.1se", "lambda.min"))
   ##  2.2 Screening
   lasso.fit <- cv.glmnet(x[samp1, ], y[samp1], penalty.factor = penalty.factor, 
                          dfmax = n.samp2 - 2L, ...)

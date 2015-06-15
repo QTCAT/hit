@@ -4,8 +4,8 @@
 \alias{hit}
 \title{Hierarchical inference testing}
 \usage{
-hit(x, y, hierarchy, B = 50, p.samp1 = 0.5, lambda.opt = c("lambda.min",
-  "lambda.1se"), gamma = seq(0.05, 0.99, length.out = 100), max.p.esti = 1,
+hit(x, y, hierarchy, B = 50, p.samp1 = 0.5, lambda.opt = c("lambda.1se",
+  "lambda.min"), gamma = seq(0.05, 0.99, length.out = 100), max.p.esti = 1,
   mc.cores = 1L, trace = FALSE, ...)
 }
 \arguments{
@@ -24,7 +24,7 @@ variables of \code{x} which should be trested.}
 \code{1 - p.samp1}.}
 
 \item{lambda.opt}{criterion for optimum selection of cross validated lasso.
-Either 'lambda.min' (default) or 'lambda.1se'. See
+Either 'lambda.1se' (default) or 'lambda.min'. See
 \code{\link[glmnet]{cv.glmnet}} for more details.}
 
 \item{gamma}{vector of gamma-values.}
