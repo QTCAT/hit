@@ -91,7 +91,7 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
   allActSet.ids <- mclapply(allSamp1.ids, samp1.lasso,
                             x, y, n.samp2, lambda.opt, 
                             penalty.factor, nfolds, ...,
-                            mc.cores=mc.cores, mc.cleanup = TRUE)
+                            mc.cores = mc.cores, mc.cleanup = TRUE)
   ##  2.3 Testing and multiplicity adjustmen; and 
   ##  2.4 Aggregating and Hierarchical adjustment
   if (isTRUE(trace))

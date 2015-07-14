@@ -38,7 +38,7 @@ hierarchy <- function (x, height, max.height, names) {
   } else if (length(setdiff(labels(x), names))) {
     stop("'x' includs variabels not in 'names'")
   }
-  out <- unname(dend2hier(x, height, names))
+  out <- unname(dend2hier(x, height, as.character(names)))
   ordAll <- order(out[[1L]])
   out[[1L]][] <- out[[1L]][ordAll]
   names(out[[1L]]) <- names(out[[1L]])[ordAll]
