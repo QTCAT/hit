@@ -56,7 +56,7 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
                 mc.cores = 1L, trace = FALSE, ...) {
   #   Mandozzi and Buehlmann (2013), 2 Description of method
   if (is.null(colnames(x)))
-    stop ("column names of 'x' are missing")
+    stop("column names of 'x' are missing")
   n <- nrow(x)
   p <- ncol(x)
   stopifnot(class(hierarchy) == "hierarchy")
@@ -133,8 +133,8 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
 #' @importFrom glmnet cv.glmnet
 #' @importFrom stats coef
 #' @keywords internal
-samp1.lasso <- function (samp1, x, y, n.samp2, 
-                         lambda.opt, penalty.factor, nfolds, ...) {
+samp1.lasso <- function(samp1, x, y, n.samp2, 
+                        lambda.opt, penalty.factor, nfolds, ...) {
   lambda.opt <- match.arg(lambda.opt, c("lambda.1se", "lambda.min"))
   ##  2.2 Screening
   lasso.fit <- cv.glmnet(x[samp1, ], y[samp1], penalty.factor = penalty.factor, 
@@ -165,6 +165,7 @@ samp1.lasso <- function (samp1, x, y, n.samp2,
 #' @param gamma vector of gamma-values.
 #' @param cores number of cores for parallelising.
 #' @author Jonas Klasen
+#' @importFrom stats quantile
 #' @keywords internal
 samp2.sigHierarchy <- function(cIndex, level, upper.p, x, y, allSamp1.ids, 
                                allActSet.ids, x.nonTested, hierarchy, 
@@ -228,8 +229,8 @@ samp2.sigHierarchy <- function(cIndex, level, upper.p, x, y, allSamp1.ids,
 #' @param allActSet.ids list of active sets.
 #' @author Jonas Klasen
 #' @keywords internal
-samp2.sigNode <- function (k, x, y, cluster, x.nonTested, 
-                           allSamp1.ids, allActSet.ids) {
+samp2.sigNode <- function(k, x, y, cluster, x.nonTested, 
+                          allSamp1.ids, allActSet.ids) {
   ## 2.3 Testing and multiplicity adjustment
   n <- nrow(x)
   actClust <- intersect(allActSet.ids[[k]], cluster)
@@ -276,6 +277,7 @@ samp2.sigNode <- function (k, x, y, cluster, x.nonTested,
 #' @param ... further arguments passed to or from other methods (not used).
 #' @author Jonas Klasen
 #' @method summary hit
+#' @importFrom methods is
 #' @export 
 summary.hit <- function(object, alpha = 0.05, max.height, ...) {
   make.pVal <- function(i) {
@@ -303,7 +305,7 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
                     heights = H.CLUSTER[non.na],
                     pValues = P.CLUSTER[non.na])
   rownames(out) <- names(object$hierarchy[[1L]])[non.na]
-  if(!missing(max.height)) 
+  if (!missing(max.height)) 
     out <- out[out[, 2L] <= max.height, ]
   if (ll <- length(unique(out[, 1L])))
     out[, 1L] <- as.integer(factor(out[, 1L], labels = 1L:ll))
@@ -333,7 +335,7 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
 #' # plot p-value matrix
 #' image(p.matrix(out))
 #' @export
-p.matrix <- function (x) {
+p.matrix <- function(x) {
   heig <- heightHierarchy(x$hierarchy)
   allheig <- sapply(x$hierarchy, attr, "height")
   inx <- which(heig[1L] == allheig)
