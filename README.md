@@ -17,7 +17,7 @@ Preprint [arXiv:1312.5556](http://arxiv.org/abs/1312.5556).
 
 ## Install:
 
-The package can be installed from an R console via [`devtools`](https://github.com/hadley/devtools/blob/master/README.md). If you haven't yet 
+The package can be installed from an R console via [`devtools`](https://github.com/hadley/devtools#updating-to-the-latest-version-of-devtools). If you haven't yet 
 `devtools` installed, you have to do so first.
 
 ```R
