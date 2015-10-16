@@ -56,4 +56,4 @@ fast.anova <- function(x, y, assign = NULL) {
   p <- rep(1, max(assign))
   p[unique(assign.pivot)] <- pf(f, df.treat, df.res, lower.tail = FALSE)
   p
-} # fast.anova
+}
