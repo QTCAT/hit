@@ -3,7 +3,7 @@ The current built and test status for Linux (Mac)
 [![Travis-CI Build Status](https://travis-ci.org/QTCAT/hit.png?branch=master)]
 (https://travis-ci.org/QTCAT/hit) 
 and for Windows 
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/kttq4x98q6hra6ct/branch/master?svg=true)](https://ci.appveyor.com/api/github/webhook?id=kttq4x98q6hra6ct)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/kttq4x98q6hra6ct/branch/master?svg=true)](https://ci.appveyor.com/project/jrklasen/qtcat)
 .
 
 ## Description:
