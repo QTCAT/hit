@@ -23,13 +23,13 @@ If you haven't yet `devtools` installed, you have to do so first.
 
 ```R
 # install.packages("devtools")
-devtools::install_github("jrklasen/hit")
+devtools::install_github("QTCAT/hit")
 ```
 
 If you want to install a specific release e.g. `v0.0-3`, use: 
 
 ```R
-devtools::install_github("jrklasen/hit", ref="v0.0-3")
+devtools::install_github("QTCAT/hit", ref="v0.0-3")
 ```
 
 ## Example:
