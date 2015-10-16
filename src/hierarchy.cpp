@@ -8,14 +8,14 @@ using std::string;
 using std::vector;
 using std::map;
 
-void findNames(List x, vector<string>& name);
+void findNames(vector<string>& name, List x);
 CharacterVector names(List x);
-void dendIndex(map<string, int>& dandNameIndex,
+void dendIndex(map<string, int>& dendNameInx,
                CharacterVector& dendNames, CharacterVector& newNames);
-IntegerVector clusterIndex(List x, map<string, int>& dandNameIndex);
-void runDend(List x, map< int, IntegerVector>& hierarchy, int& counter,
-             int superset, int level, NumericVector& height, 
-             map<string, int>& dandNameIndex);
+IntegerVector clusterIndex(List x, map<string, int>& dendNameInx);
+void runDend(map< int, IntegerVector>& hierarchy, List x, int& counter,
+             int superset, NumericVector& height, int heightInx, 
+             map<string, int>& dendNameInx);
 List  dend2hier(List x, NumericVector height, CharacterVector newNames);
 
 
@@ -26,7 +26,7 @@ List  dend2hier(List x, NumericVector height, CharacterVector newNames);
 //' 
 //' @param x A dendrogram S3 R object.
 //' @param height A vector of heights at which nodes are grouped.
-//' @param newNames Labels of the variabels which should be part of the 
+//' @param newNames Names of the variabels which should be part of the 
 //' hierarchy.
 //'
 //' @keywords internal
@@ -34,10 +34,10 @@ List  dend2hier(List x, NumericVector height, CharacterVector newNames);
 List dend2hier(List x, NumericVector height, CharacterVector newNames)
 {
     CharacterVector dendNames = names(x);
-    map<string, int> dandNameIndex; 
-    dendIndex(dandNameIndex, dendNames, newNames);
+    map<string, int> dendNameInx; 
+    dendIndex(dendNameInx, dendNames, newNames);
     // initial cluster
-    IntegerVector cluster = wrap(dandNameIndex);
+    IntegerVector cluster = wrap(dendNameInx);
     cluster.attr("height") = height[0];
     vector<int> nullSubset;
     cluster.attr("subset") = nullSubset;
@@ -46,7 +46,7 @@ List dend2hier(List x, NumericVector height, CharacterVector newNames)
     out[0] = cluster;
     int counter = 1;
     // run through the dendrogram
-    runDend(x, out, counter, 0, 0, height, dandNameIndex);
+    runDend(out, x, counter, 0, height, 0, dendNameInx);
     return wrap(out);
 }
 
@@ -54,43 +54,43 @@ List dend2hier(List x, NumericVector height, CharacterVector newNames)
 // @title Creat a node of a hierarchy
 // 
 // @description A function which recursively is called to generate all nodes 
-// in the hierarchy. Only call from within a C++ function!
+// in the hierarchy. Call only from within a C++ functions!
 // 
-// @param x A dendrogram S3 R object.
 // @param hierarchy A map to which the node is added.
+// @param x A dendrogram S3 R object.
 // @param counter A interger for the position of the node in the 
 // hierarchy.
 // @param superset A integer giving the position of the next higher node.
-// @param level A integer of the level of heights.
 // @param height A vector of heights at which nodes are grouped.
-// @param dandNameIndex Name index to add to node.
+// @param heightInx A integer of the heightInx of heights.
+// @param dendNameInx Name index to add to node.
 // 
 // @keywords internal
-void runDend(List x, map< int, IntegerVector>& hierarchy, int& counter,
-             int superset, int level, NumericVector& height, 
-             map<string, int>& dandNameIndex)
+void runDend(map< int, IntegerVector>& hierarchy, List x,  int& counter,
+             int superset, NumericVector& height, int heightInx, 
+             map<string, int>& dendNameInx)
 {
     RObject node;
     double nodeHeight = 0;
-    int newLevel = 0;
+    int newHeightInx = 0;
     for (int i = 0; i < x.size(); ++i) {
         node = as<RObject>(x[i]);
         for (int j = 0; j < height.size(); ++j) {
             nodeHeight = node.attr("height");
             if (nodeHeight <= height[j])
-                newLevel = j;
+                newHeightInx = j;
             else
                 break;
         }
-        if (newLevel > level) {
+        if (newHeightInx > heightInx) {
             IntegerVector cluster;
             RObject superNode = as<RObject>(hierarchy[superset]);
             vector<int>  superSubset;
             if (node.hasAttribute("leaf") && node.attr("leaf")) {
                 // make cluster
                 string name = as<string>(node.attr("label"));
-                cluster = dandNameIndex[name];
-                cluster.attr("height") = height[newLevel];
+                cluster = dendNameInx[name];
+                cluster.attr("height") = height[newHeightInx];
                 cluster.attr("superset") = superset +1;
                 hierarchy[counter] = cluster;
                 // modify super cluster
@@ -105,8 +105,8 @@ void runDend(List x, map< int, IntegerVector>& hierarchy, int& counter,
             }
             else {
                 // make cluster
-                cluster = clusterIndex(x[i], dandNameIndex);
-                cluster.attr("height") = height[newLevel];
+                cluster = clusterIndex(x[i], dendNameInx);
+                cluster.attr("height") = height[newHeightInx];
                 cluster.attr("superset") = superset +1;
                 hierarchy[counter] = cluster;
                 // modify super cluster
@@ -119,35 +119,35 @@ void runDend(List x, map< int, IntegerVector>& hierarchy, int& counter,
                     hierarchy[superset].attr("subset") = counter +1;
                 int newSuperset = counter;
                 ++ counter;
-                runDend(x[i], hierarchy, counter, newSuperset, 
-                        newLevel, height, dandNameIndex);
+                runDend(hierarchy, x[i], counter, newSuperset, 
+                        height, newHeightInx, dendNameInx);
             }
         }
         else if (!node.hasAttribute("leaf"))
-            runDend(x[i], hierarchy, counter, superset, 
-                    level, height, dandNameIndex);
+            runDend(hierarchy, x[i], counter, superset, 
+                    height, heightInx, dendNameInx);
     }
 }
 
 
 // @title dendrogram names in order to the new names
 //
-// @description A function which creates a nameIndex. Only call from within a 
-// C++ function!
+// @description A function which creates a nameIndex. Call only from within a 
+// C++ functions!
 //
-// @param dandNameIndex A map to which the dendrogram names index is writen.
+// @param dendNameInx A map to which the dendrogram names index is written.
 // @param dendNames The names of variables which are part of the dendrogram.
-// @param newNames Labels of the variabels which should be part of the 
+// @param newNames Names of the variabels which should be part of the 
 // hierarchy.
 // 
 // @keywords internal
-void dendIndex(map<string, int>& dandNameIndex,
+void dendIndex(map<string, int>& dendNameInx,
                CharacterVector& dendNames, CharacterVector& newNames)
 {
     for (int i = 0; i < dendNames.size(); ++i) {
         for (int j = 0; j < newNames.size(); ++j) {
             if (dendNames[i] == newNames[j]) {
-                dandNameIndex[as<string>(dendNames[i])] = j + 1;
+                dendNameInx[as<string>(dendNames[i])] = j + 1;
                 break;
             }
         }
@@ -157,27 +157,27 @@ void dendIndex(map<string, int>& dandNameIndex,
 
 // @title Index of cluster
 // 
-// @description A function which creates a Index of clusters. Only call from 
-// within a C++ function!
+// @description A function which creates a Index of clusters. Call only from 
+// within a C++ functions!
 //
 // @param x A dendrogram S3 R object.
-// @papam dandNameIndex  A map of name indexes.
+// @papam dendNameInx  A map of name indexes.
 //
 // @keywords internal
-IntegerVector clusterIndex(List x, map<string, int>& dandNameIndex)
+IntegerVector clusterIndex(List x, map<string, int>& dendNameInx)
 {
     CharacterVector name = names(x);
     int n = name.size();
     IntegerVector out(n);
     for (int i = 0; i < n; ++i)
-        out[i] = dandNameIndex[as<string>(name[i])];
+        out[i] = dendNameInx[as<string>(name[i])];
     return out.sort();
 }
 
 
 // @titile Names of cluster
 // 
-// @description A function which creates a vector of names
+// @description A function which creates a vector of names.
 // 
 // @param x A dendrogram S3 R object.
 //
@@ -185,26 +185,27 @@ IntegerVector clusterIndex(List x, map<string, int>& dandNameIndex)
 CharacterVector names(List x)
 {
     vector<string> out;
-    findNames(x, out);
+    findNames(out, x);
     return wrap(out);
 }
 
 
 // @title Find names of dendrogram
 // 
-// @description A function which finds names by recursively calling it self.
+// @description A function which finds names by recursively calling it self. 
+// Call only from within a C++ functions!
 //
+// @param name A vector in which the names are written.
 // @param x A dendrogram S3 R object.
-// @param name A vector in which the names are writrn.
 //
 // @keywords internal
-void findNames(List x, vector<string>& name) 
+void findNames(vector<string>& name, List x) 
 {
     for (int i = 0; i < x.size(); ++i) {
         RObject node = as<RObject>(x[i]);
         if (node.hasAttribute("label"))
             name.push_back(as<string>(node.attr("label")));
         else
-            findNames(x[i], name);
+            findNames(name, x[i]);
     }
 }

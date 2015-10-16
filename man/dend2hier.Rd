@@ -11,7 +11,7 @@ dend2hier(x, height, newNames)
 
 \item{height}{A vector of heights at which nodes are grouped.}
 
-\item{newNames}{Labels of the variabels which should be part of the
+\item{newNames}{Names of the variabels which should be part of the
 hierarchy.}
 }
 \description{

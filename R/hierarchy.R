@@ -10,6 +10,10 @@
 #' @param names variable names in the order in which the indexes shut be given 
 #' to the variables.
 #' 
+#' @details For the HIT algorithm it is important to have the hierarchical 
+#' clustering structure in a fast accessible format. This is provided by the 
+#' hierarchy object generated with this function.
+#' 
 #' @examples
 #' set.seed(123)
 #' n <- 100

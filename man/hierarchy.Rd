@@ -21,6 +21,11 @@ to the variables.}
 Stores variable indexes of clustering hierarchies in a fast
 accessible manner.
 }
+\details{
+For the HIT algorithm it is important to have the hierarchical
+clustering structure in a fast accessible format. This is provided by the
+hierarchy object generated with this function.
+}
 \examples{
 set.seed(123)
 n <- 100

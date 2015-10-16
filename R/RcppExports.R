@@ -8,10 +8,10 @@
 #' 
 #' @param x A dendrogram S3 R object.
 #' @param height A vector of heights at which nodes are grouped.
-#' @param newNames Labels of the variabels which should be part of the 
+#' @param newNames Names of the variabels which should be part of the 
 #' hierarchy.
 #'
-#'@keywords internal
+#' @keywords internal
 dend2hier <- function(x, height, newNames) {
     .Call('hit_dend2hier', PACKAGE = 'hit', x, height, newNames)
 }

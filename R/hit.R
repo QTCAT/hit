@@ -329,47 +329,47 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
 }
 
 
-#' @title p-value matrix
-#' 
-#' @description Matric of hierarchical p-values .
-#' 
-#' @param x a \code{\link{hit}} object
-#' 
-#' @examples
-#' set.seed(123)
-#' n <- 100
-#' p <- 150
-#' # x with correlated columns
-#' corMat <- toeplitz((p:1/p)^3)
-#' corMatQ <- chol(corMat)
-#' x <- matrix(rnorm(n * p), nrow = n) %*% corMatQ
-#' colnames(x) <- paste0("x", 1:p)
-#' # y
-#' y <- x[, c(3, 5, 73)] %*% c(2, 5, 3) + rnorm(n)
-#' # hierarchy
-#' dend <- as.dendrogram(hclust(dist(t(x))))
-#' hier <- hierarchy(dend, max.height = 20)
-#' # HIT
-#' out <- hit(x, y, hier)
-#' # plot p-value matrix
-#' image(p.matrix(out))
-#' 
-#' @export
-p.matrix <- function(x) {
-  heig <- heightHierarchy(x$hierarchy)
-  allheig <- sapply(x$hierarchy, attr, "height")
-  inx <- which(heig[1L] == allheig)
-  p.val <- rep(x$pValues[inx], sapply(allheig[inx], length))
-  out <- list(rep(NA_real_, length(p.val)))
-  out[[1L]][unlist(x$hierarchy[inx])] <- p.val
-  for (h in 2L:length(heig)) {
-    out[[h]] <- out[[h - 1L]]
-    inx <- which(heig[h] == allheig)
-    p.val <- rep(x$pValues[inx], sapply(allheig[inx] , length))
-    out[[h]][unlist(x$hierarchy[inx])] <- p.val
-  }
-  out <- do.call(rbind, out)
-  colnames(out) <- names(x$hierarchy)
-  rownames(out) <- heig
-  out
-}
+# #' @title p-value matrix
+# #' 
+# #' @description Matric of hierarchical p-values .
+# #' 
+# #' @param x a \code{\link{hit}} object
+# #' 
+# #' @examples
+# #' set.seed(123)
+# #' n <- 100
+# #' p <- 150
+# #' # x with correlated columns
+# #' corMat <- toeplitz((p:1/p)^3)
+# #' corMatQ <- chol(corMat)
+# #' x <- matrix(rnorm(n * p), nrow = n) %*% corMatQ
+# #' colnames(x) <- paste0("x", 1:p)
+# #' # y
+# #' y <- x[, c(3, 5, 73)] %*% c(2, 5, 3) + rnorm(n)
+# #' # hierarchy
+# #' dend <- as.dendrogram(hclust(dist(t(x))))
+# #' hier <- hierarchy(dend, max.height = 20)
+# #' # HIT
+# #' out <- hit(x, y, hier)
+# #' # plot p-value matrix
+# #' image(p.matrix(out))
+# #' 
+# #' @export
+# p.matrix <- function(x) {
+#   heig <- heightHierarchy(x$hierarchy)
+#   allheig <- sapply(x$hierarchy, attr, "height")
+#   inx <- which(heig[1L] == allheig)
+#   p.val <- rep(x$pValues[inx], sapply(allheig[inx], length))
+#   out <- list(rep(NA_real_, length(p.val)))
+#   out[[1L]][unlist(x$hierarchy[inx])] <- p.val
+#   for (h in 2L:length(heig)) {
+#     out[[h]] <- out[[h - 1L]]
+#     inx <- which(heig[h] == allheig)
+#     p.val <- rep(x$pValues[inx], sapply(allheig[inx] , length))
+#     out[[h]][unlist(x$hierarchy[inx])] <- p.val
+#   }
+#   out <- do.call(rbind, out)
+#   colnames(out) <- names(x$hierarchy)
+#   rownames(out) <- heig
+#   out
+# }
