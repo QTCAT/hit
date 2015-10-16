@@ -34,7 +34,4 @@ colnames(x) <- paste0("x", 1:p)
 dend <- as.dendrogram(hclust(dist(t(x))))
 hier <- hierarchy(dend, max.height = 20)
 }
-\author{
-Jonas Klasen
-}
 

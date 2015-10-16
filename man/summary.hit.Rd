@@ -18,7 +18,4 @@
 \description{
 Significant clusters at alpha threshold.
 }
-\author{
-Jonas Klasen
-}
 

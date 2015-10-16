@@ -69,12 +69,9 @@ hier <- hierarchy(dend, max.height = 20)
 out <- hit(x, y, hier)
 summary(out)
 }
-\author{
-Jonas Klasen
-}
 \references{
-Mandozzi, J. and Buehlmann, P. (2013). \emph{Hierarchical testing in the
-  high-dimensional setting with correlated variables.} To appear in the
-  Journal of the American Statistical Association. Preprint arXiv:1312.5556
+Mandozzi, J. and Buehlmann, P. (2013). \emph{Hierarchical testing
+in the high-dimensional setting with correlated variables}. To appear in the
+Journal of the American Statistical Association. Preprint arXiv:1312.5556
 }
 

@@ -24,8 +24,5 @@ samp2.sigNode(k, x, y, cluster, x.nonTested, allSamp1.ids, allActSet.ids)
 \description{
 ANOVA test (at single node) of the HIT algorithem.
 }
-\author{
-Jonas Klasen
-}
 \keyword{internal}
 

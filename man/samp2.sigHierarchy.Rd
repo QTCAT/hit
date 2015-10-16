@@ -39,8 +39,5 @@ to one. Small max.p.esti values reduce computing time.}
 \description{
 ANOVA test (long al nodes) of the HIT algorithem.
 }
-\author{
-Jonas Klasen
-}
 \keyword{internal}
 

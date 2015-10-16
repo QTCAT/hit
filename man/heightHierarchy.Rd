@@ -12,8 +12,5 @@ heightHierarchy(x)
 \description{
 All heights from a hierarchy.
 }
-\author{
-Jonas Klasen
-}
 \keyword{internal}
 

@@ -25,9 +25,6 @@ x <- matrix(data=rnorm(1000), nrow=100)
 a <- 1:10
 fast.anova(x=x, y=y, assign=a)
 }
-\author{
-Jonas Klasen
-}
 \seealso{
 \code{\link[stats]{lm}}, \code{\link[stats]{anova}}, and
 \code{\link[stats]{aov}}.

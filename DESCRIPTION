@@ -2,12 +2,12 @@ Package: hit
 Type: Package
 Title: Hierarchical Inference Testing
 Description: Hierarchical inference testing (HIT) for linear models with 
-  correlated covariates. HIT is furthermore applicable to high-dimensional 
-  settings.
+  correlated covariates applicable to high-dimensional settings.
+Authors@R: person("Jonas", "Klasen", role = c("aut", "cre"), 
+                  email = "qtcat@gmx.de")
 Version: 0.0-3
-Date: 2015-04-20
-Author: Jonas Klasen
-Maintainer: Jonas Klasen <maintainer@gmx.de>
+URL: https://github.com/QTCAT/hit
+BugReports: https://github.com/QTCAT/hit/issues
 Depends: R (>= 3.0.0)
 Imports: methods, stats, parallel, Rcpp (>= 0.11.0), glmnet
 Suggests: testthat

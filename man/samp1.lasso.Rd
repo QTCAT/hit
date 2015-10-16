@@ -30,8 +30,5 @@ Either 'lambda.min' (default) or 'lambda.1se'. See
 \description{
 LASSO function of the HIT algorithem.
 }
-\author{
-Jonas Klasen
-}
 \keyword{internal}
 

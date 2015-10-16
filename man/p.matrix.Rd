@@ -31,7 +31,4 @@ out <- hit(x, y, hier)
 # plot p-value matrix
 image(p.matrix(out))
 }
-\author{
-Jonas Klasen
-}
 

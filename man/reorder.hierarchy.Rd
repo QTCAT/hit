@@ -17,7 +17,4 @@ to the variables.}
 \description{
 Reorder indexes according to a vector of names.
 }
-\author{
-Jonas Klasen
-}
 

@@ -1,6 +1,8 @@
 #' @title Hierarchical inference testing
+#' 
 #' @description Hierarchical inference testing for linear models with 
 #' high-dimensional and/or correlated covariates by repeated sample splitting.
+#' 
 #' @param x design matrix of dimension \code{n * p}, without intercept.
 #' Variables not part of the dendrogram are added to the HO-model, see Details 
 #' below.
@@ -22,14 +24,15 @@
 #' 'B'. For details see \code{\link[parallel]{mclapply}}.
 #' @param trace if TRUE it prints current status of the program.
 #' @param ... additional arguments for \code{\link[glmnet]{cv.glmnet}}.
+#' 
 #' @details The H0-model contains variables, with are not tested, like 
 #' experimental-design variables. These variables are not penalised in the 
 #' LASSO model selection and are always include in the reduced ANOVA model.
-#' @author Jonas Klasen
-#' @references
-#'   Mandozzi, J. and Buehlmann, P. (2013). \emph{Hierarchical testing in the 
-#'   high-dimensional setting with correlated variables.} To appear in the 
-#'   Journal of the American Statistical Association. Preprint arXiv:1312.5556
+#' 
+#' @references Mandozzi, J. and Buehlmann, P. (2013). \emph{Hierarchical testing 
+#' in the high-dimensional setting with correlated variables}. To appear in the 
+#' Journal of the American Statistical Association. Preprint arXiv:1312.5556
+#'   
 #' @examples
 #' set.seed(123)
 #' n <- 500
@@ -47,6 +50,7 @@
 #' # HIT
 #' out <- hit(x, y, hier)
 #' summary(out)
+#' 
 #' @importFrom parallel mclapply
 #' @importFrom stats reorder
 #' @export 
@@ -54,7 +58,7 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
                 lambda.opt = c("lambda.1se", "lambda.min"), nfolds = 10,
                 gamma = seq(0.05, 0.99, length.out = 100), max.p.esti = 1, 
                 mc.cores = 1L, trace = FALSE, ...) {
-  #   Mandozzi and Buehlmann (2013), 2 Description of method
+  #   Mandozzi and Buehlmann (2015), 2 Description of method
   if (is.null(colnames(x)))
     stop("column names of 'x' are missing")
   n <- nrow(x)
@@ -115,8 +119,11 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
   out
 }
 
+
 #' @title LASSO screening
+#' 
 #' @description LASSO function of the HIT algorithem.
+#' 
 #' @param samp1 list of index for subsample (mclapply index).
 #' @param x design matrix, of dimension n x p.
 #' @param y vector of quantitative response variable.
@@ -129,7 +136,7 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
 #' @param nfolds number of folds (default is 10), see 
 #' \code{\link[glmnet]{cv.glmnet}} for more details.
 #' @param ... aditional agruments
-#' @author Jonas Klasen
+#' 
 #' @importFrom glmnet cv.glmnet
 #' @importFrom stats coef
 #' @keywords internal
@@ -147,9 +154,12 @@ samp1.lasso <- function(samp1, x, y, n.samp2,
   actSet
 }
 
+
 #' @title ANOVA testing, multiplicity adjustment, aggregating and hierarchical 
 #' adjustment
+#' 
 #' @description ANOVA test (long al nodes) of the HIT algorithem.
+#' 
 #' @param cIndex index for cluster (mclapply index).
 #' @param level hierarchy level counter for parallelism
 #' @param upper.p p value upper huerarchy level of the clusters variables.
@@ -164,7 +174,7 @@ samp1.lasso <- function(samp1, x, y, n.samp2,
 #' @param B number of sample-splits.
 #' @param gamma vector of gamma-values.
 #' @param cores number of cores for parallelising.
-#' @author Jonas Klasen
+#' 
 #' @importFrom stats quantile
 #' @keywords internal
 samp2.sigHierarchy <- function(cIndex, level, upper.p, x, y, allSamp1.ids, 
@@ -218,8 +228,11 @@ samp2.sigHierarchy <- function(cIndex, level, upper.p, x, y, allSamp1.ids,
   out
 }
 
+
 #' @title ANOVA testing and multiplicity adjustment
+#' 
 #' @description ANOVA test (at single node) of the HIT algorithem.
+#' 
 #' @param k index for subsample (mclapply index).
 #' @param x design matrix, of dimension n x p.
 #' @param y vector of quantitative response variable.
@@ -227,7 +240,7 @@ samp2.sigHierarchy <- function(cIndex, level, upper.p, x, y, allSamp1.ids,
 #' @param x.nonTested vector of indeces of non tested variabels.
 #' @param allSamp1.ids  list of subsampels.
 #' @param allActSet.ids list of active sets.
-#' @author Jonas Klasen
+#' 
 #' @keywords internal
 samp2.sigNode <- function(k, x, y, cluster, x.nonTested, 
                           allSamp1.ids, allActSet.ids) {
@@ -269,13 +282,16 @@ samp2.sigNode <- function(k, x, y, cluster, x.nonTested,
   p.cluster
 }
 
+
 #' @title Summary of HIT
+#' 
 #' @description Significant clusters at alpha threshold.
+#' 
 #' @param object a \code{\link{hit}} object.
 #' @param alpha a alpha significans threshold.
 #' @param max.height max. height to consider.
 #' @param ... further arguments passed to or from other methods (not used).
-#' @author Jonas Klasen
+#' 
 #' @method summary hit
 #' @importFrom methods is
 #' @export 
@@ -312,10 +328,13 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
   out
 }
 
+
 #' @title p-value matrix
+#' 
 #' @description Matric of hierarchical p-values .
+#' 
 #' @param x a \code{\link{hit}} object
-#' @author Jonas Klasen
+#' 
 #' @examples
 #' set.seed(123)
 #' n <- 100
@@ -334,6 +353,7 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
 #' out <- hit(x, y, hier)
 #' # plot p-value matrix
 #' image(p.matrix(out))
+#' 
 #' @export
 p.matrix <- function(x) {
   heig <- heightHierarchy(x$hierarchy)

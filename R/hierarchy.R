@@ -1,13 +1,15 @@
 #' @title Clustering hierachy
+#' 
 #' @description Stores variable indexes of clustering hierarchies in a fast 
 #' accessible manner.
+#' 
 #' @param x a \code{\link[stats]{dendrogram}}.
 #' @param height vector of heights at which nodes are grouped.
 #' @param max.height is the maximal height below the global node height which 
 #' is considered.
 #' @param names variable names in the order in which the indexes shut be given 
 #' to the variables.
-#' @author Jonas Klasen
+#' 
 #' @examples
 #' set.seed(123)
 #' n <- 100
@@ -20,6 +22,7 @@
 #' # hierarchy
 #' dend <- as.dendrogram(hclust(dist(t(x))))
 #' hier <- hierarchy(dend, max.height = 20)
+#' 
 #' @importFrom parallel mclapply
 #' @export
 hierarchy <- function (x, height, max.height, names) {
@@ -38,7 +41,7 @@ hierarchy <- function (x, height, max.height, names) {
   } else if (length(setdiff(labels(x), names))) {
     stop("'x' includs variabels not in 'names'")
   }
-  out <- unname(dend2hier(x, height, as.character(names)))
+  out <- unname(dend2hier(x, as.numeric(height), as.character(names)))
   ordAll <- order(out[[1L]])
   out[[1L]][] <- out[[1L]][ordAll]
   names(out[[1L]]) <- names(out[[1L]])[ordAll]
@@ -46,10 +49,13 @@ hierarchy <- function (x, height, max.height, names) {
   out
 }
 
+
 #' @title Heights of dendrogram
+#' 
 #' @description All heights from a dendrogram. 
+#' 
 #' @param x a \code{\link[stats]{dendrogram}}.
-#' @author Jonas Klasen
+#' 
 #' @keywords internal
 heightDendrogram <- function (x) {
   node.height <- function(d) {
@@ -64,10 +70,13 @@ heightDendrogram <- function (x) {
   sort(unique(node.height(x)), decreasing = TRUE)
 }
 
+
 #' @title Heights of Hierarchy
+#' 
 #' @description All heights from a hierarchy.
+#' 
 #' @param x a \code{\link{hierarchy}}.
-#' @author Jonas Klasen
+#' 
 #' @keywords internal
 heightHierarchy <- function(x) {
   if (!inherits(x, "hierarchy")) 
@@ -75,33 +84,29 @@ heightHierarchy <- function(x) {
   sort(unique(sapply(x, attr, which = "height")))
 }
 
-# #' @title Leaf of hierarchy 
-# #' @description All the leafs of the hierarchy.
-# #' @param x a \code{\link{hierarchy}}.
-# #' @keywords internal
-# bottomNodeIndex <- function(x) {
-#   if (!inherits(x, "hierarchy")) 
-#     stop("'x' is not a hierarchy")
-#   which(sapply(x, function(x) is.null(attr(x, which = "subset"))))
-# }
 
-#' @title Names  of hierarchy
+#' @title Names of hierarchy
+#' 
 #' @description Names of variables of an hierarchy.
+#' 
 #' @param x a \code{\link{hierarchy}}.
-#' @author Jonas Klasen
+#' 
 #' @method names hierarchy 
 #' @export
 names.hierarchy <- function(x) {
   names(x[[1L]])
 }
 
+
 #' @title Reorder hierarchy
+#' 
 #' @description Reorder indexes according to a vector of names.
+#' 
 #' @param x a \code{\link{hierarchy}}.
 #' @param names variable names in the order in which the indexes shut be given 
 #' to the variables.
 #' @param ... further arguments passed to or from other methods (not used).
-#' @author Jonas Klasen
+#' 
 #' @importFrom stats reorder
 #' @method reorder hierarchy 
 #' @export
@@ -119,6 +124,20 @@ reorder.hierarchy <- function(x, names, ...) {
   class(out) <- "hierarchy"
   out
 }
+
+
+# #' @title Leaf of hierarchy 
+# #'
+# #' @description All the leafs of the hierarchy.
+# #' @param x a \code{\link{hierarchy}}.
+# #'
+# #' @keywords internal
+# bottomNodeIndex <- function(x) {
+#   if (!inherits(x, "hierarchy")) 
+#     stop("'x' is not a hierarchy")
+#   which(sapply(x, function(x) is.null(attr(x, which = "subset"))))
+# }
+
 
 # #' A pure R version of hierarchy
 # #' @export

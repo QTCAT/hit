@@ -12,8 +12,5 @@ heightDendrogram(x)
 \description{
 All heights from a dendrogram.
 }
-\author{
-Jonas Klasen
-}
 \keyword{internal}
 
