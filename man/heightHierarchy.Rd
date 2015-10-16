@@ -7,7 +7,7 @@
 heightHierarchy(x)
 }
 \arguments{
-\item{x}{a \code{\link{hierarchy}}.}
+\item{x}{a \code{\link{as.hierarchy}}.}
 }
 \description{
 All heights from a hierarchy.

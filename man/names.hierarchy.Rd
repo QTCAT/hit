@@ -2,12 +2,12 @@
 % Please edit documentation in R/hierarchy.R
 \name{names.hierarchy}
 \alias{names.hierarchy}
-\title{Names of hierarchy}
+\title{Names of Hierarchy}
 \usage{
 \method{names}{hierarchy}(x)
 }
 \arguments{
-\item{x}{a \code{\link{hierarchy}}.}
+\item{x}{a \code{\link{as.hierarchy}}.}
 }
 \description{
 Names of variables of an hierarchy.

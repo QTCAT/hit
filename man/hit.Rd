@@ -2,7 +2,7 @@
 % Please edit documentation in R/hit.R
 \name{hit}
 \alias{hit}
-\title{Hierarchical inference testing}
+\title{Hierarchical Inference Testing}
 \usage{
 hit(x, y, hierarchy, B = 50, p.samp1 = 0.5, lambda.opt = c("lambda.1se",
   "lambda.min"), nfolds = 10, gamma = seq(0.05, 0.99, length.out = 100),
@@ -15,7 +15,7 @@ below.}
 
 \item{y}{quantitative response variable dimension \code{n}.}
 
-\item{hierarchy}{object of class \code{\link{hierarchy}}. Must include all
+\item{hierarchy}{object of class \code{\link{as.hierarchy}}. Must include all
 variables of \code{x} which should be trested.}
 
 \item{B}{number of sample-splits.}
@@ -63,8 +63,8 @@ colnames(x) <- paste0("x", 1:p)
 # y
 y <- x[, c(3, 5, 73)] \%*\% c(2, 5, 3) + rnorm(n)
 # hierarchy
-dend <- as.dendrogram(hclust(dist(t(x))))
-hier <- hierarchy(dend, max.height = 20)
+hc <- hclust(dist(t(x)))
+hier <- as.hierarchy(hc, max.height = 20)
 # HIT
 out <- hit(x, y, hier)
 summary(out)

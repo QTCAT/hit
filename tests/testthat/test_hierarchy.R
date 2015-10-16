@@ -12,8 +12,8 @@ test_that("hirarchy testing", {
   # y
   y <- x[, c(3, 5, 73)] %*% c(2, 5, 3) + rnorm(n)
   # hierarchy
-  dend <- as.dendrogram(hclust(dist(t(x))))
-  hier <- hierarchy(dend, max.height = 20)
+  hc <- hclust(dist(t(x)))
+  hier <- as.hierarchy(hc, max.height = 20)
   # check:
   expect_equal(class(hier), "hierarchy")
 #   expect_equal(unname(unlist(lapply(hier, class))), 

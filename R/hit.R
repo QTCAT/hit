@@ -1,4 +1,4 @@
-#' @title Hierarchical inference testing
+#' @title Hierarchical Inference Testing
 #' 
 #' @description Hierarchical inference testing for linear models with 
 #' high-dimensional and/or correlated covariates by repeated sample splitting.
@@ -7,7 +7,7 @@
 #' Variables not part of the dendrogram are added to the HO-model, see Details 
 #' below.
 #' @param y quantitative response variable dimension \code{n}.
-#' @param hierarchy object of class \code{\link{hierarchy}}. Must include all 
+#' @param hierarchy object of class \code{\link{as.hierarchy}}. Must include all 
 #' variables of \code{x} which should be trested.
 #' @param B number of sample-splits.
 #' @param p.samp1 fraction of data used for the LASSO. The ANOVA uses 
@@ -45,8 +45,8 @@
 #' # y
 #' y <- x[, c(3, 5, 73)] %*% c(2, 5, 3) + rnorm(n)
 #' # hierarchy
-#' dend <- as.dendrogram(hclust(dist(t(x))))
-#' hier <- hierarchy(dend, max.height = 20)
+#' hc <- hclust(dist(t(x)))
+#' hier <- as.hierarchy(hc, max.height = 20)
 #' # HIT
 #' out <- hit(x, y, hier)
 #' summary(out)
@@ -120,7 +120,7 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
 }
 
 
-#' @title LASSO screening
+#' @title Variabel Screening
 #' 
 #' @description LASSO function of the HIT algorithem.
 #' 
@@ -155,10 +155,10 @@ samp1.lasso <- function(samp1, x, y, n.samp2,
 }
 
 
-#' @title ANOVA testing, multiplicity adjustment, aggregating and hierarchical 
-#' adjustment
+#' @title Variabel Testing
 #' 
-#' @description ANOVA test (long al nodes) of the HIT algorithem.
+#' @description ANOVA Testing, Multiplicity Adjustment, Aggregating and 
+#' Hierarchical Adjustment
 #' 
 #' @param cIndex index for cluster (mclapply index).
 #' @param level hierarchy level counter for parallelism
@@ -293,7 +293,6 @@ samp2.sigNode <- function(k, x, y, cluster, x.nonTested,
 #' @param ... further arguments passed to or from other methods (not used).
 #' 
 #' @method summary hit
-#' @importFrom methods is
 #' @export 
 summary.hit <- function(object, alpha = 0.05, max.height, ...) {
   make.pVal <- function(i) {
@@ -310,7 +309,7 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
     }
     return(NULL)
   } 
-  stopifnot(is(object, "hit"))
+  stopifnot(class(object) == "hit")
   P.CLUSTER <- rep(NA_real_, length(object$hierarchy[[1L]]))
   ID.CLUSTER <- rep(NA_integer_, length(object$hierarchy[[1L]]))
   H.CLUSTER <- rep(NA_real_, length(object$hierarchy[[1L]]))
@@ -348,7 +347,7 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
 # #' y <- x[, c(3, 5, 73)] %*% c(2, 5, 3) + rnorm(n)
 # #' # hierarchy
 # #' dend <- as.dendrogram(hclust(dist(t(x))))
-# #' hier <- hierarchy(dend, max.height = 20)
+# #' hier <- as.hierarchy(dend, max.height = 20)
 # #' # HIT
 # #' out <- hit(x, y, hier)
 # #' # plot p-value matrix

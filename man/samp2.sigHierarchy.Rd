@@ -2,8 +2,7 @@
 % Please edit documentation in R/hit.R
 \name{samp2.sigHierarchy}
 \alias{samp2.sigHierarchy}
-\title{ANOVA testing, multiplicity adjustment, aggregating and hierarchical
-adjustment}
+\title{Variabel Testing}
 \usage{
 samp2.sigHierarchy(cIndex, level, upper.p, x, y, allSamp1.ids, allActSet.ids,
   x.nonTested, hierarchy, max.p.esti, B, gamma, cores)
@@ -37,7 +36,8 @@ to one. Small max.p.esti values reduce computing time.}
 \item{cores}{number of cores for parallelising.}
 }
 \description{
-ANOVA test (long al nodes) of the HIT algorithem.
+ANOVA Testing, Multiplicity Adjustment, Aggregating and
+Hierarchical Adjustment
 }
 \keyword{internal}
 

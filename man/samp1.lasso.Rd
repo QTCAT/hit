@@ -2,7 +2,7 @@
 % Please edit documentation in R/hit.R
 \name{samp1.lasso}
 \alias{samp1.lasso}
-\title{LASSO screening}
+\title{Variabel Screening}
 \usage{
 samp1.lasso(samp1, x, y, n.samp2, lambda.opt, penalty.factor, nfolds, ...)
 }

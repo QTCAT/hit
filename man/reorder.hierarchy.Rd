@@ -2,12 +2,12 @@
 % Please edit documentation in R/hierarchy.R
 \name{reorder.hierarchy}
 \alias{reorder.hierarchy}
-\title{Reorder hierarchy}
+\title{Reorder Hierarchy}
 \usage{
 \method{reorder}{hierarchy}(x, names, ...)
 }
 \arguments{
-\item{x}{a \code{\link{hierarchy}}.}
+\item{x}{a \code{\link{as.hierarchy}}.}
 
 \item{names}{variable names in the order in which the indexes shut be given
 to the variables.}

@@ -13,7 +13,7 @@ test_that("hit testing", {
   y <- x[, c(3, 5, 73)] %*% c(2, 5, 3) + rnorm(n)
   # hierarchy
   dend <- as.dendrogram(hclust(dist(t(x))))
-  hier <- hierarchy(dend, max.height = 20)
+  hier <- as.hierarchy(dend, max.height = 20)
   # HIT
   fit <- hit(x, y, hier)
   # checks

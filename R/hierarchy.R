@@ -1,20 +1,21 @@
-#' @title Clustering hierachy
+#' @title Hierarchy Structure
 #' 
 #' @description Stores variable indexes of clustering hierarchies in a fast 
 #' accessible manner.
 #' 
-#' @param x a \code{\link[stats]{dendrogram}}.
-#' @param height vector of heights at which nodes are grouped.
-#' @param max.height is the maximal height below the global node height which 
+#' @param x A S3 object.
+#' @param max.height Is the maximal height below the global node height which 
 #' is considered.
-#' @param names variable names in the order in which the indexes shut be given 
+#' @param height A vector of heights at which nodes are grouped.
+#' @param names Variable names in the order in which the indexes shut be given 
 #' to the variables.
+#' @param ... Further arguments.
 #' 
 #' @details For the HIT algorithm it is important to have the hierarchical 
 #' clustering structure in a fast accessible format. This is provided by the 
 #' hierarchy object generated with this function.
 #' 
-#' @examples
+#' @examples 
 #' set.seed(123)
 #' n <- 100
 #' p <- 150
@@ -24,14 +25,26 @@
 #' x <- matrix(rnorm(n * p), nrow = n) %*% corMatQ
 #' colnames(x) <- paste0("x", 1:p)
 #' # hierarchy
-#' dend <- as.dendrogram(hclust(dist(t(x))))
-#' hier <- hierarchy(dend, max.height = 20)
+#' hc <- hclust(dist(t(x)))
+#' hier <- as.hierarchy(hc, max.height = 20)
 #' 
-#' @importFrom parallel mclapply
 #' @export
-hierarchy <- function (x, height, max.height, names) {
-  if (!inherits(x, "dendrogram")) 
-    stop("'x' is not a dendrogram")
+as.hierarchy <- function(x, max.height, height, names) 
+  UseMethod("as.hierarchy")
+
+
+#' @export
+as.hierarchy.hierarchy <- function (x, max.height, height, names, ...) x
+
+
+#' @export
+as.hierarchy.hclust <- function (x, max.height, height, names, ...) {
+    as.hierarchy(as.dendrogram(x), max.height, height, names, ...)
+}
+
+
+#' @export
+as.hierarchy.dendrogram <- function (x, max.height, height, names, ...) {
   if (missing(height)) 
     height <- heightDendrogram(x)
   height <- sort(height, decreasing = TRUE)
@@ -54,7 +67,7 @@ hierarchy <- function (x, height, max.height, names) {
 }
 
 
-#' @title Heights of dendrogram
+#' @title Heights of Dendrogram
 #' 
 #' @description All heights from a dendrogram. 
 #' 
@@ -79,7 +92,7 @@ heightDendrogram <- function (x) {
 #' 
 #' @description All heights from a hierarchy.
 #' 
-#' @param x a \code{\link{hierarchy}}.
+#' @param x a \code{\link{as.hierarchy}}.
 #' 
 #' @keywords internal
 heightHierarchy <- function(x) {
@@ -89,30 +102,28 @@ heightHierarchy <- function(x) {
 }
 
 
-#' @title Names of hierarchy
+#' @title Names of Hierarchy
 #' 
 #' @description Names of variables of an hierarchy.
 #' 
-#' @param x a \code{\link{hierarchy}}.
+#' @param x a \code{\link{as.hierarchy}}.
 #' 
-#' @method names hierarchy 
 #' @export
 names.hierarchy <- function(x) {
   names(x[[1L]])
 }
 
 
-#' @title Reorder hierarchy
+#' @title Reorder Hierarchy
 #' 
 #' @description Reorder indexes according to a vector of names.
 #' 
-#' @param x a \code{\link{hierarchy}}.
+#' @param x a \code{\link{as.hierarchy}}.
 #' @param names variable names in the order in which the indexes shut be given 
 #' to the variables.
 #' @param ... further arguments passed to or from other methods (not used).
 #' 
 #' @importFrom stats reorder
-#' @method reorder hierarchy 
 #' @export
 reorder.hierarchy <- function(x, names, ...) {
   if (!inherits(x, "hierarchy")) 
@@ -130,10 +141,10 @@ reorder.hierarchy <- function(x, names, ...) {
 }
 
 
-# #' @title Leaf of hierarchy 
+# #' @title Leaf of Hierarchy 
 # #'
 # #' @description All the leafs of the hierarchy.
-# #' @param x a \code{\link{hierarchy}}.
+# #' @param x a \code{\link{as.hierarchy}}.
 # #'
 # #' @keywords internal
 # bottomNodeIndex <- function(x) {

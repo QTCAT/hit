@@ -2,7 +2,7 @@
 % Please edit documentation in R/hierarchy.R
 \name{heightDendrogram}
 \alias{heightDendrogram}
-\title{Heights of dendrogram}
+\title{Heights of Dendrogram}
 \usage{
 heightDendrogram(x)
 }
