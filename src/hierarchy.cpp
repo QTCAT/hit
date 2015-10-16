@@ -29,7 +29,7 @@ List  dend2hier(List x, NumericVector height, CharacterVector newNames);
 //' @param newNames Labels of the variabels which should be part of the 
 //' hierarchy.
 //'
-//'@keywords internal
+//' @keywords internal
 // [[Rcpp::export]]
 List dend2hier(List x, NumericVector height, CharacterVector newNames)
 {
@@ -163,7 +163,7 @@ void dendIndex(map<string, int>& dandNameIndex,
 // @param x A dendrogram S3 R object.
 // @papam dandNameIndex  A map of name indexes.
 //
-//@keywords internal
+// @keywords internal
 IntegerVector clusterIndex(List x, map<string, int>& dandNameIndex)
 {
     CharacterVector name = names(x);
@@ -181,7 +181,7 @@ IntegerVector clusterIndex(List x, map<string, int>& dandNameIndex)
 // 
 // @param x A dendrogram S3 R object.
 //
-//@keywords internal
+// @keywords internal
 CharacterVector names(List x)
 {
     vector<string> out;
@@ -197,7 +197,7 @@ CharacterVector names(List x)
 // @param x A dendrogram S3 R object.
 // @param name A vector in which the names are writrn.
 //
-//@keywords internal
+// @keywords internal
 void findNames(List x, vector<string>& name) 
 {
     for (int i = 0; i < x.size(); ++i) {
