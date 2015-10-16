@@ -309,7 +309,7 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
     }
     return(NULL)
   } 
-  stopifnot(class(object) == "hit")
+  stopifnot(inherits(object, "hit"))
   P.CLUSTER <- rep(NA_real_, length(object$hierarchy[[1L]]))
   ID.CLUSTER <- rep(NA_integer_, length(object$hierarchy[[1L]]))
   H.CLUSTER <- rep(NA_real_, length(object$hierarchy[[1L]]))
