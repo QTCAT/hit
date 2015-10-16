@@ -13,13 +13,13 @@ test_that("hit testing", {
   y <- x[, c(3, 5, 73)] %*% c(2, 5, 3) + rnorm(n)
   # hierarchy
   dend <- as.dendrogram(hclust(dist(t(x))))
-  hier <- as.hierarchy(dend, max.height = 20)
+  hier <- as.hierarchy(dend)
   # HIT
   fit <- hit(x, y, hier)
   # checks
   expect_equal(class(fit), "hit")
   expect_equal(unname(unlist(lapply(fit, class))), 
                c("numeric", "numeric","hierarchy", "character"))
-#   expect_equal(names(fit), 
-#                c("pValues", "selectFreq", "hierarchy", "additionals"))
+  expect_equal(names(fit), 
+               c("pValues", "selectFreq", "hierarchy", "additionalCovariates"))
 })

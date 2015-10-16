@@ -64,7 +64,7 @@ colnames(x) <- paste0("x", 1:p)
 y <- x[, c(3, 5, 73)] \%*\% c(2, 5, 3) + rnorm(n)
 # hierarchy
 hc <- hclust(dist(t(x)))
-hier <- as.hierarchy(hc, max.height = 20)
+hier <- as.hierarchy(hc)
 # HIT
 out <- hit(x, y, hier)
 summary(out)

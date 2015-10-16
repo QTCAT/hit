@@ -13,12 +13,9 @@ test_that("hirarchy testing", {
   y <- x[, c(3, 5, 73)] %*% c(2, 5, 3) + rnorm(n)
   # hierarchy
   hc <- hclust(dist(t(x)))
-  hier <- as.hierarchy(hc, max.height = 20)
+  hier <- as.hierarchy(hc)
   # check:
   expect_equal(class(hier), "hierarchy")
-#   expect_equal(unname(unlist(lapply(hier, class))), 
-#                c("list", "list", "character", "numeric"))
-#   expect_equal(names(hier), 
-#                c("hierarchyCluster", "clusterMembers", 
-#                  "labels", "hierarchyLevel"))
+  expect_equal(typeof(hier), "list")
 })
+

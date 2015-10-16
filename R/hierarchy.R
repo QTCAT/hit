@@ -26,7 +26,7 @@
 #' colnames(x) <- paste0("x", 1:p)
 #' # hierarchy
 #' hc <- hclust(dist(t(x)))
-#' hier <- as.hierarchy(hc, max.height = 20)
+#' hier <- as.hierarchy(hc)
 #' 
 #' @export
 as.hierarchy <- function(x, max.height, height, names) 
