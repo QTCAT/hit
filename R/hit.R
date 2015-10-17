@@ -63,6 +63,8 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
     stop("column names of 'x' are missing")
   n <- nrow(x)
   p <- ncol(x)
+  if (class(hierarchy) == "dendrogram" || class(hierarchy) == "hclust")
+    hierarchy <- as.hierarchy(hierarchy)
   stopifnot(class(hierarchy) == "hierarchy")
   ##### Checks order of variables
   x.names <- colnames(x)
