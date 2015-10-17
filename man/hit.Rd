@@ -16,7 +16,7 @@ below.}
 \item{y}{quantitative response variable dimension \code{n}.}
 
 \item{hierarchy}{object of class \code{\link{as.hierarchy}}. Must include all
-variables of \code{x} which should be trested.}
+variables of \code{x} which should be tested.}
 
 \item{B}{number of sample-splits.}
 

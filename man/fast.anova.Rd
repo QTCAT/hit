@@ -9,7 +9,7 @@ fast.anova(x, y, assign = NULL)
 \arguments{
 \item{x}{design matrix of dimension \code{n * p}.}
 
-\item{y}{respons vector of observations of length \code{n}.}
+\item{y}{response vector of observations of length \code{n}.}
 
 \item{assign}{integer vector assigning columns to terms can be also given as
 \code{x} attribute in which case the argument is ignored. For details about

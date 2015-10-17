@@ -4,7 +4,7 @@
 #' developed for internal use.
 #' 
 #' @param x design matrix of dimension \code{n * p}.
-#' @param y respons vector of observations of length \code{n}.
+#' @param y response vector of observations of length \code{n}.
 #' @param assign integer vector assigning columns to terms can be also given as 
 #' \code{x} attribute in which case the argument is ignored. For details about 
 #' assign see \code{\link[stats]{model.matrix}}.
@@ -25,7 +25,7 @@ fast.anova <- function(x, y, assign = NULL) {
     assign <- attr(x, "assign")
   }
   if (is.null(assign)) {
-    stop(" 'x' attribute 'assign' or 'assign' argument must be specified")
+    stop("either a 'x' attribute 'assign' or the 'assign' argument must be specified")
   }
   stopifnot(ncol(x) == length(assign))
   stopifnot(nrow(x) == length(y))

@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{a \code{\link{hit}} object.}
 
-\item{alpha}{a alpha significans threshold.}
+\item{alpha}{a alpha significance threshold.}
 
 \item{max.height}{max. height to consider.}
 

@@ -8,7 +8,7 @@
 #' below.
 #' @param y quantitative response variable dimension \code{n}.
 #' @param hierarchy object of class \code{\link{as.hierarchy}}. Must include all 
-#' variables of \code{x} which should be trested.
+#' variables of \code{x} which should be tested.
 #' @param B number of sample-splits.
 #' @param p.samp1 fraction of data used for the LASSO. The ANOVA uses 
 #' \code{1 - p.samp1}.
@@ -288,7 +288,7 @@ samp2.sigNode <- function(k, x, y, cluster, x.nonTested,
 #' @description Significant clusters at alpha threshold.
 #' 
 #' @param object a \code{\link{hit}} object.
-#' @param alpha a alpha significans threshold.
+#' @param alpha a alpha significance threshold.
 #' @param max.height max. height to consider.
 #' @param ... further arguments passed to or from other methods (not used).
 #' 
