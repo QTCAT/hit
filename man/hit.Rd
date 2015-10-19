@@ -9,38 +9,38 @@ hit(x, y, hierarchy, B = 50, p.samp1 = 0.5, lambda.opt = c("lambda.1se",
   max.p.esti = 1, mc.cores = 1L, trace = FALSE, ...)
 }
 \arguments{
-\item{x}{design matrix of dimension \code{n * p}, without intercept.
+\item{x}{Design matrix of dimension \code{n * p}, without intercept.
 Variables not part of the dendrogram are added to the HO-model, see Details
 below.}
 
-\item{y}{quantitative response variable dimension \code{n}.}
+\item{y}{Quantitative response variable dimension \code{n}.}
 
-\item{hierarchy}{object of class \code{\link{as.hierarchy}}. Must include all
+\item{hierarchy}{Object of class \code{\link{as.hierarchy}}. Must include all
 variables of \code{x} which should be tested.}
 
-\item{B}{number of sample-splits.}
+\item{B}{Number of sample-splits.}
 
-\item{p.samp1}{fraction of data used for the LASSO. The ANOVA uses
+\item{p.samp1}{Fraction of data used for the LASSO. The ANOVA uses
 \code{1 - p.samp1}.}
 
-\item{lambda.opt}{criterion for optimum selection of cross validated lasso.
+\item{lambda.opt}{Criterion for optimum selection of cross validated lasso.
 Either 'lambda.1se' (default) or 'lambda.min'. See
 \code{\link[glmnet]{cv.glmnet}} for more details.}
 
-\item{nfolds}{number of folds (default is 10), see
+\item{nfolds}{Number of folds (default is 10), see
 \code{\link[glmnet]{cv.glmnet}} for more details.}
 
-\item{gamma}{vector of gamma-values.}
+\item{gamma}{Vector of gamma-values.}
 
-\item{max.p.esti}{maximum alpha level. All p-values above this value are set
+\item{max.p.esti}{Maximum alpha level. All p-values above this value are set
 to one. Small \code{max.p.esti} values reduce computing time.}
 
-\item{mc.cores}{number of cores for parallelising. Theoretical maximum is
+\item{mc.cores}{Number of cores for parallelising. Theoretical maximum is
 'B'. For details see \code{\link[parallel]{mclapply}}.}
 
-\item{trace}{if TRUE it prints current status of the program.}
+\item{trace}{If TRUE it prints current status of the program.}
 
-\item{...}{additional arguments for \code{\link[glmnet]{cv.glmnet}}.}
+\item{...}{Additional arguments for \code{\link[glmnet]{cv.glmnet}}.}
 }
 \description{
 Hierarchical inference testing for linear models with

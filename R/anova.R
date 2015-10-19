@@ -3,20 +3,21 @@
 #' @description A fast sequential analysis of variance (ANOVA). Mainly 
 #' developed for internal use.
 #' 
-#' @param x design matrix of dimension \code{n * p}.
-#' @param y response vector of observations of length \code{n}.
-#' @param assign integer vector assigning columns to terms can be also given as 
-#' \code{x} attribute in which case the argument is ignored. For details about 
-#' assign see \code{\link[stats]{model.matrix}}.
+#' @param x Design matrix of dimension \code{n * p}.
+#' @param y Response vector of observations of length \code{n}.
+#' @param assign Integer vector assigning columns to terms can be also given as 
+#' \code{x} attribute in which case the argument is ignored. If an intercept 
+#' exist it is expected to be coded by '0'.For details about assign see 
+#' \code{\link[stats]{model.matrix}}.
 #' 
 #' @seealso \code{\link[stats]{lm}}, \code{\link[stats]{anova}}, and 
 #' \code{\link[stats]{aov}}.
 #' 
 #' @examples
-#' y <- rnorm(n=100)
-#' x <- matrix(data=rnorm(1000), nrow=100)
+#' y <- rnorm(n = 100)
+#' x <- matrix(data = rnorm(1000), nrow = 100)
 #' a <- 1:10
-#' fast.anova(x=x, y=y, assign=a)
+#' fast.anova(x = x, y = y, assign = a)
 #' 
 #' @importFrom stats lm.fit pf
 #' @export

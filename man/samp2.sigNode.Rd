@@ -7,19 +7,19 @@
 samp2.sigNode(k, x, y, cluster, x.nonTested, allSamp1.ids, allActSet.ids)
 }
 \arguments{
-\item{k}{index for subsample (mclapply index).}
+\item{k}{Index for subsample (mclapply index).}
 
-\item{x}{design matrix, of dimension n x p.}
+\item{x}{Design matrix, of dimension n x p.}
 
-\item{y}{vector of quantitative response variable.}
+\item{y}{Vector of quantitative response variable.}
 
-\item{cluster}{clusters to be tested.}
+\item{cluster}{Clusters to be tested.}
 
-\item{x.nonTested}{vector of indeces of non tested variabels.}
+\item{x.nonTested}{Vector of indeces of non tested variabels.}
 
-\item{allSamp1.ids}{list of subsampels.}
+\item{allSamp1.ids}{List of subsampels.}
 
-\item{allActSet.ids}{list of active sets.}
+\item{allActSet.ids}{List of active sets.}
 }
 \description{
 ANOVA test (at single node) of the HIT algorithem.

@@ -1,10 +1,16 @@
 # Hierarchical Inference Testing
-The current built and test status for Linux (Mac)
+<!---
+[![CRAN](http://www.r-pkg.org/badges/version/hit)](http://cran.r-project.org/package=hit)
+-->
+
+Master branch bild and test status for Linux (Mac)
 [![Travis-CI Build Status](https://travis-ci.org/QTCAT/hit.png?branch=master)]
 (https://travis-ci.org/QTCAT/hit) 
 and for Windows 
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/kttq4x98q6hra6ct/branch/master?svg=true)](https://ci.appveyor.com/project/jrklasen/hit)
+ [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/kttq4x98q6hra6ct/branch/master?svg=true)](https://ci.appveyor.com/project/jrklasen/hit)
 .
+
+
 
 ## Description:
 Hierarchical inference testing (HIT) for linear models with correlated 

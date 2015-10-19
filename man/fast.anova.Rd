@@ -7,23 +7,24 @@
 fast.anova(x, y, assign = NULL)
 }
 \arguments{
-\item{x}{design matrix of dimension \code{n * p}.}
+\item{x}{Design matrix of dimension \code{n * p}.}
 
-\item{y}{response vector of observations of length \code{n}.}
+\item{y}{Response vector of observations of length \code{n}.}
 
-\item{assign}{integer vector assigning columns to terms can be also given as
-\code{x} attribute in which case the argument is ignored. For details about
-assign see \code{\link[stats]{model.matrix}}.}
+\item{assign}{Integer vector assigning columns to terms can be also given as
+\code{x} attribute in which case the argument is ignored. If an intercept
+exist it is expected to be coded by '0'.For details about assign see
+\code{\link[stats]{model.matrix}}.}
 }
 \description{
 A fast sequential analysis of variance (ANOVA). Mainly
 developed for internal use.
 }
 \examples{
-y <- rnorm(n=100)
-x <- matrix(data=rnorm(1000), nrow=100)
+y <- rnorm(n = 100)
+x <- matrix(data = rnorm(1000), nrow = 100)
 a <- 1:10
-fast.anova(x=x, y=y, assign=a)
+fast.anova(x = x, y = y, assign = a)
 }
 \seealso{
 \code{\link[stats]{lm}}, \code{\link[stats]{anova}}, and

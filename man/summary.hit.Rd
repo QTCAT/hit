@@ -7,13 +7,13 @@
 \method{summary}{hit}(object, alpha = 0.05, max.height, ...)
 }
 \arguments{
-\item{object}{a \code{\link{hit}} object.}
+\item{object}{A \code{\link{hit}} object.}
 
-\item{alpha}{a alpha significance threshold.}
+\item{alpha}{A alpha significance threshold.}
 
-\item{max.height}{max. height to consider.}
+\item{max.height}{max. Height to consider.}
 
-\item{...}{further arguments passed to or from other methods (not used).}
+\item{...}{Further arguments passed to or from other methods (not used).}
 }
 \description{
 Significant clusters at alpha threshold.

@@ -7,7 +7,7 @@
 \method{names}{hierarchy}(x)
 }
 \arguments{
-\item{x}{a \code{\link{as.hierarchy}}.}
+\item{x}{A \code{\link{as.hierarchy}}.}
 }
 \description{
 Names of variables of an hierarchy.

@@ -7,7 +7,7 @@
 heightDendrogram(x)
 }
 \arguments{
-\item{x}{a \code{\link[stats]{dendrogram}}.}
+\item{x}{A \code{\link[stats]{dendrogram}}.}
 }
 \description{
 All heights from a dendrogram.

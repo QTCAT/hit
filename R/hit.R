@@ -3,27 +3,27 @@
 #' @description Hierarchical inference testing for linear models with 
 #' high-dimensional and/or correlated covariates by repeated sample splitting.
 #' 
-#' @param x design matrix of dimension \code{n * p}, without intercept.
+#' @param x Design matrix of dimension \code{n * p}, without intercept.
 #' Variables not part of the dendrogram are added to the HO-model, see Details 
 #' below.
-#' @param y quantitative response variable dimension \code{n}.
-#' @param hierarchy object of class \code{\link{as.hierarchy}}. Must include all 
+#' @param y Quantitative response variable dimension \code{n}.
+#' @param hierarchy Object of class \code{\link{as.hierarchy}}. Must include all 
 #' variables of \code{x} which should be tested.
-#' @param B number of sample-splits.
-#' @param p.samp1 fraction of data used for the LASSO. The ANOVA uses 
+#' @param B Number of sample-splits.
+#' @param p.samp1 Fraction of data used for the LASSO. The ANOVA uses 
 #' \code{1 - p.samp1}.
-#' @param lambda.opt criterion for optimum selection of cross validated lasso. 
+#' @param lambda.opt Criterion for optimum selection of cross validated lasso. 
 #' Either 'lambda.1se' (default) or 'lambda.min'. See 
 #' \code{\link[glmnet]{cv.glmnet}} for more details. 
-#' @param nfolds number of folds (default is 10), see 
+#' @param nfolds Number of folds (default is 10), see 
 #' \code{\link[glmnet]{cv.glmnet}} for more details.
-#' @param gamma vector of gamma-values.
-#' @param max.p.esti maximum alpha level. All p-values above this value are set 
+#' @param gamma Vector of gamma-values.
+#' @param max.p.esti Maximum alpha level. All p-values above this value are set 
 #' to one. Small \code{max.p.esti} values reduce computing time.
-#' @param mc.cores number of cores for parallelising. Theoretical maximum is 
+#' @param mc.cores Number of cores for parallelising. Theoretical maximum is 
 #' 'B'. For details see \code{\link[parallel]{mclapply}}.
-#' @param trace if TRUE it prints current status of the program.
-#' @param ... additional arguments for \code{\link[glmnet]{cv.glmnet}}.
+#' @param trace If TRUE it prints current status of the program.
+#' @param ... Additional arguments for \code{\link[glmnet]{cv.glmnet}}.
 #' 
 #' @details The H0-model contains variables, with are not tested, like 
 #' experimental-design variables. These variables are not penalised in the 
@@ -92,7 +92,7 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
   n.samp2 <- n - n.samp1
   allSamp1.ids <- replicate(B, sample.int(n, n.samp1), simplify = FALSE)
   ##  2.2 Screening
-  if (isTRUE(trace))
+  if (trace)
     cat("LASSO has started at:\n\t", as.character(Sys.time()), "\n")
   allActSet.ids <- mclapply(allSamp1.ids, samp1.lasso,
                             x, y, n.samp2, lambda.opt, 
@@ -100,7 +100,7 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
                             mc.cores = mc.cores, mc.cleanup = TRUE)
   ##  2.3 Testing and multiplicity adjustmen; and 
   ##  2.4 Aggregating and Hierarchical adjustment
-  if (isTRUE(trace))
+  if (trace)
     cat("Significance testing has started at:\n\t", 
         as.character(Sys.time()), "\n")
   pValues <- samp2.sigHierarchy(1L, 0L, 0, x, y, allSamp1.ids, allActSet.ids, 
@@ -108,7 +108,7 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
                                 max.p.esti, B, sort(gamma), 
                                 mc.cores)
   ##### Results
-  if (isTRUE(trace))
+  if (trace)
     cat("HIT has finished at:\n\t", as.character(Sys.time()), "\n")
   asi <- sort(unlist(allActSet.ids))
   sel.tab <- rep(0, p)
@@ -126,18 +126,18 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
 #' 
 #' @description LASSO function of the HIT algorithem.
 #' 
-#' @param samp1 list of index for subsample (mclapply index).
-#' @param x design matrix, of dimension n x p.
-#' @param y vector of quantitative response variable.
-#' @param n.samp2 number of individuals in samp2 which is the max. 
+#' @param samp1 List of index for subsample (mclapply index).
+#' @param x Design matrix, of dimension n x p.
+#' @param y Vector of quantitative response variable.
+#' @param n.samp2 Number of individuals in samp2 which is the max. 
 #' for non zero coefficients.
-#' @param lambda.opt criterion for optimum selection of cross validated lasso. 
+#' @param lambda.opt Criterion for optimum selection of cross validated lasso. 
 #' Either 'lambda.min' (default) or 'lambda.1se'. See 
 #' \code{\link[glmnet]{cv.glmnet}} for more details. 
-#' @param penalty.factor see glmnet.
-#' @param nfolds number of folds (default is 10), see 
+#' @param penalty.factor See glmnet.
+#' @param nfolds Number of folds (default is 10), see 
 #' \code{\link[glmnet]{cv.glmnet}} for more details.
-#' @param ... aditional agruments
+#' @param ... Additional agruments
 #' 
 #' @importFrom glmnet cv.glmnet
 #' @importFrom stats coef
@@ -162,20 +162,20 @@ samp1.lasso <- function(samp1, x, y, n.samp2,
 #' @description ANOVA Testing, Multiplicity Adjustment, Aggregating and 
 #' Hierarchical Adjustment
 #' 
-#' @param cIndex index for cluster (mclapply index).
-#' @param level hierarchy level counter for parallelism
-#' @param upper.p p value upper huerarchy level of the clusters variables.
-#' @param x design matrix, of dimension n x p.
-#' @param y vector of quantitative response variable.
-#' @param allSamp1.ids  list of subsampels.
-#' @param allActSet.ids list of active sets.
-#' @param x.nonTested  vector of indeces of non tested variabels.
-#' @param hierarchy a hierarchy object
-#' @param max.p.esti maximum alpha level. All p-values above this value are set 
+#' @param cIndex Index for cluster (mclapply index).
+#' @param level Hierarchy level counter for parallelism
+#' @param upper.p P value upper huerarchy level of the clusters variables.
+#' @param x Design matrix, of dimension n x p.
+#' @param y Vector of quantitative response variable.
+#' @param allSamp1.ids  List of subsampels.
+#' @param allActSet.ids List of active sets.
+#' @param x.nonTested  Vector of indeces of non tested variabels.
+#' @param hierarchy A hierarchy object
+#' @param max.p.esti Maximum alpha level. All p-values above this value are set 
 #' to one. Small max.p.esti values reduce computing time.
-#' @param B number of sample-splits.
-#' @param gamma vector of gamma-values.
-#' @param cores number of cores for parallelising.
+#' @param B Number of sample-splits.
+#' @param gamma Vector of gamma-values.
+#' @param cores Number of cores for parallelising.
 #' 
 #' @importFrom stats quantile
 #' @keywords internal
@@ -235,13 +235,13 @@ samp2.sigHierarchy <- function(cIndex, level, upper.p, x, y, allSamp1.ids,
 #' 
 #' @description ANOVA test (at single node) of the HIT algorithem.
 #' 
-#' @param k index for subsample (mclapply index).
-#' @param x design matrix, of dimension n x p.
-#' @param y vector of quantitative response variable.
-#' @param cluster clusters to be tested.
-#' @param x.nonTested vector of indeces of non tested variabels.
-#' @param allSamp1.ids  list of subsampels.
-#' @param allActSet.ids list of active sets.
+#' @param k Index for subsample (mclapply index).
+#' @param x Design matrix, of dimension n x p.
+#' @param y Vector of quantitative response variable.
+#' @param cluster Clusters to be tested.
+#' @param x.nonTested Vector of indeces of non tested variabels.
+#' @param allSamp1.ids  List of subsampels.
+#' @param allActSet.ids List of active sets.
 #' 
 #' @keywords internal
 samp2.sigNode <- function(k, x, y, cluster, x.nonTested, 
@@ -289,10 +289,10 @@ samp2.sigNode <- function(k, x, y, cluster, x.nonTested,
 #' 
 #' @description Significant clusters at alpha threshold.
 #' 
-#' @param object a \code{\link{hit}} object.
-#' @param alpha a alpha significance threshold.
-#' @param max.height max. height to consider.
-#' @param ... further arguments passed to or from other methods (not used).
+#' @param object A \code{\link{hit}} object.
+#' @param alpha A alpha significance threshold.
+#' @param max.height max. Height to consider.
+#' @param ... Further arguments passed to or from other methods (not used).
 #' 
 #' @method summary hit
 #' @export 
@@ -328,49 +328,3 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
     out[, 1L] <- as.integer(factor(out[, 1L], labels = 1L:ll))
   out
 }
-
-
-# #' @title p-value matrix
-# #' 
-# #' @description Matric of hierarchical p-values .
-# #' 
-# #' @param x a \code{\link{hit}} object
-# #' 
-# #' @examples
-# #' set.seed(123)
-# #' n <- 100
-# #' p <- 150
-# #' # x with correlated columns
-# #' corMat <- toeplitz((p:1/p)^3)
-# #' corMatQ <- chol(corMat)
-# #' x <- matrix(rnorm(n * p), nrow = n) %*% corMatQ
-# #' colnames(x) <- paste0("x", 1:p)
-# #' # y
-# #' y <- x[, c(3, 5, 73)] %*% c(2, 5, 3) + rnorm(n)
-# #' # hierarchy
-# #' dend <- as.dendrogram(hclust(dist(t(x))))
-# #' hier <- as.hierarchy(dend, max.height = 20)
-# #' # HIT
-# #' out <- hit(x, y, hier)
-# #' # plot p-value matrix
-# #' image(p.matrix(out))
-# #' 
-# #' @export
-# p.matrix <- function(x) {
-#   heig <- heightHierarchy(x$hierarchy)
-#   allheig <- sapply(x$hierarchy, attr, "height")
-#   inx <- which(heig[1L] == allheig)
-#   p.val <- rep(x$pValues[inx], sapply(allheig[inx], length))
-#   out <- list(rep(NA_real_, length(p.val)))
-#   out[[1L]][unlist(x$hierarchy[inx])] <- p.val
-#   for (h in 2L:length(heig)) {
-#     out[[h]] <- out[[h - 1L]]
-#     inx <- which(heig[h] == allheig)
-#     p.val <- rep(x$pValues[inx], sapply(allheig[inx] , length))
-#     out[[h]][unlist(x$hierarchy[inx])] <- p.val
-#   }
-#   out <- do.call(rbind, out)
-#   colnames(out) <- names(x$hierarchy)
-#   rownames(out) <- heig
-#   out
-# }

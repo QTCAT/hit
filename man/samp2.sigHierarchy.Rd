@@ -8,32 +8,32 @@ samp2.sigHierarchy(cIndex, level, upper.p, x, y, allSamp1.ids, allActSet.ids,
   x.nonTested, hierarchy, max.p.esti, B, gamma, cores)
 }
 \arguments{
-\item{cIndex}{index for cluster (mclapply index).}
+\item{cIndex}{Index for cluster (mclapply index).}
 
-\item{level}{hierarchy level counter for parallelism}
+\item{level}{Hierarchy level counter for parallelism}
 
-\item{upper.p}{p value upper huerarchy level of the clusters variables.}
+\item{upper.p}{P value upper huerarchy level of the clusters variables.}
 
-\item{x}{design matrix, of dimension n x p.}
+\item{x}{Design matrix, of dimension n x p.}
 
-\item{y}{vector of quantitative response variable.}
+\item{y}{Vector of quantitative response variable.}
 
-\item{allSamp1.ids}{list of subsampels.}
+\item{allSamp1.ids}{List of subsampels.}
 
-\item{allActSet.ids}{list of active sets.}
+\item{allActSet.ids}{List of active sets.}
 
-\item{x.nonTested}{vector of indeces of non tested variabels.}
+\item{x.nonTested}{Vector of indeces of non tested variabels.}
 
-\item{hierarchy}{a hierarchy object}
+\item{hierarchy}{A hierarchy object}
 
-\item{max.p.esti}{maximum alpha level. All p-values above this value are set
+\item{max.p.esti}{Maximum alpha level. All p-values above this value are set
 to one. Small max.p.esti values reduce computing time.}
 
-\item{B}{number of sample-splits.}
+\item{B}{Number of sample-splits.}
 
-\item{gamma}{vector of gamma-values.}
+\item{gamma}{Vector of gamma-values.}
 
-\item{cores}{number of cores for parallelising.}
+\item{cores}{Number of cores for parallelising.}
 }
 \description{
 ANOVA Testing, Multiplicity Adjustment, Aggregating and

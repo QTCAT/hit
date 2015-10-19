@@ -7,25 +7,25 @@
 samp1.lasso(samp1, x, y, n.samp2, lambda.opt, penalty.factor, nfolds, ...)
 }
 \arguments{
-\item{samp1}{list of index for subsample (mclapply index).}
+\item{samp1}{List of index for subsample (mclapply index).}
 
-\item{x}{design matrix, of dimension n x p.}
+\item{x}{Design matrix, of dimension n x p.}
 
-\item{y}{vector of quantitative response variable.}
+\item{y}{Vector of quantitative response variable.}
 
-\item{n.samp2}{number of individuals in samp2 which is the max.
+\item{n.samp2}{Number of individuals in samp2 which is the max.
 for non zero coefficients.}
 
-\item{lambda.opt}{criterion for optimum selection of cross validated lasso.
+\item{lambda.opt}{Criterion for optimum selection of cross validated lasso.
 Either 'lambda.min' (default) or 'lambda.1se'. See
 \code{\link[glmnet]{cv.glmnet}} for more details.}
 
-\item{penalty.factor}{see glmnet.}
+\item{penalty.factor}{See glmnet.}
 
-\item{nfolds}{number of folds (default is 10), see
+\item{nfolds}{Number of folds (default is 10), see
 \code{\link[glmnet]{cv.glmnet}} for more details.}
 
-\item{...}{aditional agruments}
+\item{...}{Additional agruments}
 }
 \description{
 LASSO function of the HIT algorithem.

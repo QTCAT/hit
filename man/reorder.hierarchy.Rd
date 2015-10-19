@@ -7,12 +7,12 @@
 \method{reorder}{hierarchy}(x, names, ...)
 }
 \arguments{
-\item{x}{a \code{\link{as.hierarchy}}.}
+\item{x}{A \code{\link{as.hierarchy}}.}
 
-\item{names}{variable names in the order in which the indexes shut be given
+\item{names}{Variable names in the order in which the indexes shut be given
 to the variables.}
 
-\item{...}{further arguments passed to or from other methods (not used).}
+\item{...}{Further arguments passed to or from other methods (not used).}
 }
 \description{
 Reorder indexes according to a vector of names.
