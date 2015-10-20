@@ -24,7 +24,7 @@ variables of \code{x} which should be tested.}
 \code{1 - p.samp1}.}
 
 \item{lambda.opt}{Criterion for optimum selection of cross validated lasso.
-Either 'lambda.1se' (default) or 'lambda.min'. See
+Either "lambda.1se" (default) or "lambda.min". See
 \code{\link[glmnet]{cv.glmnet}} for more details.}
 
 \item{nfolds}{Number of folds (default is 10), see

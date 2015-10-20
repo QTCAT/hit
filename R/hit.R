@@ -13,7 +13,7 @@
 #' @param p.samp1 Fraction of data used for the LASSO. The ANOVA uses 
 #' \code{1 - p.samp1}.
 #' @param lambda.opt Criterion for optimum selection of cross validated lasso. 
-#' Either 'lambda.1se' (default) or 'lambda.min'. See 
+#' Either "lambda.1se" (default) or "lambda.min". See 
 #' \code{\link[glmnet]{cv.glmnet}} for more details. 
 #' @param nfolds Number of folds (default is 10), see 
 #' \code{\link[glmnet]{cv.glmnet}} for more details.
