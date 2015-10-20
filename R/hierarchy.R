@@ -37,6 +37,7 @@ as.hierarchy <- function(x, max.height, height, names)
 as.hierarchy.hierarchy <- function(x, max.height, height, names, ...) x
 
 
+#' @importFrom stats as.dendrogram
 #' @export
 as.hierarchy.hclust <- function(x, max.height, height, names, ...) {
     as.hierarchy(as.dendrogram(x), max.height, height, names, ...)
