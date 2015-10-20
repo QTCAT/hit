@@ -23,14 +23,14 @@ Statistical Association. Preprint
 [arXiv:1312.5556](http://arxiv.org/abs/1312.5556).
 
 ## Install:
-The package can be installed from an R console from CRAN
+The package can be installed from CRAN,
 
 ```R
 install.packages("hit")
 
 ```
 
-Or via [`devtools`](https://github.com/hadley/devtools#updating-to-the-latest-version-of-devtools), if you haven't yet `devtools` installed, you have to do so first.
+or via [`devtools`](https://github.com/hadley/devtools#updating-to-the-latest-version-of-devtools), if you haven't yet `devtools` installed, you have to do so first.
 
 ```R
 # install.packages("devtools")
