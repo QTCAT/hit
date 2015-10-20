@@ -16,9 +16,10 @@
 #' hierarchy object generated with this function.
 #' 
 #' @examples 
+#' ##
 #' set.seed(123)
-#' n <- 100
-#' p <- 150
+#' n <- 80
+#' p <- 90
 #' # x with correlated columns
 #' corMat <- toeplitz((p:1/p)^3)
 #' corMatQ <- chol(corMat)

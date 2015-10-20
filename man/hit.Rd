@@ -53,8 +53,8 @@ LASSO model selection and are always include in the reduced ANOVA model.
 }
 \examples{
 set.seed(123)
-n <- 500
-p <- 800
+n <- 80
+p <- 90
 # x with correlated columns
 corMat <- toeplitz((p:1/p)^3)
 corMatQ <- chol(corMat)
@@ -62,12 +62,13 @@ x <- matrix(rnorm(n * p), nrow = n) \%*\% corMatQ
 colnames(x) <- paste0("x", 1:p)
 # y
 y <- x[, c(3, 5, 73)] \%*\% c(2, 5, 3) + rnorm(n)
-# hierarchy
+# clustering
 hc <- hclust(dist(t(x)))
-hier <- as.hierarchy(hc)
-# HIT
-out <- hit(x, y, hier)
+# HIT (run time > 5 sec)
+\dontrun{
+out <- hit(x, y, hc)
 summary(out)
+}
 }
 \references{
 Mandozzi, J. and Buehlmann, P. (2013). \emph{Hierarchical testing
