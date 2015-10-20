@@ -1,7 +1,7 @@
 # Hierarchical Inference Testing
-<!---
+
 [![CRAN](http://www.r-pkg.org/badges/version/hit)](http://cran.r-project.org/package=hit)
--->
+
 
 Master branch bild and test status for Linux (Mac)
 [![Travis-CI Build Status](https://travis-ci.org/QTCAT/hit.png?branch=master)]
@@ -23,25 +23,23 @@ Statistical Association. Preprint
 [arXiv:1312.5556](http://arxiv.org/abs/1312.5556).
 
 ## Install:
-The package can be installed from an R console via 
-[`devtools`](https://github.com/hadley/devtools#updating-to-the-latest-version-of-devtools). 
-If you haven't yet `devtools` installed, you have to do so first.
+The package can be installed from an R console from CRAN
+
+```R
+install.packages("hit")
+
+```
+
+Or via [`devtools`](https://github.com/hadley/devtools#updating-to-the-latest-version-of-devtools), if you haven't yet `devtools` installed, you have to do so first.
 
 ```R
 # install.packages("devtools")
 devtools::install_github("QTCAT/hit")
 ```
 
-If you want to install a specific release e.g. `v0.0-3`, use: 
-
-```R
-devtools::install_github("QTCAT/hit", ref="v0.0-3")
-```
-
 ## Example:
 The `hit`-function example gives an overview of the functionality of the 
-package and can be accessed once the package is loaded (please be aware, that 
-running the example can take a few seconds).
+package and can be accessed once the package is loaded.
 
 ```R
 library(hit)
