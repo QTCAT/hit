@@ -30,7 +30,9 @@ install.packages("hit")
 
 ```
 
-or via [`devtools`](https://github.com/hadley/devtools#updating-to-the-latest-version-of-devtools), if you haven't yet `devtools` installed, you have to do so first.
+or via 
+[`devtools`](https://github.com/hadley/devtools#updating-to-the-latest-version-of-devtools)
+, if you haven't `devtools` installed yet you have to do so first.
 
 ```R
 # install.packages("devtools")
