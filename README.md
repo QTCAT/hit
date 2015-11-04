@@ -22,7 +22,7 @@ high-dimensional setting with correlated variables*. Journal of the American
 Statistical Association. Preprint 
 [arXiv:1312.5556](http://arxiv.org/abs/1312.5556).
 
-## Install:
+## Installation:
 The package can be installed from CRAN,
 
 ```R
