@@ -7,16 +7,22 @@
 #' Variables not part of the dendrogram are added to the HO-model, see Details 
 #' below.
 #' @param y Quantitative response variable dimension \code{n}.
-#' @param hierarchy Object of class \code{\link{as.hierarchy}}. Must include all 
-#' variables of \code{x} which should be tested.
+#' @param hierarchy Object of class \code{\link{as.hierarchy}}. Must include 
+#' all variables of \code{x} which should be tested.
 #' @param B Number of sample-splits.
 #' @param p.samp1 Fraction of data used for the LASSO. The ANOVA uses 
 #' \code{1 - p.samp1}.
+#' @param sel.method Name of method for the selection of covariates via the 
+#' LASSO, either "ASF" (default), the occurrence frequenze of covariates along 
+#' the lambda path or "CV" n-fold cross-validation.
+#' @param activeset.freq Frequency in which a covariate has to occur along the 
+#' lambda path to be selected in the active set. Ignored if \code{sel.method} 
+#' is "CV".
+#' @param nfolds Number of folds (default is 10). Ignored if \code{sel.method} 
+#' is "ASF". See \code{\link[glmnet]{cv.glmnet}} for more details. 
 #' @param lambda.opt Criterion for optimum selection of cross validated lasso. 
-#' Either "lambda.1se" (default) or "lambda.min". See 
-#' \code{\link[glmnet]{cv.glmnet}} for more details. 
-#' @param nfolds Number of folds (default is 10), see 
-#' \code{\link[glmnet]{cv.glmnet}} for more details.
+#' Either "lambda.1se" (default) or "lambda.min". Ignored if \code{sel.method} 
+#' is "ASF". See \code{\link[glmnet]{cv.glmnet}} for more details. 
 #' @param gamma Vector of gamma-values.
 #' @param max.p.esti Maximum alpha level. All p-values above this value are set 
 #' to one. Small \code{max.p.esti} values reduce computing time.
@@ -29,9 +35,10 @@
 #' experimental-design variables. These variables are not penalised in the 
 #' LASSO model selection and are always include in the reduced ANOVA model.
 #' 
-#' @references Mandozzi, J. and Buehlmann, P. (2013). \emph{Hierarchical testing 
-#' in the high-dimensional setting with correlated variables}. To appear in the 
-#' Journal of the American Statistical Association. Preprint arXiv:1312.5556
+#' @references Mandozzi, J. and Buehlmann, P. (2013). \emph{Hierarchical 
+#' testing in the high-dimensional setting with correlated variables}. To 
+#' appear in the Journal of the American Statistical Association. Preprint 
+#' arXiv:1312.5556
 #'   
 #' @examples
 #' set.seed(123)
@@ -46,17 +53,23 @@
 #' y <- x[, c(3, 5, 73)] %*% c(2, 5, 3) + rnorm(n)
 #' # clustering
 #' hc <- hclust(dist(t(x)))
-#' # HIT (run time > 5 sec)
-#' \dontrun{
+#' # HIT with ASF
 #' out <- hit(x, y, hc)
 #' summary(out)
+#' 
+#' 
+#' # HIT with CV
+#' \dontrun{
+#' out2 <- hit(x, y, hc, sel.method = "CV")
+#' summary(out2)
 #' }
 #' 
 #' @importFrom parallel mclapply
 #' @importFrom stats reorder
 #' @export 
 hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5, 
-                lambda.opt = c("lambda.1se", "lambda.min"), nfolds = 10,
+                sel.method = c("ASF", "CV"), activeset.freq = 1 / 3,
+                nfolds = 10, lambda.opt = c("lambda.1se", "lambda.min"), 
                 gamma = seq(0.05, 0.99, length.out = 100), max.p.esti = 1, 
                 mc.cores = 1L, trace = FALSE, ...) {
   #   Mandozzi and Buehlmann (2015), 2 Description of method
@@ -96,8 +109,8 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
   if (trace)
     cat("LASSO has started at:\n\t", as.character(Sys.time()), "\n")
   allActSet.ids <- mclapply(allSamp1.ids, samp1.lasso,
-                            x, y, n.samp2, lambda.opt, 
-                            penalty.factor, nfolds, ...,
+                            x, y, n.samp2, penalty.factor, sel.method, 
+                            activeset.freq, nfolds, lambda.opt, ...,
                             mc.cores = mc.cores, mc.cleanup = TRUE)
   ##  2.3 Testing and multiplicity adjustmen; and 
   ##  2.4 Aggregating and Hierarchical adjustment
@@ -132,28 +145,52 @@ hit <- function(x, y, hierarchy, B = 50, p.samp1 = 0.5,
 #' @param y Vector of quantitative response variable.
 #' @param n.samp2 Number of individuals in samp2 which is the max. 
 #' for non zero coefficients.
-#' @param lambda.opt Criterion for optimum selection of cross validated lasso. 
-#' Either 'lambda.min' (default) or 'lambda.1se'. See 
-#' \code{\link[glmnet]{cv.glmnet}} for more details. 
 #' @param penalty.factor See glmnet.
-#' @param nfolds Number of folds (default is 10), see 
-#' \code{\link[glmnet]{cv.glmnet}} for more details.
+#' @param sel.method Name of method for the selection of covariates via the 
+#' LASSO, either "ASF" (default), the occurrence frequenze of covariates along 
+#' the lambda path or "CV" n-fold cross-validation.
+#' @param activeset.freq Frequency in which a covariate has to occur along the 
+#' lambda path to be selected in the active set. Ignored if \code{sel.method} 
+#' is "CV".
+#' @param nfolds Number of folds (default is 10). Ignored if \code{sel.method} 
+#' is "ASF". See \code{\link[glmnet]{cv.glmnet}} for more details. 
+#' @param lambda.opt Criterion for optimum selection of cross validated lasso. 
+#' Either "lambda.1se" (default) or "lambda.min". Ignored if \code{sel.method} 
+#' is "ASF". See \code{\link[glmnet]{cv.glmnet}} for more details. 
 #' @param ... Additional agruments
 #' 
-#' @importFrom glmnet cv.glmnet
+#' @importFrom glmnet cv.glmnet glmnet
+#' @importFrom Matrix which
 #' @importFrom stats coef
 #' @keywords internal
-samp1.lasso <- function(samp1, x, y, n.samp2, 
-                        lambda.opt, penalty.factor, nfolds, ...) {
-  lambda.opt <- match.arg(lambda.opt, c("lambda.1se", "lambda.min"))
+samp1.lasso <- function(samp1, x, y, n.samp2, penalty.factor, sel.method, 
+                        activeset.freq, nfolds, lambda.opt, ...) {
   ##  2.2 Screening
-  lasso.fit <- cv.glmnet(x[samp1, ], y[samp1], penalty.factor = penalty.factor, 
-                         nfolds = nfolds, dfmax = n.samp2 - 2L, ...)
-  if (lambda.opt == "lambda.min")
-    beta <- coef(lasso.fit, s = lasso.fit$lambda.min)[-1L]
-  else 
-    beta <- coef(lasso.fit, s = lasso.fit$lambda.1se)[-1L]
-  actSet <- which(beta != 0 & penalty.factor == 1L)
+  if (match.arg(sel.method, c("ASF", "CV")) == "CV") {
+    # n-fold cross-validation
+    lambda.opt <- match.arg(lambda.opt, c("lambda.1se", "lambda.min"))
+    lasso.fit <- cv.glmnet(x[samp1, ], y[samp1], 
+                           penalty.factor = penalty.factor, 
+                           nfolds = nfolds, dfmax = n.samp2 - 2L, ...)
+    if (lambda.opt == "lambda.min")
+      beta <- coef(lasso.fit, s = lasso.fit$lambda.min)[-1L]
+    else 
+      beta <- coef(lasso.fit, s = lasso.fit$lambda.1se)[-1L]
+    actSet <- which(beta != 0 & penalty.factor == 1L)
+  } else {
+    # Select by the occurrence frequency along the lambda path
+    lasso.fit <- glmnet(x[samp1, ], y[samp1], 
+                        penalty.factor = penalty.factor, ...)
+    inx <- which(lasso.fit$beta != 0, arr.ind = TRUE)[, 1L]
+    inxcount <- table(inx)
+    uniqinx <- sort(unique(inx))
+    asThre <- ceiling(ncol(lasso.fit$beta) * activeset.freq)
+    actSet <- uniqinx[inxcount > asThre]
+    while (length(actSet) > n.samp2 - 2L) {
+      asThre <- asThre + 1L
+      actSet <- uniqinx[inxcount > asThre]
+    }
+  }
   actSet
 }
 
