@@ -4,9 +4,10 @@
 \alias{hit}
 \title{Hierarchical Inference Testing}
 \usage{
-hit(x, y, hierarchy, B = 50, p.samp1 = 0.5, lambda.opt = c("lambda.1se",
-  "lambda.min"), nfolds = 10, gamma = seq(0.05, 0.99, length.out = 100),
-  max.p.esti = 1, mc.cores = 1L, trace = FALSE, ...)
+hit(x, y, hierarchy, B = 50, p.samp1 = 0.5, sel.method = c("ASF", "CV"),
+  activeset.freq = 1/3, nfolds = 10, lambda.opt = c("lambda.1se",
+  "lambda.min"), gamma = seq(0.05, 0.99, length.out = 100), max.p.esti = 1,
+  mc.cores = 1L, trace = FALSE, ...)
 }
 \arguments{
 \item{x}{Design matrix of dimension \code{n * p}, without intercept.
@@ -15,20 +16,28 @@ below.}
 
 \item{y}{Quantitative response variable dimension \code{n}.}
 
-\item{hierarchy}{Object of class \code{\link{as.hierarchy}}. Must include all
-variables of \code{x} which should be tested.}
+\item{hierarchy}{Object of class \code{\link{as.hierarchy}}. Must include
+all variables of \code{x} which should be tested.}
 
 \item{B}{Number of sample-splits.}
 
 \item{p.samp1}{Fraction of data used for the LASSO. The ANOVA uses
 \code{1 - p.samp1}.}
 
-\item{lambda.opt}{Criterion for optimum selection of cross validated lasso.
-Either "lambda.1se" (default) or "lambda.min". See
-\code{\link[glmnet]{cv.glmnet}} for more details.}
+\item{sel.method}{Name of method for the selection of covariates via the
+LASSO, either "ASF" (default), the occurrence frequenze of covariates along
+the lambda path or "CV" n-fold cross-validation.}
 
-\item{nfolds}{Number of folds (default is 10), see
-\code{\link[glmnet]{cv.glmnet}} for more details.}
+\item{activeset.freq}{Frequency in which a covariate has to occur along the
+lambda path to be selected in the active set. Ignored if \code{sel.method}
+is "CV".}
+
+\item{nfolds}{Number of folds (default is 10). Ignored if \code{sel.method}
+is "ASF". See \code{\link[glmnet]{cv.glmnet}} for more details.}
+
+\item{lambda.opt}{Criterion for optimum selection of cross validated lasso.
+Either "lambda.1se" (default) or "lambda.min". Ignored if \code{sel.method}
+is "ASF". See \code{\link[glmnet]{cv.glmnet}} for more details.}
 
 \item{gamma}{Vector of gamma-values.}
 
@@ -64,15 +73,21 @@ colnames(x) <- paste0("x", 1:p)
 y <- x[, c(3, 5, 73)] \%*\% c(2, 5, 3) + rnorm(n)
 # clustering
 hc <- hclust(dist(t(x)))
-# HIT (run time > 5 sec)
-\dontrun{
+# HIT with ASF
 out <- hit(x, y, hc)
 summary(out)
+
+
+# HIT with CV
+\dontrun{
+out2 <- hit(x, y, hc, sel.method = "CV")
+summary(out2)
 }
 }
 \references{
-Mandozzi, J. and Buehlmann, P. (2013). \emph{Hierarchical testing
-in the high-dimensional setting with correlated variables}. To appear in the
-Journal of the American Statistical Association. Preprint arXiv:1312.5556
+Mandozzi, J. and Buehlmann, P. (2013). \emph{Hierarchical
+testing in the high-dimensional setting with correlated variables}. To
+appear in the Journal of the American Statistical Association. Preprint
+arXiv:1312.5556
 }
 
