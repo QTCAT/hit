@@ -23,7 +23,7 @@ function or the result of a call to a family function. (See
 \code{\link[stats]{family}} for details of family functions.)}
 
 \item{test}{The name of the test either "LRT" (default) for likelihood ratio
-test or "F" for F-test}
+test or "F" for F test.}
 }
 \description{
 A fast sequential analysis of variance (ANOVA). Mainly

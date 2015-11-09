@@ -15,7 +15,7 @@
 #' function or the result of a call to a family function. (See 
 #' \code{\link[stats]{family}} for details of family functions.)
 #' @param test The name of the test either "LRT" (default) for likelihood ratio 
-#' test or "F" for F-test
+#' test or "F" for F test.
 #' 
 #' @seealso \code{\link[stats]{lm}}, \code{\link[stats]{anova}}, and 
 #' \code{\link[stats]{aov}}.
@@ -55,18 +55,14 @@ fast.anova <- function(x, y, assign = NULL, family = gaussian(),
 }
 
 
-#' @title Fast LM F-test ANOVA
+#' @title Fast LM F test ANOVA
 #' 
 #' @description A fast sequential analysis of variance (ANOVA). Mainly 
 #' developed for internal use.
 #' 
 #' @param x Design matrix of dimension \code{n * p}.
 #' @param y Response vector of observations of length \code{n}.
-#' @param assign Integer vector assigning columns to terms can be also given as 
-#' \code{x} attribute in which case the argument is ignored. If an intercept 
-#' exist it is expected to be the first column in \code{x} and here it has to 
-#' specified by a '0'. For details about assign see 
-#' \code{\link[stats]{model.matrix}}.
+#' @param assign Integer vector assigning columns to terms.
 #' 
 #' @importFrom stats lm.fit pf 
 #' @keywords internal
@@ -101,23 +97,19 @@ lm.anova <- function (x, y, assign) {
 }
 
 
-#' @title Fast GLM F-test of LR-test ANOVA
+#' @title Fast GLM F test of LR test ANOVA
 #' 
 #' @description A fast sequential analysis of variance (ANOVA). Mainly 
 #' developed for internal use.
 #' 
 #' @param x Design matrix of dimension \code{n * p}.
 #' @param y Response vector of observations of length \code{n}.
-#' @param assign Integer vector assigning columns to terms can be also given as 
-#' \code{x} attribute in which case the argument is ignored. If an intercept 
-#' exist it is expected to be the first column in \code{x} and here it has to 
-#' specified by a '0'. For details about assign see 
-#' \code{\link[stats]{model.matrix}}.
+#' @param assign Integer vector assigning columns to terms.
 #' @param family A description of the error distribution and link function to 
 #' be used in the model. For glm this must be the result of a call to a family 
-#' function. (See \code{\link[stats]{family}} for details of family functions.)
+#' function.
 #' @param test The name of the test either "LRT" (default) for likelihood ratio 
-#' test or "F" for F-test
+#' test or "F" for F test.
 #' 
 #' @importFrom speedglm speedglm.wfit
 #' @importFrom stats pf pchisq

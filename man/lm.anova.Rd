@@ -2,7 +2,7 @@
 % Please edit documentation in R/anova.R
 \name{lm.anova}
 \alias{lm.anova}
-\title{Fast LM F-test ANOVA}
+\title{Fast LM F test ANOVA}
 \usage{
 lm.anova(x, y, assign)
 }
@@ -11,11 +11,7 @@ lm.anova(x, y, assign)
 
 \item{y}{Response vector of observations of length \code{n}.}
 
-\item{assign}{Integer vector assigning columns to terms can be also given as
-\code{x} attribute in which case the argument is ignored. If an intercept
-exist it is expected to be the first column in \code{x} and here it has to
-specified by a '0'. For details about assign see
-\code{\link[stats]{model.matrix}}.}
+\item{assign}{Integer vector assigning columns to terms.}
 }
 \description{
 A fast sequential analysis of variance (ANOVA). Mainly
