@@ -31,7 +31,7 @@
 #' @export 
 fast.anova <- function(x, y, assign = NULL, family = gaussian(), 
                        test = c("LRT", "F")) {
-  # check validity of args
+  ##### check validity of args
   if (is.null(assign) && !is.null(attr(x, "assign"))) {
     assign <- attr(x, "assign")
   }
@@ -40,7 +40,7 @@ fast.anova <- function(x, y, assign = NULL, family = gaussian(),
   }
   stopifnot(ncol(x) == length(assign))
   stopifnot(nrow(x) == length(y))
-  if (is.character(family)){
+  if (is.character(family)) {
     family <- eval(call(family))
   } else if (is.function(family)) {
     family <- family()
@@ -66,16 +66,16 @@ fast.anova <- function(x, y, assign = NULL, family = gaussian(),
 #' 
 #' @importFrom stats lm.fit pf 
 #' @keywords internal
-lm.anova <- function (x, y, assign) {
+lm.anova <- function(x, y, assign) {
   # LM fit by pivoted QR decomposition
   fit <- lm.fit(x, y)
   if (assign[1L] == 0L) { 
-    # with intercept
+    ##### with intercept
     full.rank <- 1L:(fit$rank - 1L)
     assign.pivot <- assign[fit$qr$pivot[full.rank + 1L]]
     var <- fit$effects[-1L]^2
   } else { 
-    # without intercept
+    ##### without intercept
     full.rank <- 1L:fit$rank
     assign.pivot <- assign[fit$qr$pivot[full.rank]]
     var <- fit$effects^2
@@ -114,13 +114,13 @@ lm.anova <- function (x, y, assign) {
 #' @importFrom speedglm speedglm.wfit
 #' @importFrom stats pf pchisq
 #' @keywords internal
-glm.anova <- function (x, y, assign, family, test) {
+glm.anova <- function(x, y, assign, family, test) {
   iner <- ifelse(assign[1] == 0L, TRUE, FALSE)
   # Full model fit by pivoted Colesky decomposition
   suppressWarnings(
     full.fit <- speedglm.wfit(X = x, y = y, 
-                              intercept = iner,
-                              family = family, method = "Cholesky")
+                              intercept = iner, family = family, 
+                              method = "Cholesky", tol.solve = 1e-30)
   )
   # Reduced model fits by pivoted Colesky decomposition
   red.dev <- red.df <- NULL 
@@ -128,8 +128,8 @@ glm.anova <- function (x, y, assign, family, test) {
     for (i in seq_len( max(assign) - 1L)) {
       suppressWarnings(
         red.fit <- speedglm.wfit(X = x[, assign <= i, drop = FALSE], y = y, 
-                                 intercept = iner,
-                                 family = family, method = "Cholesky")
+                                 intercept = iner, family = family, 
+                                 method = "Cholesky", tol.solve = 1e-30)
       )
       red.dev <- c(red.dev, red.fit$deviance)
       red.df <- c(red.df, red.fit$df)
@@ -138,11 +138,11 @@ glm.anova <- function (x, y, assign, family, test) {
   # Treatment: Variance | DF
   df.treat <- -diff(c(full.fit$nulldf, red.df, full.fit$df))
   var.treat <- pmax(-diff(c(full.fit$nulldev, red.dev, full.fit$deviance)))
-  # check for singularity
+  ##### check for singularity
   nonsing.covar <- which(df.treat != 0)
   df.treat <- df.treat[nonsing.covar]
   var.treat <- var.treat[nonsing.covar]
-  # Dispersion factor
+  ##### Dispersion factor
   disp <- full.fit$dispersion
   # estimated  test statistic
   p <- rep(1, max(assign))
