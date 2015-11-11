@@ -4,8 +4,8 @@
 \alias{samp1.lasso}
 \title{Variabel Screening}
 \usage{
-samp1.lasso(samp1, x, y, n.samp2, penalty.factor, sel.method, activeset.freq,
-  nfolds, lambda.opt, ...)
+samp1.lasso(samp1, x, y, family, penalty.factor, sel.method, act.freq, nfolds,
+  lambda.opt, n.samp2, ...)
 }
 \arguments{
 \item{samp1}{List of index for subsample (mclapply index).}
@@ -14,16 +14,15 @@ samp1.lasso(samp1, x, y, n.samp2, penalty.factor, sel.method, activeset.freq,
 
 \item{y}{Vector of quantitative response variable.}
 
-\item{n.samp2}{Number of individuals in samp2 which is the max.
-for non zero coefficients.}
+\item{family}{Distribution family of \code{y}.}
 
 \item{penalty.factor}{See glmnet.}
 
 \item{sel.method}{Name of method for the selection of covariates via the
-LASSO, either "ASF" (default), the occurrence frequenze of covariates along
+LASSO, either "AF" (default), the occurrence frequenze of covariates along
 the lambda path or "CV" n-fold cross-validation.}
 
-\item{activeset.freq}{Frequency in which a covariate has to occur along the
+\item{act.freq}{Frequency in which a covariate has to occur along the
 lambda path to be selected in the active set. Ignored if \code{sel.method}
 is "CV".}
 
@@ -33,6 +32,9 @@ is "ASF". See \code{\link[glmnet]{cv.glmnet}} for more details.}
 \item{lambda.opt}{Criterion for optimum selection of cross validated lasso.
 Either "lambda.1se" (default) or "lambda.min". Ignored if \code{sel.method}
 is "ASF". See \code{\link[glmnet]{cv.glmnet}} for more details.}
+
+\item{n.samp2}{Number of individuals in samp2 which is the max.
+for non zero coefficients.}
 
 \item{...}{Additional agruments}
 }

@@ -4,10 +4,10 @@
 \alias{hit}
 \title{Hierarchical Inference Testing}
 \usage{
-hit(x, y, hierarchy, B = 50, p.samp1 = 0.5, sel.method = c("ASF", "CV"),
-  activeset.freq = 1/3, nfolds = 10, lambda.opt = c("lambda.1se",
-  "lambda.min"), gamma = seq(0.05, 0.99, length.out = 100), max.p.esti = 1,
-  mc.cores = 1L, trace = FALSE, ...)
+hit(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5,
+  sel.method = c("AF", "CV"), act.freq = 2/3, nfolds = 10,
+  lambda.opt = c("lambda.1se", "lambda.min"), gamma = seq(0.05, 0.99,
+  length.out = 100), max.p.esti = 1, mc.cores = 1L, trace = FALSE, ...)
 }
 \arguments{
 \item{x}{Design matrix of dimension \code{n * p}, without intercept.
@@ -19,25 +19,33 @@ below.}
 \item{hierarchy}{Object of class \code{\link{as.hierarchy}}. Must include
 all variables of \code{x} which should be tested.}
 
+\item{family}{Family of response variable distribution. Ether \code{y} is
+"gaussian" in which case \code{y} must be a vector or it is "binomial"
+distibuded. In this case \code{y} should be either a factor with two levels,
+or a two-column matrix of counts or proportions (the second column is
+treated as the target class; for a factor, the last level in alphabetical
+order is the target class). For "binomial" if \code{y} is presented as a
+vector, it will be coerced into a factor.}
+
 \item{B}{Number of sample-splits.}
 
 \item{p.samp1}{Fraction of data used for the LASSO. The ANOVA uses
 \code{1 - p.samp1}.}
 
 \item{sel.method}{Name of method for the selection of covariates via the
-LASSO, either "ASF" (default), the occurrence frequenze of covariates along
+LASSO, either "AF" (default), the occurrence frequenze of covariates along
 the lambda path or "CV" n-fold cross-validation.}
 
-\item{activeset.freq}{Frequency in which a covariate has to occur along the
+\item{act.freq}{Frequency in which a covariate has to occur along the
 lambda path to be selected in the active set. Ignored if \code{sel.method}
 is "CV".}
 
 \item{nfolds}{Number of folds (default is 10). Ignored if \code{sel.method}
-is "ASF". See \code{\link[glmnet]{cv.glmnet}} for more details.}
+is "AF". See \code{\link[glmnet]{cv.glmnet}} for more details.}
 
 \item{lambda.opt}{Criterion for optimum selection of cross validated lasso.
 Either "lambda.1se" (default) or "lambda.min". Ignored if \code{sel.method}
-is "ASF". See \code{\link[glmnet]{cv.glmnet}} for more details.}
+is "AF". See \code{\link[glmnet]{cv.glmnet}} for more details.}
 
 \item{gamma}{Vector of gamma-values.}
 
@@ -61,27 +69,47 @@ experimental-design variables. These variables are not penalised in the
 LASSO model selection and are always include in the reduced ANOVA model.
 }
 \examples{
+# Simulation:
 set.seed(123)
 n <- 80
-p <- 90
-# x with correlated columns
-corMat <- toeplitz((p:1/p)^3)
+p <- 82
+
+## x with correlated columns
+corMat <- toeplitz((p:1/p)^5)
 corMatQ <- chol(corMat)
 x <- matrix(rnorm(n * p), nrow = n) \%*\% corMatQ
 colnames(x) <- paste0("x", 1:p)
-# y
-y <- x[, c(3, 5, 73)] \%*\% c(2, 5, 3) + rnorm(n)
-# clustering
+
+## y
+mu <- x[, c(5, 24, 72)] \%*\% c(5, 4, 7)
+y <-  rnorm(n, mu, 2)
+y2 <- rbinom(n, 1, 1 / (1 + exp(-mu)))
+
+## clustering of the clumns of x
 hc <- hclust(dist(t(x)))
-# HIT with ASF
+
+# HIT with AF
 out <- hit(x, y, hc)
 summary(out)
 
-
-# HIT with CV
+# if you want to run the additional examples as well, use:
+# example(hit, run.dontrun = TRUE)
 \dontrun{
+# HIT with CV
 out2 <- hit(x, y, hc, sel.method = "CV")
 summary(out2)
+}
+
+\dontrun{
+# HIT with binomial response
+out3 <- hit(x, y2, hc, family = "binomial")
+summary(out3)
+}
+
+\dontrun{
+# HIT with binomial response and CV
+out4 <- hit(x, y2, hc, family = "binomial", sel.method = "CV")
+summary(out4)
 }
 }
 \references{

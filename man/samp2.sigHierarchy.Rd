@@ -4,34 +4,38 @@
 \alias{samp2.sigHierarchy}
 \title{Variabel Testing}
 \usage{
-samp2.sigHierarchy(cIndex, level, upper.p, x, y, allSamp1.ids, allActSet.ids,
-  x.nonTested, hierarchy, max.p.esti, B, gamma, cores)
+samp2.sigHierarchy(j, x, y, hierarchy, family, test, x.notest, B, allSamp1.ids,
+  allActSet.ids, upper.p, max.p.esti, gamma, hl.count, cores)
 }
 \arguments{
-\item{cIndex}{Index for cluster (mclapply index).}
-
-\item{level}{Hierarchy level counter for parallelism}
-
-\item{upper.p}{P value upper huerarchy level of the clusters variables.}
+\item{j}{Index for cluster (mclapply index).}
 
 \item{x}{Design matrix, of dimension n x p.}
 
 \item{y}{Vector of quantitative response variable.}
 
+\item{hierarchy}{A hierarchy object.}
+
+\item{family}{Distribution family of \code{y}.}
+
+\item{test}{name of test.}
+
+\item{x.notest}{Vector of indeces of non tested variabels.}
+
+\item{B}{Number of sample-splits.}
+
 \item{allSamp1.ids}{List of subsampels.}
 
 \item{allActSet.ids}{List of active sets.}
 
-\item{x.nonTested}{Vector of indeces of non tested variabels.}
-
-\item{hierarchy}{A hierarchy object}
+\item{upper.p}{P value upper huerarchy level of the clusters variables.}
 
 \item{max.p.esti}{Maximum alpha level. All p-values above this value are set
 to one. Small max.p.esti values reduce computing time.}
 
-\item{B}{Number of sample-splits.}
-
 \item{gamma}{Vector of gamma-values.}
+
+\item{hl.count}{Hierarchy level counter for parallelism}
 
 \item{cores}{Number of cores for parallelising.}
 }

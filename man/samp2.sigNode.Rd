@@ -4,7 +4,8 @@
 \alias{samp2.sigNode}
 \title{ANOVA testing and multiplicity adjustment}
 \usage{
-samp2.sigNode(k, x, y, cluster, x.nonTested, allSamp1.ids, allActSet.ids)
+samp2.sigNode(k, x, y, cluster, family, test, x.notest, allSamp1.ids,
+  allActSet.ids)
 }
 \arguments{
 \item{k}{Index for subsample (mclapply index).}
@@ -15,7 +16,11 @@ samp2.sigNode(k, x, y, cluster, x.nonTested, allSamp1.ids, allActSet.ids)
 
 \item{cluster}{Clusters to be tested.}
 
-\item{x.nonTested}{Vector of indeces of non tested variabels.}
+\item{family}{Distribution family of \code{y}.}
+
+\item{test}{name of test.}
+
+\item{x.notest}{Vector of indeces of non tested variabels.}
 
 \item{allSamp1.ids}{List of subsampels.}
 
