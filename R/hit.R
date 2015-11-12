@@ -53,44 +53,20 @@
 #' set.seed(123)
 #' n <- 80
 #' p <- 82
-#' 
 #' ## x with correlated columns
 #' corMat <- toeplitz((p:1/p)^5)
 #' corMatQ <- chol(corMat)
 #' x <- matrix(rnorm(n * p), nrow = n) %*% corMatQ
 #' colnames(x) <- paste0("x", 1:p)
-#' 
 #' ## y
-#' mu <- x[, c(5, 24, 72)] %*% c(5, 4, 7)
-#' y <-  rnorm(n, mu, 2)
-#' y2 <- rbinom(n, 1, 1 / (1 + exp(-mu))) 
-#' 
+#' mu <- x[, c(5, 24, 72)] %*% c(3, 1, 2)
+#' y <-  rnorm(n, mu)
 #' ## clustering of the clumns of x
 #' hc <- hclust(dist(t(x)))
 #' 
 #' # HIT with AF
 #' out <- hit(x, y, hc)
 #' summary(out)
-#' 
-#' # if you want to run the additional examples as well, use:
-#' # example(hit, run.dontrun = TRUE)
-#' \dontrun{
-#' # HIT with CV
-#' out2 <- hit(x, y, hc, sel.method = "CV")
-#' summary(out2)
-#' }
-#' 
-#' \dontrun{
-#' # HIT with binomial response
-#' out3 <- hit(x, y2, hc, family = "binomial")
-#' summary(out3)
-#' }
-#' 
-#' \dontrun{
-#' # HIT with binomial response and CV
-#' out4 <- hit(x, y2, hc, family = "binomial", sel.method = "CV")
-#' summary(out4)
-#' }
 #' 
 #' @importFrom parallel mclapply
 #' @importFrom stats reorder
@@ -413,3 +389,31 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
     out[, 1L] <- as.integer(factor(out[, 1L], labels = 1L:ll))
   out
 }
+
+
+#------------------------------------------------------------------------------#
+# AIC as selection criteria for 2.2 Screening via lasso was obvious, however, 
+# it was not working that nicely, therefore it is not used at the moment.
+# if (sel.method == "AIC") {
+#   AIC.glmnet <- function(object) {
+#     n <- object$nobs
+#     df <- object$df + 1
+#     dev <- deviance(object)
+#     fam <- object$call$family
+#     if (is.null(fam) || fam == "gaussian") {
+#       ll <- -n / 2 * (log(2 * pi) + log(dev / n)) - n / 2
+#       df <- df + 1
+#     } else if (!is.null(fam) && fam == "binomial") {
+#       ll <- -.5 * dev
+#     } else {
+#       stop(paste(fam, "not implemented"))
+#     }
+#     aic <- (df - ll) * 2
+#     aic[df > (n - 2)] <- Inf
+#     aic
+#   }
+#   # AIC selection
+#   s.aic <- which.min(AIC.glmnet(fit))
+#   beta <- coef(fit, s = fit$lambda[s.aic])[-1L]
+#   actSet <- which(beta != 0 & penalty.factor == 1L)
+# }
