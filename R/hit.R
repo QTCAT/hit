@@ -97,16 +97,13 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5,
   if (length(setdiff(hier.names, x.names)))
     stop("'hierarchy' includs variabels not in 'x'")
   if (identical(hier.names, x.names)) {
-    additionalCovariates <- character(0L)
     x.notest <- integer(0L)
   } else if (setequal(hier.names, x.names)) {
     hierarchy <- reorder(hierarchy, x.names)
-    additionalCovariates <- character(0L)
     x.notest <- integer(0L)
   } else {
     hierarchy <- reorder(hierarchy, x.names)
-    additionalCovariates <- setdiff(x.names, names(hierarchy))
-    x.notest <- match(additionalCovariates, x.names)
+    x.notest <- match(setdiff(x.names, names(hierarchy)), x.names)
   }
   penalty.factor <- rep(1L, p)
   penalty.factor[x.notest] <- 0L
