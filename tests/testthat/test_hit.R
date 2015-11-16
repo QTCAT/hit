@@ -5,7 +5,7 @@ test_that("hit testing", {
   n <- 100
   p <- 150
   # x with correlated columns
-  corMat <- toeplitz((p:1/p)^3)
+  corMat <- toeplitz((p:1 / p)^3)
   corMatQ <- chol(corMat)
   x <- matrix(rnorm(n * p), nrow = n) %*% corMatQ
   colnames(x) <- paste0("x", 1:p)
@@ -19,7 +19,7 @@ test_that("hit testing", {
   # checks
   expect_equal(class(fit), "hit")
   expect_equal(unname(unlist(lapply(fit, class))), 
-               c("numeric", "numeric","hierarchy", "character"))
+               c("numeric", "numeric","hierarchy", "logical"))
   expect_equal(names(fit), 
-               c("pValues", "selectFreq", "hierarchy", "additionalCovariates"))
+               c("pValues", "selectFreq", "hierarchy", "tested"))
 })

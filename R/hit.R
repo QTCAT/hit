@@ -137,10 +137,13 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5,
   asi <- sort(unlist(allActSet.ids))
   sel.tab <- rep(0, p)
   sel.tab[unique(asi)] <- table(asi) / B
+  tested <- rep(TRUE, p)
+  tested[x.notest] <- FALSE
+  names(tested) <- x.names
   out <- list(pValues = pValues,
               selectFreq = sel.tab,
               hierarchy = hierarchy,
-              additionalCovariates = additionalCovariates)
+              tested = tested)
   class(out) <- "hit"
   out
 }
