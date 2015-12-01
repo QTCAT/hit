@@ -48,9 +48,9 @@ fast.anova <- function(x, y, assign = NULL, family = gaussian(),
   test <- match.arg(test, c("LRT", "F"))
   # fit anova model
   if (family$family == "gaussian" && test == "F") 
-    p <- lm.anova(x, y, assign)
+    p <- fast.lmanova(x, y, assign)
   else
-    p <- glm.anova(x, y, assign, family, test)
+    p <- fast.glmanova(x, y, assign, family, test)
   p
 }
 
@@ -66,7 +66,7 @@ fast.anova <- function(x, y, assign = NULL, family = gaussian(),
 #' 
 #' @importFrom stats lm.fit pf 
 #' @keywords internal
-lm.anova <- function(x, y, assign) {
+fast.lmanova <- function(x, y, assign) {
   # LM fit by pivoted QR decomposition
   fit <- lm.fit(x, y)
   if (assign[1L] == 0L) { 
@@ -114,7 +114,7 @@ lm.anova <- function(x, y, assign) {
 #' @importFrom speedglm speedglm.wfit
 #' @importFrom stats pf pchisq
 #' @keywords internal
-glm.anova <- function(x, y, assign, family, test) {
+fast.glmanova <- function(x, y, assign, family, test) {
   iner <- ifelse(assign[1] == 0L, TRUE, FALSE)
   # Full model fit by pivoted Colesky decomposition
   suppressWarnings(
@@ -161,4 +161,3 @@ glm.anova <- function(x, y, assign, family, test) {
   }
   p
 }
-
