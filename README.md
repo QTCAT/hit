@@ -13,9 +13,9 @@ and for Windows
 
 
 ## Description:
-Hierarchical inference testing (HIT) for linear models with correlated 
-covariates. HIT is furthermore applicable to high-dimensional settings. For 
-details see:
+Hierarchical inference testing (HIT) for (generalized) linear models with 
+correlated covariates. HIT is furthermore applicable to high-dimensional 
+settings. For details see:
 
 **Mandozzi, J. and Buehlmann, P. (2015)**. *Hierarchical testing in the 
 high-dimensional setting with correlated variables*. Journal of the American 

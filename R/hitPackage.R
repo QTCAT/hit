@@ -4,8 +4,8 @@
 #' 
 #' @title Hierarchical Inference Testing
 #' 
-#' @description Hierarchical inference testing (HIT) for linear models 
-#' with correlated covariates applicable to high-dimensional settings.
+#' @description Hierarchical inference testing (HIT) for (generalized) linear 
+#' models with correlated covariates applicable to high-dimensional settings.
 #' 
 #' @author Jonas Klasen
 #' 
