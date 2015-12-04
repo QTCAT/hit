@@ -115,11 +115,11 @@ fast.lmanova <- function(x, y, assign) {
 #' @importFrom stats pf pchisq
 #' @keywords internal
 fast.glmanova <- function(x, y, assign, family, test) {
-  iner <- ifelse(assign[1] == 0L, TRUE, FALSE)
+  inter <- ifelse(assign[1] == 0L, TRUE, FALSE)
   # Full model fit by pivoted Colesky decomposition
   suppressWarnings(
     full.fit <- speedglm.wfit(X = x, y = y, 
-                              intercept = iner, family = family, 
+                              intercept = inter, family = family, 
                               method = "Cholesky", tol.solve = 1e-30)
   )
   # Reduced model fits by pivoted Colesky decomposition
@@ -128,7 +128,7 @@ fast.glmanova <- function(x, y, assign, family, test) {
     for (i in seq_len( max(assign) - 1L)) {
       suppressWarnings(
         red.fit <- speedglm.wfit(X = x[, assign <= i, drop = FALSE], y = y, 
-                                 intercept = iner, family = family, 
+                                 intercept = inter, family = family, 
                                  method = "Cholesky", tol.solve = 1e-30)
       )
       red.dev <- c(red.dev, red.fit$deviance)
