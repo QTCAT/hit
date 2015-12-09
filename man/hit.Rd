@@ -5,8 +5,7 @@
 \title{Hierarchical Inference Testing}
 \usage{
 hit(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5,
-  sel.method = c("AF", "CV"), act.freq = 0.5, nfolds = 10,
-  lambda.opt = c("lambda.1se", "lambda.min"), gamma = seq(0.05, 0.99,
+  nfolds = 10, lambda.opt = "lambda.1se", gamma = seq(0.05, 0.99,
   length.out = 100), max.p.esti = 1, mc.cores = 1L, trace = FALSE, ...)
 }
 \arguments{
@@ -31,14 +30,6 @@ vector, it will be coerced into a factor.}
 
 \item{p.samp1}{Fraction of data used for the LASSO. The ANOVA uses 
 \code{1 - p.samp1}.}
-
-\item{sel.method}{Name of method for the selection of covariates via the 
-LASSO, either "AF" (default), the occurrence frequenze of covariates along 
-the lambda path or "CV" n-fold cross-validation.}
-
-\item{act.freq}{Frequency in which a covariate has to occur along the 
-lambda path to be selected in the active set. Ignored if \code{sel.method} 
-is "CV".}
 
 \item{nfolds}{Number of folds (default is 10). Ignored if \code{sel.method} 
 is "AF". See \code{\link[glmnet]{cv.glmnet}} for more details.}

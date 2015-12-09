@@ -4,8 +4,7 @@
 \alias{samp1.lasso}
 \title{Variabel Screening}
 \usage{
-samp1.lasso(samp1, x, y, family, penalty.factor, sel.method, act.freq, nfolds,
-  lambda.opt, n.samp2, ...)
+samp1.lasso(samp1, x, y, family, penalty.factor, lambda, n.samp2, ...)
 }
 \arguments{
 \item{samp1}{List of index for subsample (mclapply index).}
@@ -18,20 +17,8 @@ samp1.lasso(samp1, x, y, family, penalty.factor, sel.method, act.freq, nfolds,
 
 \item{penalty.factor}{See glmnet.}
 
-\item{sel.method}{Name of method for the selection of covariates via the 
-LASSO, either "AF" (default), the occurrence frequenze of covariates along 
-the lambda path or "CV" n-fold cross-validation.}
-
-\item{act.freq}{Frequency in which a covariate has to occur along the 
-lambda path to be selected in the active set. Ignored if \code{sel.method} 
-is "CV".}
-
-\item{nfolds}{Number of folds (default is 10). Ignored if \code{sel.method} 
-is "ASF". See \code{\link[glmnet]{cv.glmnet}} for more details.}
-
-\item{lambda.opt}{Criterion for optimum selection of cross validated lasso. 
-Either "lambda.1se" (default) or "lambda.min". Ignored if \code{sel.method} 
-is "ASF". See \code{\link[glmnet]{cv.glmnet}} for more details.}
+\item{lambda}{A vector of lambda values sorted from large to small where 
+the smallest is the optimal value.}
 
 \item{n.samp2}{Number of individuals in samp2 which is the max. 
 for non zero coefficients.}

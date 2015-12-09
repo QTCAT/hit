@@ -2,7 +2,7 @@
 % Please edit documentation in R/hit.R
 \name{samp2.sigHierarchy}
 \alias{samp2.sigHierarchy}
-\title{Variabel Testing}
+\title{Variabel Testing along the hierarchy}
 \usage{
 samp2.sigHierarchy(j, x, y, hierarchy, family, test, x.notest, B, allSamp1.ids,
   allActSet.ids, upper.p, max.p.esti, gamma, hl.count, cores)

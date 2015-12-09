@@ -19,12 +19,6 @@
 #' @param B Number of sample-splits.
 #' @param p.samp1 Fraction of data used for the LASSO. The ANOVA uses 
 #' \code{1 - p.samp1}.
-#' @param sel.method Name of method for the selection of covariates via the 
-#' LASSO, either "AF" (default), the occurrence frequenze of covariates along 
-#' the lambda path or "CV" n-fold cross-validation.
-#' @param act.freq Frequency in which a covariate has to occur along the 
-#' lambda path to be selected in the active set. Ignored if \code{sel.method} 
-#' is "CV".
 #' @param nfolds Number of folds (default is 10). Ignored if \code{sel.method} 
 #' is "AF". See \code{\link[glmnet]{cv.glmnet}} for more details. 
 #' @param lambda.opt Criterion for optimum selection of cross validated lasso. 
@@ -69,14 +63,15 @@
 #' summary(out)
 #' 
 #' @importFrom parallel mclapply
+#' @importFrom glmnet cv.glmnet
 #' @importFrom stats reorder
 #' @export 
 hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5, 
-                sel.method = c("AF", "CV"), act.freq = 0.5,
-                nfolds = 10, lambda.opt = c("lambda.1se", "lambda.min"), 
+                nfolds = 10, lambda.opt = "lambda.1se", 
                 gamma = seq(0.05, 0.99, length.out = 100), max.p.esti = 1, 
                 mc.cores = 1L, trace = FALSE, ...) {
   #   Mandozzi and Buehlmann (2015), 2 Description of method
+  ## Checks for given args
   if (is.null(colnames(x)))
     stop("column names of 'x' are missing")
   n <- nrow(x)
@@ -84,13 +79,13 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5,
   if (class(hierarchy) == "dendrogram" || class(hierarchy) == "hclust")
     hierarchy <- as.hierarchy(hierarchy)
   stopifnot(class(hierarchy) == "hierarchy")
+  lambda.opt <- match.arg(lambda.opt, c("lambda.1se", "lambda.min"))
   ##### Check family and assign test
   family <- match.arg(family, c("gaussian", "binomial"))
   test <- "LRT"
   if (family == "gaussian") 
     test <- "F"
   family2 <- eval(call(family))
-  sel.method <- match.arg(sel.method, c("AF", "CV"))
   ##### Checks order of variats
   x.names <- colnames(x)
   hier.names <- names(hierarchy)
@@ -116,9 +111,16 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5,
   ##  2.2 Screening
   if (trace)
     cat("LASSO has started at:\n\t", as.character(Sys.time()), "\n")
-  allActSet.ids <- mclapply(allSamp1.ids, samp1.lasso,
-                            x, y, family, penalty.factor, sel.method, 
-                            act.freq, nfolds, lambda.opt, n.samp2, ...,
+  suppressWarnings(
+    cvl <- cv.glmnet(x, y, family = family, nfolds = nfolds, 
+                     penalty.factor = penalty.factor, pmax = n.samp2 - 2L, ...)
+  )
+  if (lambda.opt == "lambda.min") 
+    lambda <- cvl$lambda[cvl$lambda >= cvl$lambda.min]
+  else 
+    lambda <- cvl$lambda[cvl$lambda >= cvl$lambda.1se]
+  allActSet.ids <- mclapply(allSamp1.ids, samp1.lasso, x, y, family, 
+                            penalty.factor, lambda, n.samp2, ..., 
                             mc.cores = mc.cores, mc.cleanup = TRUE)
   ##  2.3 Testing and multiplicity adjustmen; and 
   ##  2.4 Aggregating and Hierarchical adjustment
@@ -155,60 +157,28 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5,
 #' @param y Vector of quantitative response variable.
 #' @param family Distribution family of \code{y}. 
 #' @param penalty.factor See glmnet.
-#' @param sel.method Name of method for the selection of covariates via the 
-#' LASSO, either "AF" (default), the occurrence frequenze of covariates along 
-#' the lambda path or "CV" n-fold cross-validation.
-#' @param act.freq Frequency in which a covariate has to occur along the 
-#' lambda path to be selected in the active set. Ignored if \code{sel.method} 
-#' is "CV".
-#' @param nfolds Number of folds (default is 10). Ignored if \code{sel.method} 
-#' is "ASF". See \code{\link[glmnet]{cv.glmnet}} for more details. 
-#' @param lambda.opt Criterion for optimum selection of cross validated lasso. 
-#' Either "lambda.1se" (default) or "lambda.min". Ignored if \code{sel.method} 
-#' is "ASF". See \code{\link[glmnet]{cv.glmnet}} for more details.
+#' @param lambda A vector of lambda values sorted from large to small where 
+#' the smallest is the optimal value.
 #' @param n.samp2 Number of individuals in samp2 which is the max. 
 #' for non zero coefficients.
 #' @param ... Additional agruments
 #' 
-#' @importFrom glmnet cv.glmnet glmnet
-#' @importFrom Matrix which
+#' @importFrom glmnet glmnet
 #' @importFrom stats coef
 #' @keywords internal
-samp1.lasso <- function(samp1, x, y, family, penalty.factor, sel.method, 
-                        act.freq, nfolds, lambda.opt, n.samp2, ...) {
-  ##  2.2 Screening
-  if (sel.method == "CV") {
-    # n-fold cross-validation
-    lambda.opt <- match.arg(lambda.opt, c("lambda.1se", "lambda.min"))
-    fit <- cv.glmnet(x[samp1, ], y[samp1], 
-                     nfolds = nfolds, 
-                     penalty.factor = penalty.factor, 
-                     dfmax = n.samp2 - 2L, ...)
-    if (lambda.opt == "lambda.min")
-      beta <- coef(fit, s = fit$lambda.min)[-1L]
-    else 
-      beta <- coef(fit, s = fit$lambda.1se)[-1L]
-    actSet <- which(beta != 0 & penalty.factor == 1L)
-  } else {
-    # Select by the occurrence frequency along the lambda path
-    fit <- glmnet(x[samp1, ], y[samp1], 
-                  penalty.factor = penalty.factor, 
-                  dfmax = n.samp2 - 2L, ...)
-    inx <- which(fit$beta != 0 & penalty.factor == 1L, arr.ind = TRUE)[, 1L]
-    inxcount <- table(inx)
-    uniqinx <- sort(unique(inx))
-    asThre <- ceiling(ncol(fit$beta) * act.freq)
-    actSet <- uniqinx[inxcount > asThre]
-    while (length(actSet) > n.samp2 - 2L) {
-      asThre <- asThre + 1L
-      actSet <- uniqinx[inxcount > asThre]
-    }
-  }
+samp1.lasso <- function(samp1, x, y, family, penalty.factor, 
+                        lambda, n.samp2, ...) {
+  suppressWarnings(
+    fit <- glmnet(x[samp1, ], y[samp1], lambda = lambda, 
+                  penalty.factor = penalty.factor, pmax = n.samp2 - 2L, ...)
+  )
+  beta <- coef(fit, s = lambda[length(lambda)])[-1L]
+  actSet <- which(beta != 0 & penalty.factor == 1L)
   actSet
 }
 
 
-#' @title Variabel Testing
+#' @title Variabel Testing along the hierarchy
 #' 
 #' @description ANOVA Testing, Multiplicity Adjustment, Aggregating and 
 #' Hierarchical Adjustment

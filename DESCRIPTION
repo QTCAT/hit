@@ -13,7 +13,6 @@ Depends:
 Imports:
     stats,
     parallel,
-    Matrix,
     Rcpp (>= 0.11.0),
     glmnet,
     speedglm
