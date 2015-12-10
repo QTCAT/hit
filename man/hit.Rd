@@ -31,12 +31,12 @@ vector, it will be coerced into a factor.}
 \item{p.samp1}{Fraction of data used for the LASSO. The ANOVA uses 
 \code{1 - p.samp1}.}
 
-\item{nfolds}{Number of folds (default is 10). Ignored if \code{sel.method} 
-is "AF". See \code{\link[glmnet]{cv.glmnet}} for more details.}
+\item{nfolds}{Number of folds (default is 10). See 
+\code{\link[glmnet]{cv.glmnet}} for more details.}
 
 \item{lambda.opt}{Criterion for optimum selection of cross validated lasso. 
-Either "lambda.1se" (default) or "lambda.min". Ignored if \code{sel.method} 
-is "AF". See \code{\link[glmnet]{cv.glmnet}} for more details.}
+Either "lambda.1se" (default) or "lambda.min". See 
+\code{\link[glmnet]{cv.glmnet}} for more details.}
 
 \item{gamma}{Vector of gamma-values.}
 

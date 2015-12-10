@@ -19,11 +19,11 @@
 #' @param B Number of sample-splits.
 #' @param p.samp1 Fraction of data used for the LASSO. The ANOVA uses 
 #' \code{1 - p.samp1}.
-#' @param nfolds Number of folds (default is 10). Ignored if \code{sel.method} 
-#' is "AF". See \code{\link[glmnet]{cv.glmnet}} for more details. 
+#' @param nfolds Number of folds (default is 10). See 
+#' \code{\link[glmnet]{cv.glmnet}} for more details. 
 #' @param lambda.opt Criterion for optimum selection of cross validated lasso. 
-#' Either "lambda.1se" (default) or "lambda.min". Ignored if \code{sel.method} 
-#' is "AF". See \code{\link[glmnet]{cv.glmnet}} for more details. 
+#' Either "lambda.1se" (default) or "lambda.min". See 
+#' \code{\link[glmnet]{cv.glmnet}} for more details. 
 #' @param gamma Vector of gamma-values.
 #' @param max.p.esti Maximum alpha level. All p-values above this value are set 
 #' to one. Small \code{max.p.esti} values reduce computing time.
@@ -359,6 +359,36 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
     out[, 1L] <- as.integer(factor(out[, 1L], labels = 1L:ll))
   out
 }
+
+
+#------------------------------------------------------------------------------#
+# #' @title Significants hierarchy martix
+# #' 
+# #' @description Significants hierarchy martix
+# #' 
+# #' @param x a hit object
+# #' 
+# #' @details makes a matrix of p-values for image(p.matrix(x)). Mainly for 
+# #' debugging purposes
+# #' 
+# #' @export
+# p.matrix <- function (x) {
+#   allheig <- sapply(x$hierarchy, attr, "height")
+#   heig <- sort(unique(allheig))
+#   inx <- which(heig[1] == allheig)
+#   out <- list()
+#   out[[1]] <- x$pValues[inx]
+#   for (h in 2L:length(heig)) {
+#     out[[h]] <- out[[h-1]]
+#     inx <- which(heig[h] == allheig)
+#     p.val <- rep(x$pValues[inx], sapply(x$hierarchy[inx] , length))
+#     tryCatch(out[[h]][unlist(x$hierarchy[inx])] <- p.val)
+#   }
+#   out <- do.call("rbind", out)
+#   colnames(out) <- names(x$hierarchy[[1]])
+#   rownames(out) <- heig
+#   out
+# }
 
 
 #------------------------------------------------------------------------------#
