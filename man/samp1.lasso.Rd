@@ -4,7 +4,7 @@
 \alias{samp1.lasso}
 \title{Variabel Screening}
 \usage{
-samp1.lasso(samp1, x, y, family, penalty.factor, lambda, n.samp2, ...)
+samp1.lasso(samp1, x, y, family, alpha, lambda, penalty.factor, n.samp2, ...)
 }
 \arguments{
 \item{samp1}{List of index for subsample (mclapply index).}
@@ -15,15 +15,17 @@ samp1.lasso(samp1, x, y, family, penalty.factor, lambda, n.samp2, ...)
 
 \item{family}{Distribution family of \code{y}.}
 
-\item{penalty.factor}{See glmnet.}
+\item{alpha}{Mixing value for elnet.}
 
 \item{lambda}{A vector of lambda values sorted from large to small where 
 the smallest is the optimal value.}
 
+\item{penalty.factor}{See glmnet.}
+
 \item{n.samp2}{Number of individuals in samp2 which is the max. 
 for non zero coefficients.}
 
-\item{...}{Additional agruments}
+\item{...}{Additional agruments.}
 }
 \description{
 LASSO function of the HIT algorithem.

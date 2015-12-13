@@ -5,8 +5,9 @@
 \title{Hierarchical Inference Testing}
 \usage{
 hit(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5,
-  nfolds = 10, lambda.opt = "lambda.1se", gamma = seq(0.05, 0.99,
-  length.out = 100), max.p.esti = 1, mc.cores = 1L, trace = FALSE, ...)
+  nfolds = 10, lambda.opt = "lambda.1se", alpha = seq(1, 0.02, length.out
+  = 8)^0.3, gamma = seq(0.05, 0.99, length.out = 100), max.p.esti = 1,
+  mc.cores = 1L, trace = FALSE, ...)
 }
 \arguments{
 \item{x}{Design matrix of dimension \code{n * p}, without intercept.
@@ -34,9 +35,13 @@ vector, it will be coerced into a factor.}
 \item{nfolds}{Number of folds (default is 10). See 
 \code{\link[glmnet]{cv.glmnet}} for more details.}
 
-\item{lambda.opt}{Criterion for optimum selection of cross validated lasso. 
+\item{lambda.opt}{Criterion for optimum selection of cross-validated lasso. 
 Either "lambda.1se" (default) or "lambda.min". See 
 \code{\link[glmnet]{cv.glmnet}} for more details.}
+
+\item{alpha}{A single value or a vector of values in the range of 0 to 1 for 
+the elastic net mixing parameter. If more than one value are given, the best 
+is selected during cross-validation.}
 
 \item{gamma}{Vector of gamma-values.}
 

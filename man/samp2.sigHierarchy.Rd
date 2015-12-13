@@ -35,7 +35,7 @@ to one. Small max.p.esti values reduce computing time.}
 
 \item{gamma}{Vector of gamma-values.}
 
-\item{hl.count}{Hierarchy level counter for parallelism}
+\item{hl.count}{Hierarchy level counter for parallelism.}
 
 \item{cores}{Number of cores for parallelising.}
 }

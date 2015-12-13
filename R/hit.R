@@ -21,9 +21,12 @@
 #' \code{1 - p.samp1}.
 #' @param nfolds Number of folds (default is 10). See 
 #' \code{\link[glmnet]{cv.glmnet}} for more details. 
-#' @param lambda.opt Criterion for optimum selection of cross validated lasso. 
+#' @param lambda.opt Criterion for optimum selection of cross-validated lasso. 
 #' Either "lambda.1se" (default) or "lambda.min". See 
 #' \code{\link[glmnet]{cv.glmnet}} for more details. 
+#' @param alpha A single value or a vector of values in the range of 0 to 1 for 
+#' the elastic net mixing parameter. If more than one value are given, the best 
+#' is selected during cross-validation.
 #' @param gamma Vector of gamma-values.
 #' @param max.p.esti Maximum alpha level. All p-values above this value are set 
 #' to one. Small \code{max.p.esti} values reduce computing time.
@@ -68,10 +71,11 @@
 #' @export 
 hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5, 
                 nfolds = 10, lambda.opt = "lambda.1se", 
+                alpha = seq(1, .02, length.out = 8)^.3,
                 gamma = seq(0.05, 0.99, length.out = 100), max.p.esti = 1, 
                 mc.cores = 1L, trace = FALSE, ...) {
   #   Mandozzi and Buehlmann (2015), 2 Description of method
-  ## Checks for given args
+  ## Checks args
   if (is.null(colnames(x)))
     stop("column names of 'x' are missing")
   n <- nrow(x)
@@ -80,6 +84,7 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5,
     hierarchy <- as.hierarchy(hierarchy)
   stopifnot(class(hierarchy) == "hierarchy")
   lambda.opt <- match.arg(lambda.opt, c("lambda.1se", "lambda.min"))
+  alpha <- sort(alpha, decreasing = TRUE)
   ##### Check family and assign test
   family <- match.arg(family, c("gaussian", "binomial"))
   test <- "LRT"
@@ -111,16 +116,11 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5,
   ##  2.2 Screening
   if (trace)
     cat("LASSO has started at:\n\t", as.character(Sys.time()), "\n")
-  suppressWarnings(
-    cvl <- cv.glmnet(x, y, family = family, nfolds = nfolds, 
-                     penalty.factor = penalty.factor, pmax = n.samp2 - 2L, ...)
-  )
-  if (lambda.opt == "lambda.min") 
-    lambda <- cvl$lambda[cvl$lambda >= cvl$lambda.min]
-  else 
-    lambda <- cvl$lambda[cvl$lambda >= cvl$lambda.1se]
-  allActSet.ids <- mclapply(allSamp1.ids, samp1.lasso, x, y, family, 
-                            penalty.factor, lambda, n.samp2, ..., 
+  optpen <- opt.penalty(x, y, family, nfolds, lambda.opt, alpha, 
+                        penalty.factor, n.samp2, mc.cores, ...)
+  allActSet.ids <- mclapply(allSamp1.ids, samp1.lasso, 
+                            x, y, family, optpen$alpha, optpen$lambda, 
+                            penalty.factor, n.samp2, ..., 
                             mc.cores = mc.cores, mc.cleanup = TRUE)
   ##  2.3 Testing and multiplicity adjustmen; and 
   ##  2.4 Aggregating and Hierarchical adjustment
@@ -148,6 +148,67 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5,
 }
 
 
+#' @title Cross-validation of LASSO alpha and lambda
+#' 
+#' @description Cross-validation of LASSO alpha and lambda.
+#' 
+#' @param x Design matrix, of dimension n x p.
+#' @param y Vector of quantitative response variable.
+#' @param nfolds Number of folds (default is 10). See 
+#' @param family Distribution family of \code{y}. 
+#' @param lambda.opt Criterion for optimum selection of cross-validated lasso. 
+#' Either "lambda.1se" (default) or "lambda.min". See 
+#' \code{\link[glmnet]{cv.glmnet}} for more details. 
+#' @param alpha A single value or a vector of values in the range of 0 to 1 for 
+#' the elastic net mixing parameter. If more than one value are given, the best 
+#' is selected during cross-validation.
+#' @param penalty.factor See glmnet.
+#' @param n.samp2 Number of individuals in samp2 which is the max. 
+#' for non zero coefficients.
+#' @param mc.cores Number of cores for parallelising. Theoretical maximum is 
+#' 'B'. For details see \code{\link[parallel]{mclapply}}.
+#' @param ... Additional agruments.
+#' 
+#' @importFrom parallel mclapply
+#' @importFrom glmnet cv.glmnet
+#' @keywords internal
+opt.penalty <- function(x, y, family, nfolds, lambda.opt, alpha, 
+                        penalty.factor, n.samp2, mc.cores, ...) {
+  foldid <- sample(rep(1L:nfolds, length.out = nrow(x)))
+  suppressWarnings(
+    cvfit <- cv.glmnet(x, y, family = family, foldid = foldid, alpha = alpha,
+                       penalty.factor = penalty.factor, 
+                       pmax = n.samp2 - 2L, ...)
+  )
+  optinx <- 1L
+  if (length(alpha) > 1L) {
+    optcv.glmnet <- function(alpha, x, y, family, foldid, lambda, 
+                             penalty.factor, n.samp2, ...) {
+      #suppressWarnings(
+        out <- cv.glmnet(x, y, family = family, foldid = foldid,
+                         alpha = alpha, lambda = lambda,
+                         penalty.factor = penalty.factor, 
+                         pmax = n.samp2 - 2L, ...)
+      #)
+      out
+    }
+    cvfits <- mclapply(alpha[-1L], optcv.glmnet, 
+                       x, y, family, foldid, cvfit$lambda, 
+                       penalty.factor, n.samp2, ..., 
+                       mc.cores = mc.cores, mc.cleanup = TRUE)
+    cvfits <- c(list(cvfit), cvfits)
+    optinx <- which.min(sapply(cvfits, function(x) min(x$cvm)))
+    cvfit <- cvfits[[optinx]]
+  }
+  optalpha <- alpha[optinx]
+  if (lambda.opt == "lambda.min") 
+    optlambda <- cvfit$lambda[cvfit$lambda >= cvfit$lambda.min]
+  else 
+    optlambda <- cvfit$lambda[cvfit$lambda >= cvfit$lambda.1se]
+  list(alpha = optalpha, lambda = optlambda)
+}
+
+
 #' @title Variabel Screening
 #' 
 #' @description LASSO function of the HIT algorithem.
@@ -156,20 +217,21 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5,
 #' @param x Design matrix, of dimension n x p.
 #' @param y Vector of quantitative response variable.
 #' @param family Distribution family of \code{y}. 
-#' @param penalty.factor See glmnet.
+#' @param alpha Mixing value for elnet.
 #' @param lambda A vector of lambda values sorted from large to small where 
 #' the smallest is the optimal value.
+#' @param penalty.factor See glmnet.
 #' @param n.samp2 Number of individuals in samp2 which is the max. 
 #' for non zero coefficients.
-#' @param ... Additional agruments
+#' @param ... Additional agruments.
 #' 
 #' @importFrom glmnet glmnet
 #' @importFrom stats coef
 #' @keywords internal
-samp1.lasso <- function(samp1, x, y, family, penalty.factor, 
-                        lambda, n.samp2, ...) {
+samp1.lasso <- function(samp1, x, y, family, alpha, lambda, 
+                        penalty.factor, n.samp2, ...) {
   suppressWarnings(
-    fit <- glmnet(x[samp1, ], y[samp1], lambda = lambda, 
+    fit <- glmnet(x[samp1, ], y[samp1], alpha = alpha, lambda = lambda, 
                   penalty.factor = penalty.factor, pmax = n.samp2 - 2L, ...)
   )
   beta <- coef(fit, s = lambda[length(lambda)])[-1L]
@@ -197,7 +259,7 @@ samp1.lasso <- function(samp1, x, y, family, penalty.factor,
 #' @param max.p.esti Maximum alpha level. All p-values above this value are set 
 #' to one. Small max.p.esti values reduce computing time.
 #' @param gamma Vector of gamma-values.
-#' @param hl.count Hierarchy level counter for parallelism
+#' @param hl.count Hierarchy level counter for parallelism.
 #' @param cores Number of cores for parallelising.
 #' 
 #' @importFrom stats quantile
