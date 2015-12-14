@@ -142,7 +142,9 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5,
   out <- list(pValues = pValues,
               selectFreq = sel.tab,
               hierarchy = hierarchy,
-              tested = tested)
+              tested = tested,
+              alpha = optpen$alpha,
+              lambda = optpen$lambda[length(optpen$lambda)])
   class(out) <- "hit"
   out
 }
@@ -184,12 +186,12 @@ opt.penalty <- function(x, y, family, nfolds, lambda.opt, alpha,
   if (length(alpha) > 1L) {
     optcv.glmnet <- function(alpha, x, y, family, foldid, lambda,
                              penalty.factor, n.samp2, ...) {
-      #suppressWarnings(
+      suppressWarnings(
         out <- cv.glmnet(x, y, family = family, foldid = foldid,
                          alpha = alpha, lambda = lambda,
                          penalty.factor = penalty.factor,
                          pmax = n.samp2 - 2L, ...)
-      #)
+      )
       out
     }
     cvfits <- mclapply(alpha[-1L], optcv.glmnet,
