@@ -20,8 +20,8 @@ test_that("hit testing", {
   expect_equal(class(fit), "hit")
   expect_equal(unname(unlist(lapply(fit, class))), 
                c("numeric", "numeric","hierarchy", 
-                 "logical", "numeric", "numeric"))
+                 "logical", "numeric", "numeric", "numeric"))
   expect_equal(names(fit), 
                c("pValues", "selectFreq", "hierarchy", 
-                 "tested", "alpha", "lambda"))
+                 "tested", "alpha", "lambda", "max.p.esti"))
 })
