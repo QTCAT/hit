@@ -1,7 +1,7 @@
 # Hierarchical Inference Testing
 
-[![CRAN](http://www.r-pkg.org/badges/version/hit)](https://cran.r-project.org/package=hit)
-
+[![CRAN](http://www.r-pkg.org/badges/version/hit)](http://cran.r-project.org/package=hit)
+[![Downloads](http://cranlogs.r-pkg.org/badges/hit?color=brightgreen)](http://www.r-pkg.org/pkg/hit)
 
 The current built and test status for Linux (Mac)
 [![Build Status](https://travis-ci.org/QTCAT/hit.svg)](https://travis-ci.org/QTCAT/hit)
