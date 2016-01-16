@@ -1,15 +1,13 @@
 # Hierarchical Inference Testing
 
-[![CRAN](http://www.r-pkg.org/badges/version/hit)](http://cran.r-project.org/package=hit)
+[![CRAN](http://www.r-pkg.org/badges/version/hit)](https://cran.r-project.org/package=hit)
 
 
-Master branch bild and test status for Linux (Mac)
-[![Travis-CI Build Status](https://travis-ci.org/QTCAT/hit.png?branch=master)]
-(https://travis-ci.org/QTCAT/hit) 
+ The current built and test status for Linux (Mac)
+[![Travis](https://img.shields.io/travis/rust-lang/rust.svg)](https://travis-ci.org/QTCAT/hit) 
 and for Windows 
- [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/kttq4x98q6hra6ct/branch/master?svg=true)](https://ci.appveyor.com/project/jrklasen/hit)
+[![AppVeyor](https://img.shields.io/appveyor/ci/gruntjs/grunt.svg)](https://ci.appveyor.com/project/QTCAT/hit)
 .
-
 
 ## Description:
 Hierarchical inference testing (HIT) for (generalized) linear models with 
@@ -19,7 +17,7 @@ settings. For details see:
 **Mandozzi, J. and Buehlmann, P. (2015)**. *Hierarchical testing in the 
 high-dimensional setting with correlated variables*. Journal of the American 
 Statistical Association. Preprint 
-[arXiv:1312.5556](http://arxiv.org/abs/1312.5556).
+[arXiv:1312.5556](https://arxiv.org/abs/1312.5556).
 
 ## Installation:
 The package can be installed from CRAN,
@@ -48,5 +46,5 @@ example(hit)
 ```
 
 --------------------------------------------------------------------------------
-[![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
+[![License](https://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 &copy; 2015 JR Klasen
