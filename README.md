@@ -3,10 +3,10 @@
 [![CRAN](http://www.r-pkg.org/badges/version/hit)](https://cran.r-project.org/package=hit)
 
 
- The current built and test status for Linux (Mac)
-[![Travis](https://img.shields.io/travis/rust-lang/rust.svg)](https://travis-ci.org/QTCAT/hit) 
+The current built and test status for Linux (Mac)
+[![Build Status](https://travis-ci.org/QTCAT/hit.svg)](https://travis-ci.org/QTCAT/hit)
 and for Windows 
-[![AppVeyor](https://img.shields.io/appveyor/ci/gruntjs/grunt.svg)](https://ci.appveyor.com/project/QTCAT/hit)
+[![Build status](https://ci.appveyor.com/api/projects/status/kttq4x98q6hra6ct?svg=true)](https://ci.appveyor.com/project/jrklasen/hit)
 .
 
 ## Description:
