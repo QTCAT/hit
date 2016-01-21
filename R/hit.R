@@ -410,8 +410,9 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
     return(NULL)
   }
   stopifnot(inherits(object, "hit"))
+  stopifnot(alpha <= 0.999)
   if (missing(max.height))
-    max.height <- attr(object$hierarchy[[1]], "height")
+    max.height <- attr(object$hierarchy[[1L]], "height")
   P.CLUSTER <- rep(NA_real_, length(object$hierarchy[[1L]]))
   ID.CLUSTER <- rep(NA_integer_, length(object$hierarchy[[1L]]))
   H.CLUSTER <- rep(NA_real_, length(object$hierarchy[[1L]]))
