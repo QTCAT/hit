@@ -396,18 +396,22 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
   make.pVal <- function(i) {
     p.value <- object$pValues[i]
     inx <- object$hierarchy[[i]]
-    if (p.value <= alpha &&
-          (all(is.na(P.CLUSTER[inx])) ||
-             (all(!is.na(P.CLUSTER[inx]) &&
-                    P.CLUSTER[inx] <= alpha)))) {
+    height <- attr(object$hierarchy[[i]], "height")
+    if (p.value <= alpha && 
+        height <= max.height &&
+        (all(is.na(P.CLUSTER[inx])) || 
+         (all(!is.na(P.CLUSTER[inx]) && 
+              P.CLUSTER[inx] <= alpha)))) {
       P.CLUSTER[inx] <<-  p.value
       ID.CLUSTER[inx] <<- COUNTER
-      H.CLUSTER[inx] <<- attr(object$hierarchy[[i]], "height")
+      H.CLUSTER[inx] <<- height
       COUNTER <<- COUNTER + 1L
     }
     return(NULL)
   }
   stopifnot(inherits(object, "hit"))
+  if (missing(max.height))
+    max.height <- attr(object$hierarchy[[1]], "height")
   P.CLUSTER <- rep(NA_real_, length(object$hierarchy[[1L]]))
   ID.CLUSTER <- rep(NA_integer_, length(object$hierarchy[[1L]]))
   H.CLUSTER <- rep(NA_real_, length(object$hierarchy[[1L]]))
@@ -418,8 +422,6 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
                     heights = H.CLUSTER[non.na],
                     pValues = P.CLUSTER[non.na])
   rownames(out) <- names(object$hierarchy[[1L]])[non.na]
-  if (!missing(max.height))
-    out <- out[out[, 2L] <= max.height, ]
   if (ll <- length(unique(out[, 1L])))
     out[, 1L] <- as.integer(factor(out[, 1L], labels = 1L:ll))
   out
