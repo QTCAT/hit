@@ -4,10 +4,10 @@
 \alias{as.hierarchy}
 \title{Hierarchy Structure}
 \usage{
-as.hierarchy(x, max.height, height, names)
+as.hierarchy(x, max.height, height, names, ...)
 }
 \arguments{
-\item{x}{A S3 object.}
+\item{x}{A S3 object e.g. from hclust or dendrogram.}
 
 \item{max.height}{Is the maximal height below the global node height which 
 is considered.}

@@ -13,8 +13,9 @@ CharacterVector names(List x);
 void dendIndex(map<string, int>& dendNameInx,
                CharacterVector& dendNames, CharacterVector& newNames);
 IntegerVector clusterIndex(List x, map<string, int>& dendNameInx);
-void runDend(map< int, IntegerVector>& hierarchy, List x, int& counter,
-             int superset, NumericVector& height, int heightInx, 
+void runDend(map< int, IntegerVector>& hierarchy, map< int, vector<int> >& subsets, 
+             List x, 
+             int& counter, int superset, NumericVector& height, int heightInx, 
              map<string, int>& dendNameInx);
 List  dend2hier(List x, NumericVector height, CharacterVector newNames);
 
@@ -42,11 +43,16 @@ List dend2hier(List x, NumericVector height, CharacterVector newNames)
     vector<int> nullSubset;
     cluster.attr("subset") = nullSubset;
     // output 
+    map<int, vector<int> > subsets;
     map<int, IntegerVector> out;
     out[0] = cluster;
     int counter = 1;
     // run through the dendrogram
-    runDend(out, x, counter, 0, height, 0, dendNameInx);
+    runDend(out, subsets, x, counter, 0, height, 0, dendNameInx);
+    // add subset attr to clusters
+    for (map<int, vector<int> >::iterator i = subsets.begin(); i != subsets.end(); i++) {
+        out[i->first].attr("subset") = i->second;
+    }
     return wrap(out);
 }
 
@@ -57,6 +63,7 @@ List dend2hier(List x, NumericVector height, CharacterVector newNames)
 // in the hierarchy. Call only from within a C++ functions!
 // 
 // @param hierarchy A map to which the node is added.
+// @param subsets A map of indixces of subset of a set.
 // @param x A dendrogram S3 R object.
 // @param counter A interger for the position of the node in the 
 // hierarchy.
@@ -66,8 +73,8 @@ List dend2hier(List x, NumericVector height, CharacterVector newNames)
 // @param dendNameInx Name index to add to node.
 // 
 // @keywords internal
-void runDend(map< int, IntegerVector>& hierarchy, List x,  int& counter,
-             int superset, NumericVector& height, int heightInx, 
+void runDend(map< int, IntegerVector>& hierarchy, map< int, vector<int> >& subsets, 
+             List x, int& counter, int superset, NumericVector& height, int heightInx, 
              map<string, int>& dendNameInx)
 {
     RObject node;
@@ -85,7 +92,6 @@ void runDend(map< int, IntegerVector>& hierarchy, List x,  int& counter,
         if (newHeightInx > heightInx) {
             IntegerVector cluster;
             RObject superNode = as<RObject>(hierarchy[superset]);
-            vector<int>  superSubset;
             if (node.hasAttribute("leaf") && node.attr("leaf")) {
                 // make cluster
                 string name = as<string>(node.attr("label"));
@@ -94,13 +100,7 @@ void runDend(map< int, IntegerVector>& hierarchy, List x,  int& counter,
                 cluster.attr("superset") = superset +1;
                 hierarchy[counter] = cluster;
                 // modify super cluster
-                if (superNode.hasAttribute("subset")) {
-                    superSubset = hierarchy[superset].attr("subset");
-                    superSubset.push_back(counter +1);
-                    hierarchy[superset].attr("subset") = superSubset;
-                }
-                else
-                    hierarchy[superset].attr("subset") = counter +1;
+                subsets[superset].push_back(counter +1);
                 ++ counter;
             }
             else {
@@ -110,21 +110,15 @@ void runDend(map< int, IntegerVector>& hierarchy, List x,  int& counter,
                 cluster.attr("superset") = superset +1;
                 hierarchy[counter] = cluster;
                 // modify super cluster
-                if (superNode.hasAttribute("subset")) {
-                    superSubset = hierarchy[superset].attr("subset");
-                    superSubset.push_back(counter +1);
-                    hierarchy[superset].attr("subset") = superSubset;
-                }
-                else
-                    hierarchy[superset].attr("subset") = counter +1;
+                subsets[superset].push_back(counter +1);
                 int newSuperset = counter;
                 ++ counter;
-                runDend(hierarchy, x[i], counter, newSuperset, 
+                runDend(hierarchy, subsets, x[i], counter, newSuperset, 
                         height, newHeightInx, dendNameInx);
             }
         }
         else if (!node.hasAttribute("leaf"))
-            runDend(hierarchy, x[i], counter, superset, 
+            runDend(hierarchy, subsets, x[i], counter, superset, 
                     height, heightInx, dendNameInx);
     }
 }

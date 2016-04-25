@@ -7,8 +7,8 @@
 #' @param y Response vector of observations of length \code{n}.
 #' @param assign Integer vector assigning columns to terms can be also given as 
 #' \code{x} attribute in which case the argument is ignored. If an intercept 
-#' exist it is expected to be the first column in \code{x} and here it has to 
-#' specified by a '0'. For details about assign see 
+#' exist it is expected to be the first column in \code{x} and it has to 
+#' be specified by a '0' in tis vector. For details about assign see 
 #' \code{\link[stats]{model.matrix}}.
 #' @param family A description of the error distribution and link function to 
 #' be used in the model. For glm this can be a character string naming a family 

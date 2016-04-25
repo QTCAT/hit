@@ -17,8 +17,8 @@
 #' order is the target class). For "binomial" if \code{y} is presented as a
 #' vector, it will be coerced into a factor.
 #' @param B Number of sample-splits.
-#' @param p.samp1 Fraction of data used for the LASSO. The ANOVA uses
-#' \code{1 - p.samp1}.
+#' @param p.samp1 Fraction of data used for the LASSO. The hierachical ANOVA 
+#' testing uses \code{1 - p.samp1}.
 #' @param nfolds Number of folds (default is 10). See
 #' \code{\link[glmnet]{cv.glmnet}} for more details.
 #' @param lambda.opt Criterion for optimum selection of cross-validated lasso.

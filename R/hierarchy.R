@@ -3,7 +3,7 @@
 #' @description Stores variable indexes of clustering hierarchies in a fast 
 #' accessible manner.
 #' 
-#' @param x A S3 object.
+#' @param x A S3 object e.g. from hclust or dendrogram.
 #' @param max.height Is the maximal height below the global node height which 
 #' is considered.
 #' @param height A vector of heights at which nodes are grouped.
@@ -30,12 +30,12 @@
 #' hier <- as.hierarchy(hc)
 #' 
 #' @export
-as.hierarchy <- function(x, max.height, height, names) 
+as.hierarchy <- function(x, max.height, height, names, ...) 
   UseMethod("as.hierarchy")
 
 
-#' @export
-as.hierarchy.hierarchy <- function(x, max.height, height, names, ...) x
+# #' @export
+# as.hierarchy.hierarchy <- function(x, max.height, height, names, ...) x
 
 
 #' @importFrom stats as.dendrogram

@@ -2,7 +2,6 @@
 
 S3method(as.hierarchy,dendrogram)
 S3method(as.hierarchy,hclust)
-S3method(as.hierarchy,hierarchy)
 S3method(names,hierarchy)
 S3method(reorder,hierarchy)
 S3method(summary,hit)
