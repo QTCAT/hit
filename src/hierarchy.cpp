@@ -8,6 +8,7 @@ using std::string;
 using std::vector;
 using std::map;
 
+
 void findNames(vector<string>& name, List x);
 CharacterVector names(List x);
 void dendIndex(map<string, int>& dendNameInx,
@@ -135,8 +136,8 @@ void runDend(map< int, IntegerVector>& hierarchy, map< int, vector<int> >& subse
 // hierarchy.
 // 
 // @keywords internal
-void dendIndex(map<string, int>& dendNameInx,
-               CharacterVector& dendNames, CharacterVector& newNames)
+void dendIndex(map<string, int>& dendNameInx, CharacterVector& dendNames, 
+               CharacterVector& newNames)
 {
     for (int i = 0; i < dendNames.size(); ++i) {
         for (int j = 0; j < newNames.size(); ++j) {

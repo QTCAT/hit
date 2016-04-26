@@ -1,4 +1,4 @@
-## hit v0.2-2 (Release date: 2016-04-25)
+## hit v0.2-2 (Release date: 2016-04-26)
 
 Changes:
 
@@ -9,17 +9,17 @@ Changes:
 
 Changes:
 
-* ``hit`` sticks to cross-validation as selection method.
+* ``hit`` sticks to cross-validation as selection method
 
-* ``hit`` arguments have changed.
+* ``hit`` arguments have changed
 
 
 ## hit v0.2-0 (Release date: 2015-12-4)
 
 Changes:
 
-* a new glm anova extension.
+* a new anova for glm's
 
-* ``hit`` allows known for binomial responses
+* ``hit`` now is able to deal with binomial responses
 
-* ``hit`` a new selection method for the active set.
+* ``hit`` a new selection method for the active set
