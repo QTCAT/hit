@@ -45,12 +45,12 @@ fast.anova <- function(x, y, assign = NULL, family = gaussian(),
   } else if (is.function(family)) {
     family <- family()
   }
-  test <- match.arg(test, c("LRT", "F"))
+  test <- match.arg(test, c("LRT", "F"), several.ok = TRUE)
   # fit anova model
-  if (family$family == "gaussian" && test == "F") 
+  if (family$family == "gaussian" && any(test == "F")) 
     p <- fast.lmanova(x, y, assign)
   else
-    p <- fast.glmanova(x, y, assign, family, test)
+    p <- fast.glmanova(x, y, assign, family, test[1])
   p
 }
 

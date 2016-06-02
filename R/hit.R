@@ -70,8 +70,7 @@
 #' @importFrom stats reorder
 #' @export
 hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.35,
-                nfolds = 10, lambda.opt = "lambda.1se",
-                alpha = 1,
+                nfolds = 10, lambda.opt = "lambda.1se", alpha = 1,
                 gamma = seq(0.05, 0.99, length.out = 100), max.p.esti = 1,
                 mc.cores = 1L, trace = FALSE, ...) {
   #   Mandozzi and Buehlmann (2015), 2 Description of method
