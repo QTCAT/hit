@@ -1,7 +1,6 @@
 # Hierarchical Inference Testing
 
 [![CRAN](http://www.r-pkg.org/badges/version/hit)](http://cran.r-project.org/package=hit)
-[![Downloads](http://cranlogs.r-pkg.org/badges/hit?color=brightgreen)](http://www.r-pkg.org/pkg/hit)
 
 The current built and test status for Linux (Mac)
 [![Build Status](https://travis-ci.org/QTCAT/hit.svg)](https://travis-ci.org/QTCAT/hit)
@@ -47,4 +46,4 @@ example(hit)
 
 --------------------------------------------------------------------------------
 [![License](https://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
-&copy; 2015 JR Klasen
+&copy; 2015-16 JR Klasen

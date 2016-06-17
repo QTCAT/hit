@@ -39,9 +39,7 @@ testing uses \code{1 - p.samp1}.}
 Either "lambda.1se" (default) or "lambda.min". See
 \code{\link[glmnet]{cv.glmnet}} for more details.}
 
-\item{alpha}{A single value or a vector of values in the range of 0 to 1 for
-the elastic net mixing parameter. If more than one value are given, the best
-is selected during cross-validation.}
+\item{alpha}{A single value in the range of 0 to 1 for the elastic net mixing parameter.}
 
 \item{gamma}{Vector of gamma-values.}
 

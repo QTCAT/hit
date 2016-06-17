@@ -2,7 +2,7 @@
 % Please edit documentation in R/hit.R
 \name{opt.penalty}
 \alias{opt.penalty}
-\title{Cross-validation of LASSO alpha and lambda}
+\title{Cross-validation of LASSO penenlty lambda}
 \usage{
 opt.penalty(x, y, family, nfolds, lambda.opt, alpha, penalty.factor, n.samp2,
   mc.cores, ...)
@@ -20,14 +20,12 @@ opt.penalty(x, y, family, nfolds, lambda.opt, alpha, penalty.factor, n.samp2,
 Either "lambda.1se" (default) or "lambda.min". See
 \code{\link[glmnet]{cv.glmnet}} for more details.}
 
-\item{alpha}{A single value or a vector of values in the range of 0 to 1 for
-the elastic net mixing parameter. If more than one value are given, the best
-is selected during cross-validation.}
+\item{alpha}{A single value n the range of 0 to 1 for the elastic net mixing parameter.}
 
 \item{penalty.factor}{See glmnet.}
 
-\item{n.samp2}{Number of individuals in samp2 which is the max.
-for non zero coefficients.}
+\item{n.samp2}{Number of individuals in samp2 which is the max. for non zero 
+coefficients.}
 
 \item{mc.cores}{Number of cores for parallelising. Theoretical maximum is
 'B'. For details see \code{\link[parallel]{mclapply}}.}
@@ -35,7 +33,7 @@ for non zero coefficients.}
 \item{...}{Additional agruments.}
 }
 \description{
-Cross-validation of LASSO alpha and lambda.
+Cross-validation of LASSO penenlty lambda.
 }
 \keyword{internal}
 

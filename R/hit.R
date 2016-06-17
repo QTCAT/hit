@@ -24,9 +24,7 @@
 #' @param lambda.opt Criterion for optimum selection of cross-validated lasso.
 #' Either "lambda.1se" (default) or "lambda.min". See
 #' \code{\link[glmnet]{cv.glmnet}} for more details.
-#' @param alpha A single value or a vector of values in the range of 0 to 1 for
-#' the elastic net mixing parameter. If more than one value are given, the best
-#' is selected during cross-validation.
+#' @param alpha A single value in the range of 0 to 1 for the elastic net mixing parameter.
 #' @param gamma Vector of gamma-values.
 #' @param max.p.esti Maximum alpha level. All p-values above this value are set
 #' to one. Small \code{max.p.esti} values reduce computing time.
@@ -83,7 +81,6 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.35,
     hierarchy <- as.hierarchy(hierarchy)
   stopifnot(class(hierarchy) == "hierarchy")
   lambda.opt <- match.arg(lambda.opt, c("lambda.1se", "lambda.min"))
-  alpha <- sort(alpha, decreasing = TRUE)
   ##### Check family and assign test
   family <- match.arg(family, c("gaussian", "binomial"))
   test <- "LRT"
@@ -115,10 +112,10 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.35,
   ##  2.2 Screening
   if (trace)
     cat("LASSO has started at:\n\t", as.character(Sys.time()), "\n")
-  optpen <- opt.penalty(x, y, family, nfolds, lambda.opt, alpha,
-                        penalty.factor, n.samp2, mc.cores, ...)
+  optlambda <- opt.penalty(x, y, family, nfolds, lambda.opt, alpha,
+                           penalty.factor, n.samp2, mc.cores, ...)
   allActSet.ids <- mclapply(allSamp1.ids, samp1.lasso,
-                            x, y, family, optpen$alpha, optpen$lambda,
+                            x, y, family, alpha, optlambda,
                             penalty.factor, n.samp2, ...,
                             mc.cores = mc.cores, mc.cleanup = TRUE)
   ##  2.3 Testing and multiplicity adjustmen; and
@@ -142,17 +139,17 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.35,
               selectFreq = sel.tab,
               hierarchy = hierarchy,
               tested = tested,
-              alpha = optpen$alpha,
-              lambda = optpen$lambda[length(optpen$lambda)],
+              alpha = alpha,
+              lambda = optlambda[length(optlambda)],
               max.p.esti = max.p.esti)
   class(out) <- "hit"
   out
 }
 
 
-#' @title Cross-validation of LASSO alpha and lambda
+#' @title Cross-validation of LASSO penenlty lambda
 #'
-#' @description Cross-validation of LASSO alpha and lambda.
+#' @description Cross-validation of LASSO penenlty lambda.
 #'
 #' @param x Design matrix, of dimension n x p.
 #' @param y Vector of quantitative response variable.
@@ -161,12 +158,10 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.35,
 #' @param lambda.opt Criterion for optimum selection of cross-validated lasso.
 #' Either "lambda.1se" (default) or "lambda.min". See
 #' \code{\link[glmnet]{cv.glmnet}} for more details.
-#' @param alpha A single value or a vector of values in the range of 0 to 1 for
-#' the elastic net mixing parameter. If more than one value are given, the best
-#' is selected during cross-validation.
+#' @param alpha A single value n the range of 0 to 1 for the elastic net mixing parameter. 
 #' @param penalty.factor See glmnet.
-#' @param n.samp2 Number of individuals in samp2 which is the max.
-#' for non zero coefficients.
+#' @param n.samp2 Number of individuals in samp2 which is the max. for non zero 
+#' coefficients.
 #' @param mc.cores Number of cores for parallelising. Theoretical maximum is
 #' 'B'. For details see \code{\link[parallel]{mclapply}}.
 #' @param ... Additional agruments.
@@ -182,32 +177,11 @@ opt.penalty <- function(x, y, family, nfolds, lambda.opt, alpha,
                        penalty.factor = penalty.factor,
                        pmax = n.samp2 - 2L, ...)
   )
-  optinx <- 1L
-  if (length(alpha) > 1L) {
-    optcv.glmnet <- function(alpha, x, y, family, foldid, lambda,
-                             penalty.factor, n.samp2, ...) {
-      suppressWarnings(
-        out <- cv.glmnet(x, y, family = family, foldid = foldid,
-                         alpha = alpha, lambda = lambda,
-                         penalty.factor = penalty.factor,
-                         pmax = n.samp2 - 2L, ...)
-      )
-      out
-    }
-    cvfits <- mclapply(alpha[-1L], optcv.glmnet,
-                       x, y, family, foldid, cvfit$lambda,
-                       penalty.factor, n.samp2, ...,
-                       mc.cores = mc.cores, mc.cleanup = TRUE)
-    cvfits <- c(list(cvfit), cvfits)
-    optinx <- which.min(sapply(cvfits, function(x) min(x$cvm)))
-    cvfit <- cvfits[[optinx]]
-  }
-  optalpha <- alpha[optinx]
   if (lambda.opt == "lambda.min")
     optlambda <- cvfit$lambda[cvfit$lambda >= cvfit$lambda.min]
   else
     optlambda <- cvfit$lambda[cvfit$lambda >= cvfit$lambda.1se]
-  list(alpha = optalpha, lambda = optlambda)
+  optlambda
 }
 
 
@@ -426,61 +400,3 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
     out[, 1L] <- as.integer(factor(out[, 1L], labels = 1L:ll))
   out
 }
-
-
-#------------------------------------------------------------------------------#
-# #' @title Significants hierarchy martix
-# #'
-# #' @description Significants hierarchy martix
-# #'
-# #' @param x a hit object
-# #'
-# #' @details makes a matrix of p-values for image(p.matrix(x)). Mainly for
-# #' debugging purposes
-# #'
-# #' @export
-# p.matrix <- function (x) {
-#   allheig <- sapply(x$hierarchy, attr, "height")
-#   heig <- sort(unique(allheig))
-#   inx <- which(heig[1] == allheig)
-#   out <- list()
-#   out[[1]] <- x$pValues[inx]
-#   for (h in 2L:length(heig)) {
-#     out[[h]] <- out[[h-1]]
-#     inx <- which(heig[h] == allheig)
-#     p.val <- rep(x$pValues[inx], sapply(x$hierarchy[inx] , length))
-#     tryCatch(out[[h]][unlist(x$hierarchy[inx])] <- p.val)
-#   }
-#   out <- do.call("rbind", out)
-#   colnames(out) <- names(x$hierarchy[[1]])
-#   rownames(out) <- heig
-#   out
-# }
-
-
-#------------------------------------------------------------------------------#
-# AIC as selection criteria for 2.2 Screening via lasso was obvious, however,
-# it was not working that nicely, therefore it is not used at the moment.
-# if (sel.method == "AIC") {
-#   AIC.glmnet <- function(object) {
-#     n <- object$nobs
-#     df <- object$df + 1
-#     dev <- deviance(object)
-#     fam <- object$call$family
-#     if (is.null(fam) || fam == "gaussian") {
-#       ll <- -n / 2 * (log(2 * pi) + log(dev / n)) - n / 2
-#       df <- df + 1
-#     } else if (!is.null(fam) && fam == "binomial") {
-#       ll <- -.5 * dev
-#     } else {
-#       stop(paste(fam, "not implemented"))
-#     }
-#     aic <- (df - ll) * 2
-#     aic[df > (n - 2)] <- Inf
-#     aic
-#   }
-#   # AIC selection
-#   s.aic <- which.min(AIC.glmnet(fit))
-#   beta <- coef(fit, s = fit$lambda[s.aic])[-1L]
-#   actSet <- which(beta != 0 & penalty.factor == 1L)
-# }
