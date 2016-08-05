@@ -17,13 +17,13 @@ samp1.lasso(samp1, x, y, family, alpha, lambda, penalty.factor, n.samp2, ...)
 
 \item{alpha}{Mixing value for elnet.}
 
-\item{lambda}{A vector of lambda values sorted from large to small where
-the smallest is the optimal value.}
+\item{lambda}{A vector of lambda values sorted from large to small where the smallest is 
+the optimal value.}
 
 \item{penalty.factor}{See glmnet.}
 
-\item{n.samp2}{Number of individuals in samp2 which is the max.
-for non zero coefficients.}
+\item{n.samp2}{Number of individuals in samp2 which is the max. for non zero 
+coefficients.}
 
 \item{...}{Additional agruments.}
 }

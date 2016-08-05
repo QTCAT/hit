@@ -30,8 +30,8 @@ samp2.sigHierarchy(j, x, y, hierarchy, family, test, x.notest, B, allSamp1.ids,
 
 \item{upper.p}{P value upper huerarchy level of the clusters variables.}
 
-\item{max.p.esti}{Maximum alpha level. All p-values above this value are set
-to one. Small max.p.esti values reduce computing time.}
+\item{max.p.esti}{Maximum alpha level. All p-values above this value are set to one. 
+Small max.p.esti values reduce computing time.}
 
 \item{gamma}{Vector of gamma-values.}
 
@@ -40,8 +40,8 @@ to one. Small max.p.esti values reduce computing time.}
 \item{cores}{Number of cores for parallelising.}
 }
 \description{
-ANOVA Testing, Multiplicity Adjustment, Aggregating and
-Hierarchical Adjustment
+ANOVA Testing, Multiplicity Adjustment, Aggregating and Hierarchical 
+Adjustment
 }
 \keyword{internal}
 

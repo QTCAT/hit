@@ -9,24 +9,23 @@ as.hierarchy(x, max.height, height, names, ...)
 \arguments{
 \item{x}{A S3 object e.g. from hclust or dendrogram.}
 
-\item{max.height}{Is the maximal height below the global node height which 
-is considered.}
+\item{max.height}{Is the maximal height below the global node height which is considered.}
 
 \item{height}{A vector of heights at which nodes are grouped.}
 
-\item{names}{Variable names in the order in which the indexes shut be given 
-to the variables.}
+\item{names}{Variable names in the order in which the indexes shut be given to the 
+variables.}
 
 \item{...}{Further arguments.}
 }
 \description{
-Stores variable indexes of clustering hierarchies in a fast 
-accessible manner.
+Stores variable indexes of clustering hierarchies in a fast accessible 
+manner.
 }
 \details{
-For the HIT algorithm it is important to have the hierarchical 
-clustering structure in a fast accessible format. This is provided by the 
-hierarchy object generated with this function.
+For the HIT algorithm it is important to have the hierarchical clustering 
+structure in a fast accessible format. This is provided by the hierarchy object 
+generated with this function.
 }
 \examples{
 ##

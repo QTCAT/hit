@@ -14,8 +14,8 @@ fast.lmanova(x, y, assign)
 \item{assign}{Integer vector assigning columns to terms.}
 }
 \description{
-A fast sequential analysis of variance (ANOVA). Mainly 
-developed for internal use.
+A fast sequential analysis of variance (ANOVA). Mainly developed for 
+internal use.
 }
 \keyword{internal}
 

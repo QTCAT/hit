@@ -1,46 +1,43 @@
 #' @title Hierarchical Inference Testing
 #'
-#' @description Hierarchical inference testing for linear models with
-#' high-dimensional and/or correlated covariates by repeated sample splitting.
+#' @description Hierarchical inference testing for linear models with high-dimensional 
+#' and/or correlated covariates by repeated sample splitting.
 #'
-#' @param x Design matrix of dimension \code{n * p}, without intercept.
-#' Variables not part of the dendrogram are added to the HO-model, see Details
-#' below.
+#' @param x Design matrix of dimension \code{n * p}, without intercept. Variables not part 
+#' of the dendrogram are added to the HO-model, see Details below.
 #' @param y Quantitative response variable dimension \code{n}.
-#' @param hierarchy Object of class \code{\link{as.hierarchy}}. Must include
-#' all variables of \code{x} which should be tested.
-#' @param family Family of response variable distribution. Ether \code{y} is
-#' "gaussian" in which case \code{y} must be a vector or it is "binomial"
-#' distibuded. In this case \code{y} should be either a factor with two levels,
-#' or a two-column matrix of counts or proportions (the second column is
-#' treated as the target class; for a factor, the last level in alphabetical
-#' order is the target class). For "binomial" if \code{y} is presented as a
-#' vector, it will be coerced into a factor.
+#' @param hierarchy Object of class \code{\link{as.hierarchy}}. Must include all variables 
+#' of \code{x} which should be tested.
+#' @param family Family of response variable distribution. Ether \code{y} is "gaussian" or 
+#' "poisson" in which case \code{y} must be a vector or it is "binomial" distibuded and is 
+#' either a vecror of zeros and ones, factor with two levels,  or a two-column matrix of 
+#' counts or proportions. The second column is treated as the target class. For a factor, 
+#' the last level in alphabetical order is the target class. For "binomial" if \code{y} is 
+#' presented as a vector, it will be coerced into a factor.
 #' @param B Number of sample-splits.
-#' @param p.samp1 Fraction of data used for the LASSO. The hierachical ANOVA 
-#' testing uses \code{1 - p.samp1}.
-#' @param nfolds Number of folds (default is 10). See
-#' \code{\link[glmnet]{cv.glmnet}} for more details.
-#' @param lambda.opt Criterion for optimum selection of cross-validated lasso.
-#' Either "lambda.1se" (default) or "lambda.min". See
-#' \code{\link[glmnet]{cv.glmnet}} for more details.
+#' @param p.samp1 Fraction of data used for the LASSO. The hierachical ANOVA testing uses 
+#' \code{1 - p.samp1}.
+#' @param nfolds Number of folds (default is 10). See \code{\link[glmnet]{cv.glmnet}} for 
+#' more details.
+#' @param lambda.opt Criterion for optimum selection of cross-validated lasso. Either 
+#' "lambda.1se" (default) or "lambda.min". See \code{\link[glmnet]{cv.glmnet}} for more 
+#' details.
 #' @param alpha A single value in the range of 0 to 1 for the elastic net mixing parameter.
 #' @param gamma Vector of gamma-values.
-#' @param max.p.esti Maximum alpha level. All p-values above this value are set
-#' to one. Small \code{max.p.esti} values reduce computing time.
-#' @param mc.cores Number of cores for parallelising. Theoretical maximum is
-#' 'B'. For details see \code{\link[parallel]{mclapply}}.
+#' @param max.p.esti Maximum alpha level. All p-values above this value are set to one. 
+#' Small \code{max.p.esti} values reduce computing time.
+#' @param mc.cores Number of cores for parallelising. Theoretical maximum is 'B'. For 
+#' details see \code{\link[parallel]{mclapply}}.
 #' @param trace If TRUE it prints current status of the program.
 #' @param ... Additional arguments for \code{\link[glmnet]{cv.glmnet}}.
 #'
-#' @details The H0-model contains variables, with are not tested, like
-#' experimental-design variables. These variables are not penalised in the
-#' LASSO model selection and are always include in the reduced ANOVA model.
+#' @details The H0-model contains variables, with are not tested, like experimental-design 
+#' variables. These variables are not penalised in the LASSO model selection and are always 
+#' include in the reduced ANOVA model.
 #'
-#' @references Mandozzi, J. and Buehlmann, P. (2013). \emph{Hierarchical
-#' testing in the high-dimensional setting with correlated variables}. To
-#' appear in the Journal of the American Statistical Association. Preprint
-#' arXiv:1312.5556
+#' @references Mandozzi, J. and Buehlmann, P. (2013). \emph{Hierarchical testing in the 
+#' high-dimensional setting with correlated variables}. To appear in the Journal of the 
+#' American Statistical Association. Preprint arXiv:1312.5556
 #'
 #' @examples
 #'
@@ -67,7 +64,7 @@
 #' @importFrom glmnet cv.glmnet
 #' @importFrom stats reorder
 #' @export
-hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.35,
+hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.35, 
                 nfolds = 10, lambda.opt = "lambda.1se", alpha = 1,
                 gamma = seq(0.05, 0.99, length.out = 100), max.p.esti = 1,
                 mc.cores = 1L, trace = FALSE, ...) {
@@ -82,7 +79,7 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.35,
   stopifnot(class(hierarchy) == "hierarchy")
   lambda.opt <- match.arg(lambda.opt, c("lambda.1se", "lambda.min"))
   ##### Check family and assign test
-  family <- match.arg(family, c("gaussian", "binomial"))
+  family <- match.arg(family, c("gaussian", "binomial", "poisson"))
   test <- "LRT"
   if (family == "gaussian")
     test <- "F"
@@ -155,15 +152,15 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.35,
 #' @param y Vector of quantitative response variable.
 #' @param nfolds Number of folds (default is 10). See
 #' @param family Distribution family of \code{y}.
-#' @param lambda.opt Criterion for optimum selection of cross-validated lasso.
-#' Either "lambda.1se" (default) or "lambda.min". See
-#' \code{\link[glmnet]{cv.glmnet}} for more details.
+#' @param lambda.opt Criterion for optimum selection of cross-validated lasso. Either 
+#' "lambda.1se" (default) or "lambda.min". See \code{\link[glmnet]{cv.glmnet}} for more 
+#' details.
 #' @param alpha A single value n the range of 0 to 1 for the elastic net mixing parameter. 
 #' @param penalty.factor See glmnet.
 #' @param n.samp2 Number of individuals in samp2 which is the max. for non zero 
 #' coefficients.
-#' @param mc.cores Number of cores for parallelising. Theoretical maximum is
-#' 'B'. For details see \code{\link[parallel]{mclapply}}.
+#' @param mc.cores Number of cores for parallelising. Theoretical maximum is 'B'. For 
+#' details see \code{\link[parallel]{mclapply}}.
 #' @param ... Additional agruments.
 #'
 #' @importFrom parallel mclapply
@@ -194,11 +191,11 @@ opt.penalty <- function(x, y, family, nfolds, lambda.opt, alpha,
 #' @param y Vector of quantitative response variable.
 #' @param family Distribution family of \code{y}.
 #' @param alpha Mixing value for elnet.
-#' @param lambda A vector of lambda values sorted from large to small where
-#' the smallest is the optimal value.
+#' @param lambda A vector of lambda values sorted from large to small where the smallest is 
+#' the optimal value.
 #' @param penalty.factor See glmnet.
-#' @param n.samp2 Number of individuals in samp2 which is the max.
-#' for non zero coefficients.
+#' @param n.samp2 Number of individuals in samp2 which is the max. for non zero 
+#' coefficients.
 #' @param ... Additional agruments.
 #'
 #' @importFrom glmnet glmnet
@@ -218,8 +215,8 @@ samp1.lasso <- function(samp1, x, y, family, alpha, lambda,
 
 #' @title Variabel Testing along the hierarchy
 #'
-#' @description ANOVA Testing, Multiplicity Adjustment, Aggregating and
-#' Hierarchical Adjustment
+#' @description ANOVA Testing, Multiplicity Adjustment, Aggregating and Hierarchical 
+#' Adjustment
 #'
 #' @param j Index for cluster (mclapply index).
 #' @param x Design matrix, of dimension n x p.
@@ -232,8 +229,8 @@ samp1.lasso <- function(samp1, x, y, family, alpha, lambda,
 #' @param allSamp1.ids  List of subsampels.
 #' @param allActSet.ids List of active sets.
 #' @param upper.p P value upper huerarchy level of the clusters variables.
-#' @param max.p.esti Maximum alpha level. All p-values above this value are set
-#' to one. Small max.p.esti values reduce computing time.
+#' @param max.p.esti Maximum alpha level. All p-values above this value are set to one. 
+#' Small max.p.esti values reduce computing time.
 #' @param gamma Vector of gamma-values.
 #' @param hl.count Hierarchy level counter for parallelism.
 #' @param cores Number of cores for parallelising.
@@ -371,10 +368,9 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
     inx <- object$hierarchy[[i]]
     height <- attr(object$hierarchy[[i]], "height")
     if (p.value <= alpha && 
-        height <= max.height &&
         (all(is.na(P.CLUSTER[inx])) || 
-         (all(!is.na(P.CLUSTER[inx]) && 
-              P.CLUSTER[inx] <= alpha)))) {
+         (all(!is.na(P.CLUSTER[inx])) && 
+          all(P.CLUSTER[inx] <= alpha)))) {
       P.CLUSTER[inx] <<-  p.value
       ID.CLUSTER[inx] <<- COUNTER
       H.CLUSTER[inx] <<- height
@@ -396,6 +392,7 @@ summary.hit <- function(object, alpha = 0.05, max.height, ...) {
                     heights = H.CLUSTER[non.na],
                     pValues = P.CLUSTER[non.na])
   rownames(out) <- names(object$hierarchy[[1L]])[non.na]
+  out <- out[out$heights <= max.height, ]
   if (ll <- length(unique(out[, 1L])))
     out[, 1L] <- as.integer(factor(out[, 1L], labels = 1L:ll))
   out

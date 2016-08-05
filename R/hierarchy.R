@@ -1,19 +1,18 @@
 #' @title Hierarchy Structure
 #' 
-#' @description Stores variable indexes of clustering hierarchies in a fast 
-#' accessible manner.
+#' @description Stores variable indexes of clustering hierarchies in a fast accessible 
+#' manner.
 #' 
 #' @param x A S3 object e.g. from hclust or dendrogram.
-#' @param max.height Is the maximal height below the global node height which 
-#' is considered.
+#' @param max.height Is the maximal height below the global node height which is considered.
 #' @param height A vector of heights at which nodes are grouped.
-#' @param names Variable names in the order in which the indexes shut be given 
-#' to the variables.
+#' @param names Variable names in the order in which the indexes shut be given to the 
+#' variables.
 #' @param ... Further arguments.
 #' 
-#' @details For the HIT algorithm it is important to have the hierarchical 
-#' clustering structure in a fast accessible format. This is provided by the 
-#' hierarchy object generated with this function.
+#' @details For the HIT algorithm it is important to have the hierarchical clustering 
+#' structure in a fast accessible format. This is provided by the hierarchy object 
+#' generated with this function.
 #' 
 #' @examples 
 #' ##
@@ -30,7 +29,7 @@
 #' hier <- as.hierarchy(hc)
 #' 
 #' @export
-as.hierarchy <- function(x, max.height, height, names, ...) 
+as.hierarchy <- function(x, max.height, height, names, ...)
   UseMethod("as.hierarchy")
 
 
@@ -41,17 +40,20 @@ as.hierarchy <- function(x, max.height, height, names, ...)
 #' @importFrom stats as.dendrogram
 #' @export
 as.hierarchy.hclust <- function(x, max.height, height, names, ...) {
-    as.hierarchy(as.dendrogram(x), max.height, height, names, ...)
+  as.hierarchy(as.dendrogram(x), max.height, height, names, ...)
 }
 
 
 #' @export
 as.hierarchy.dendrogram <- function(x, max.height, height, names, ...) {
-  if (missing(height)) 
+  if (missing(height)) {
     height <- heightDendrogram(x)
-  height <- sort(height, decreasing = TRUE)
-  if (missing(max.height))
-    max.height <- attr(x, "height")
+    if (missing(max.height))
+      max.height <- attr(x, "height")
+  } else {
+    height <- sort(height, decreasing = TRUE)
+    max.height <- min(height[1L], attr(x, "height"))
+  }
   height <- height[height <= max.height]
   if (attr(x, "height") > max.height)
     height <- c(attr(x, "height"), height)
@@ -121,8 +123,8 @@ names.hierarchy <- function(x) {
 #' @description Reorder indexes according to a vector of names.
 #' 
 #' @param x A \code{\link{as.hierarchy}}.
-#' @param names Variable names in the order in which the indexes shut be given 
-#' to the variables.
+#' @param names Variable names in the order in which the indexes shut be given to the 
+#' variables.
 #' @param ... Further arguments passed to or from other methods (not used).
 #' 
 #' @importFrom stats reorder

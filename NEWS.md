@@ -1,9 +1,12 @@
-## hit v0.2-3 (Release date: 2016-xx-xx)
+## hit v0.3.0 (Release date: 2016-09-05)
 
 Changes:
 
-* remove the alpha optimisation, allow only one alpha value in ``hit``
+* remove the alpha optimization, allow only one alpha value in ``hit``
 
+* fix bug in ``summary.hit``
+
+* allow Poisson distributed y in ``hit``
 
 
 ## hit v0.2-2 (Release date: 2016-04-26)
@@ -28,7 +31,7 @@ Changes:
 
 Changes:
 
-* a new anova for glm's
+* a new anova for GLM's
 
 * ``hit`` now is able to deal with binomial responses
 
