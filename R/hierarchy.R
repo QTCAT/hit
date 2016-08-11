@@ -88,7 +88,7 @@ heightDendrogram <- function(x) {
   }
   if (!inherits(x, "dendrogram")) 
     stop("'x' is not a dendrogram")
-  sort(unique(node.height(x)), decreasing = TRUE)
+  sort(unique(round(node.height(x), 8)), decreasing = TRUE)
 }
 
 
@@ -102,7 +102,7 @@ heightDendrogram <- function(x) {
 heightHierarchy <- function(x) {
   if (!inherits(x, "hierarchy")) 
     stop("'x' is not a hierarchy")
-  sort(unique(sapply(x, attr, which = "height")))
+  sort(unique(round(sapply(x, attr, which = "height"), 8)), decreasing = TRUE)
 }
 
 
