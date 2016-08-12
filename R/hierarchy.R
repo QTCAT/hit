@@ -92,20 +92,6 @@ heightDendrogram <- function(x) {
 }
 
 
-#' @title Heights of Hierarchy
-#' 
-#' @description All heights from a hierarchy.
-#' 
-#' @param x a \code{\link{as.hierarchy}}.
-#' 
-#' @keywords internal
-heightHierarchy <- function(x) {
-  if (!inherits(x, "hierarchy")) 
-    stop("'x' is not a hierarchy")
-  sort(unique(round(sapply(x, attr, which = "height"), 8)), decreasing = TRUE)
-}
-
-
 #' @title Names of Hierarchy
 #' 
 #' @description Names of variables of an hierarchy.
