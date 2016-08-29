@@ -46,4 +46,4 @@ example(hit)
 
 --------------------------------------------------------------------------------
 [![License](https://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
-&copy; 2015-16 JR Klasen
+&copy; 2016 JR Klasen
