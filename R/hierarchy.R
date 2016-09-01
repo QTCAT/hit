@@ -4,9 +4,10 @@
 #' manner.
 #' 
 #' @param x A S3 object e.g. from hclust or dendrogram.
-#' @param max.height Is the maximal height below the global node height which is considered.
+#' @param max.height Is the maximal height below the height of the global node which is 
+#' considered.
 #' @param height A vector of heights at which nodes are grouped.
-#' @param names Variable names in the order in which the indexes shut be given to the 
+#' @param names Variable names in the order in which the indexes should be assigned to the 
 #' variables.
 #' @param ... Further arguments.
 #' 
@@ -109,7 +110,7 @@ names.hierarchy <- function(x) {
 #' @description Reorder indexes according to a vector of names.
 #' 
 #' @param x A \code{\link{as.hierarchy}}.
-#' @param names Variable names in the order in which the indexes shut be given to the 
+#' @param names Variable names in the order in which the indexes should be assigned to the 
 #' variables.
 #' @param ... Further arguments passed to or from other methods (not used).
 #' 
@@ -119,12 +120,12 @@ reorder.hierarchy <- function(x, names, ...) {
   if (!inherits(x, "hierarchy")) 
     stop("'x' is not a hierarchy")
   if (length(setdiff(names(x[[1L]]), names)))
-    stop("'x' includs variabels not in 'names'")
+    stop("'x' names and 'names' mismatch")
   newOrder <- match(names(x[[1L]]), names)
-  out <- lapply(x, function(x, newOrder) {
-    x[] <- sort(newOrder[x]) 
-    x
-  }, newOrder)
+  out <- lapply(x, function(xi, x1, newOrder) {
+    xi[] <- sort(newOrder[match(x1, xi, nomatch = 0L)]) 
+    xi
+  }, x[[1L]], newOrder)
   names(out[[1L]]) <- names[out[[1L]]]
   class(out) <- "hierarchy"
   out

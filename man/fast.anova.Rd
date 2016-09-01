@@ -18,7 +18,7 @@ vector. For details about assign see
 \code{\link[stats]{model.matrix}}.}
 
 \item{family}{A description of the error distribution and link function to be used in 
-the model. For glm this can be a character string naming a family function or the result 
+the model. For GLMs this can be a character string naming a family function or the result 
 of a call to a family function. (See \code{\link[stats]{family}} for details of family 
 functions.)}
 

@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{A \code{\link{as.hierarchy}}.}
 
-\item{names}{Variable names in the order in which the indexes shut be given to the 
+\item{names}{Variable names in the order in which the indexes should be assigned to the 
 variables.}
 
 \item{...}{Further arguments passed to or from other methods (not used).}

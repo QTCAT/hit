@@ -11,7 +11,7 @@
 #' vector. For details about assign see 
 #' \code{\link[stats]{model.matrix}}.
 #' @param family A description of the error distribution and link function to be used in 
-#' the model. For glm this can be a character string naming a family function or the result 
+#' the model. For GLMs this can be a character string naming a family function or the result 
 #' of a call to a family function. (See \code{\link[stats]{family}} for details of family 
 #' functions.)
 #' @param test The name of the test either "LRT" (default) for likelihood ratio test or "F" 
@@ -106,7 +106,7 @@ fast.lmanova <- function(x, y, assign) {
 #' @param y Response vector of observations of length \code{n}.
 #' @param assign Integer vector assigning columns to terms.
 #' @param family A description of the error distribution and link function to be used in 
-#' the model. For glm this must be the result of a call to a family function.
+#' the model. For GLMs this must be the result of a call to a family function.
 #' @param test The name of the test either "LRT" (default) for likelihood ratio  test or 
 #' "F" for F test.
 #' 

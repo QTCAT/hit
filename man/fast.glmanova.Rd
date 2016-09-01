@@ -14,7 +14,7 @@ fast.glmanova(x, y, assign, family, test)
 \item{assign}{Integer vector assigning columns to terms.}
 
 \item{family}{A description of the error distribution and link function to be used in 
-the model. For glm this must be the result of a call to a family function.}
+the model. For GLMs this must be the result of a call to a family function.}
 
 \item{test}{The name of the test either "LRT" (default) for likelihood ratio  test or 
 "F" for F test.}
