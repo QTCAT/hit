@@ -64,9 +64,8 @@ as.hierarchy.dendrogram <- function(x, max.height, height, names, ...) {
     stop("'x' includs variabels not in 'names'")
   }
   out <- unname(dend2hier(x, as.numeric(height), as.character(names)))
-  ordAll <- order(out[[1L]])
-  out[[1L]][] <- out[[1L]][ordAll]
-  names(out[[1L]]) <- names(out[[1L]])[ordAll]
+  out[[1L]][] <- sort(out[[1L]])
+  names(out[[1L]]) <- names[out[[1L]]]
   class(out) <- "hierarchy"
   out
 }
@@ -119,13 +118,13 @@ names.hierarchy <- function(x) {
 reorder.hierarchy <- function(x, names, ...) {
   if (!inherits(x, "hierarchy")) 
     stop("'x' is not a hierarchy")
-  if (length(setdiff(names(x[[1L]]), names)))
-    stop("'x' names and 'names' mismatch")
+  if (!all(names(x[[1L]]) %in% names))
+    stop("'x' includs variabels not in 'names'")
   newOrder <- match(names(x[[1L]]), names)
   out <- lapply(x, function(xi, x1, newOrder) {
-    xi[] <- sort(newOrder[match(x1, xi, nomatch = 0L)]) 
+    xi[] <- sort(newOrder[match(xi, x1)])
     xi
-  }, x[[1L]], newOrder)
+  }, x1 = x[[1L]], newOrder = newOrder)
   names(out[[1L]]) <- names[out[[1L]]]
   class(out) <- "hierarchy"
   out
