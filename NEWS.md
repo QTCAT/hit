@@ -1,4 +1,12 @@
-## hit v0.3.0 (Release date: 2016-09-029)
+## hit v0.3.1 (Release date: 2016-09-15)
+
+Changes: 
+
+* ``reorder``: a more general reorder function for hierarchy
+
+
+
+## hit v0.3.0 (Release date: 2016-08-29)
 
 Changes:
 
@@ -28,7 +36,7 @@ Changes:
 
 
 
-## hit v0.2-0 (Release date: 2015-12-4)
+## hit v0.2-0 (Release date: 2015-12-04)
 
 Changes:
 
