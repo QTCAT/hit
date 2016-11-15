@@ -4,8 +4,8 @@
 \alias{opt.penalty}
 \title{Cross-validation of LASSO penenlty lambda}
 \usage{
-opt.penalty(x, y, family, nfolds, lambda.opt, alpha, penalty.factor, n.samp2,
-  mc.cores, ...)
+opt.penalty(x, y, family, alpha, lambda.opt, nfolds, penalty.factor, n.samp2,
+  ...)
 }
 \arguments{
 \item{x}{Design matrix, of dimension n x p.}
@@ -14,21 +14,18 @@ opt.penalty(x, y, family, nfolds, lambda.opt, alpha, penalty.factor, n.samp2,
 
 \item{family}{Distribution family of \code{y}.}
 
-\item{nfolds}{Number of folds (default is 10). See}
+\item{alpha}{A single value n the range of 0 to 1 for the elastic net mixing parameter.}
 
 \item{lambda.opt}{Criterion for optimum selection of cross-validated lasso. Either 
 "lambda.1se" (default) or "lambda.min". See \code{\link[glmnet]{cv.glmnet}} for more 
 details.}
 
-\item{alpha}{A single value n the range of 0 to 1 for the elastic net mixing parameter.}
+\item{nfolds}{Number of folds (default is 10). See}
 
 \item{penalty.factor}{See glmnet.}
 
 \item{n.samp2}{Number of individuals in samp2 which is the max. for non zero 
 coefficients.}
-
-\item{mc.cores}{Number of cores for parallelising. Theoretical maximum is 'B'. For 
-details see \code{\link[parallel]{mclapply}}.}
 
 \item{...}{Additional agruments.}
 }
