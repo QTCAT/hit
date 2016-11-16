@@ -112,8 +112,8 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5,
   if (trace)
     cat("LASSO has started at:\n\t", as.character(Sys.time()), "\n")
   if (overall.lambda) {
-    lambdas <- opt.penalty(x, y, family, alpha, lambda.opt, nfolds,
-                             penalty.factor, n.samp2, ...)
+    lambdas <- samp1.lambda.overall(x, y, family, alpha, lambda.opt, nfolds,
+                                    penalty.factor, n.samp2, ...)
     allActSet.ids <- mclapply(allSamp1.ids, samp1.lasso.overall,
                               x, y, family, alpha, lambdas,
                               penalty.factor, n.samp2, ...,
@@ -172,8 +172,8 @@ hit <- function(x, y, hierarchy, family = "gaussian", B = 50, p.samp1 = 0.5,
 #' @importFrom parallel mclapply
 #' @importFrom glmnet cv.glmnet
 #' @keywords internal
-opt.penalty <- function(x, y, family, alpha, lambda.opt, nfolds, 
-                        penalty.factor, n.samp2, ...) {
+samp1.lambda.overall <- function(x, y, family, alpha, lambda.opt, nfolds, 
+                                 penalty.factor, n.samp2, ...) {
   foldid <- sample(rep(1L:nfolds, length.out = nrow(x)))
   suppressWarnings(
     cvfit <- cv.glmnet(x, y, family = family, foldid = foldid, alpha = alpha,
