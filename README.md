@@ -15,8 +15,11 @@ settings. For details see:
 
 **Mandozzi, J. and Buehlmann, P. (2015)**. *Hierarchical testing in the 
 high-dimensional setting with correlated variables*. Journal of the American 
-Statistical Association. Preprint 
-[arXiv:1312.5556](https://arxiv.org/abs/1312.5556).
+Statistical Association. [Preprint](https://arxiv.org/abs/1312.5556)
+
+**Klasen, J. R. et al. (2016)**. *A multi-marker association method for genome-wide 
+association studies without the need for population structure correction*. Nature 
+Communications. [Paper](http://www.nature.com/articles/ncomms13299)
 
 ## Installation:
 The package can be installed from CRAN,

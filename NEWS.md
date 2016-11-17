@@ -1,3 +1,10 @@
+## hit v0.4.0 (Release date: 2016-11-16)
+
+Changes: 
+
+* ``hit``: second path for lambda estimation, with a new lambda for each sample split.
+
+
 ## hit v0.3.1 (Release date: 2016-09-15)
 
 Changes: 
